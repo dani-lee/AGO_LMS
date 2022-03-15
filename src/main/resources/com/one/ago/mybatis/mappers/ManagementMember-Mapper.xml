@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ManagementMember-Mapper">
+	<sql id="search">
+		<if test="searchType == 'n'.toString()">
+			and MEM_NAME like '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and POSITION_ID like '%' || #{keyword} || '%'
+		</if>
+		<if test="sortType != null">
+			and DP_ID like '%' || #{sortType} || '%'
+		</if>
+	</sql>
+	<select id="selectMemberList" resultType="member">
+		SELECT
+		  MEM_EMAIL
+		, MEM_NAME
+		, MEM_BIR
+		, MEM_PHONE
+		, MEM_ID
+		, MEM_PWD
+		, MEM_CREDIT
+		, POSITION_ID
+		, DP_ID
+		, AUTHORITY_ID
+		, MEM_STATUS
+		FROM
+		MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND MEM_STATUS NOT IN ('A403')
+		ORDER BY POSITION_ID DESC, MEM_NAME ASC, MEM_BIR DESC
+
+	</select>
+
+	<select id="selectMemberListCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND MEM_STATUS NOT IN ('A403')
+		ORDER BY POSITION_ID DESC
+	</select>
+
+
+	<select id="selectDepartment" resultType="department">
+		SELECT
+		COMMON_CODE
+		, GROUP_CODE
+		, GROUP_CODE_NM
+		, CODE_NAME1
+		, USE_YN
+		FROM
+		COMMON
+		WHERE
+		GROUP_CODE = 'DP1'
+		ORDER BY COMMON_CODE
+	</select>
+	
+	<!-- 퇴사자 목록 상태가 퇴사인 경우 -->
+	<select id="selectResignerList" resultType="member">
+		SELECT
+		  MEM_EMAIL
+		, MEM_NAME
+		, MEM_BIR
+		, MEM_PHONE
+		, MEM_ID
+		, MEM_PWD
+		, MEM_CREDIT
+		, POSITION_ID
+		, DP_ID
+		, AUTHORITY_ID
+		, MEM_STATUS
+		FROM
+		MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND MEM_STATUS = 'A403'
+		ORDER BY POSITION_ID DESC, MEM_NAME ASC, MEM_BIR DESC
+	</select>
+	
+	<select id="selectResignerListCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND MEM_STATUS = 'A403'
+		ORDER BY POSITION_ID DESC, MEM_NAME ASC, MEM_BIR DESC
+	</select>
+	
+	<!-- 퇴사자 등록 리스트 (퇴사 상태 이외의 회원) -->
+	<select id="selectMemberListExceptResigners" resultType="member">
+		 SELECT
+		  MEM_EMAIL
+		, MEM_NAME
+		, MEM_BIR
+		, MEM_PHONE
+		, MEM_ID
+		, MEM_PWD
+		, MEM_CREDIT
+		, POSITION_ID
+		, DP_ID
+		, AUTHORITY_ID
+		, MEM_STATUS
+		FROM MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND NOT MEM_STATUS IN 'A403'
+		ORDER BY POSITION_ID DESC, MEM_NAME ASC, MEM_BIR DESC
+	</select>
+	
+	<select id="selectMemberListExceptResignersCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		MEMBER
+		WHERE MEM_EMAIL IS NOT NULL
+		<include refid="search" />
+		AND NOT MEM_STATUS IN 'A403'
+		ORDER BY POSITION_ID DESC, MEM_NAME ASC, MEM_BIR DESC
+	</select>
+	
+	<!-- 퇴사자 재직자로 상태 변경 -->
+	<update id="updateMemberStatus" parameterType="member">
+		UPDATE  MEMBER
+        SET
+		MEM_STATUS = #{memStatus}
+		WHERE MEM_EMAIL = #{memEmail}
+	</update>
+	
+	<!-- 퇴사로 상태 일괄 변경 -->
+	<update id="updateCheckedMemberStatus" parameterType="map">
+		UPDATE MEMBER
+		SET
+		MEM_STATUS = 'A403'
+		, AUTHORITY_ID = 'A101'
+		WHERE
+			MEM_EMAIL IS NULL
+		<foreach collection="array" item="item"> 
+			or MEM_EMAIL = #{ item } 
+		</foreach>
+
+		
+	</update>
+	
+	<select id="selectPosition" resultType="common">
+		SELECT
+			COMMON_CODE
+		  , GROUP_CODE
+		  , GROUP_CODE_NM
+		  , CODE_NAME1
+		  , CODE_NAME2
+		  , CODE_NAME3
+		  , OPTION1
+		  , OPTION2
+		  , USE_YN
+		  , OPTION3
+		FROM
+		COMMON
+		WHERE GROUP_CODE = 'PS1'
+	</select>
+</mapper>

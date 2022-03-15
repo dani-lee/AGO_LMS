@@ -1,0 +1,109 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.PageMaker;
+import com.one.dao.LikeClassDAO;
+import com.one.dto.ClassVO.ClassDepartmentVO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.LikeClassService;
+
+public class LikeClassServiceImpl implements LikeClassService{
+
+	private LikeClassDAO likeClassDAO;
+	
+	public void setLikeClassDAO(LikeClassDAO likeClassDAO) {
+		this.likeClassDAO = likeClassDAO;
+	}
+
+	@Override
+	public Map<String, Object> getLikeClassList(String memEmail, Criteria cri, String memDpId) throws SQLException{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<ClassStasticsVO> likeClassList = likeClassDAO.selectLikeClassList(memEmail, cri);
+		int totalCount = likeClassDAO.selectLikeClassListCount(memEmail);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		
+		List<ClassStasticsVO> attendeesCntList = likeClassDAO.selectLikeClassCntAttendees();
+		for(ClassStasticsVO classInfo : likeClassList) {
+			for(ClassStasticsVO attendessCnt : attendeesCntList) {
+				if(classInfo.getOpcl() == attendessCnt.getOpcl()) {
+					attendessCnt.setCount(attendessCnt.getCount());
+				}
+			}
+			List<ClassDepartmentVO> dpIds = likeClassDAO.selectDpIdsByOpcl(classInfo.getOpcl());
+			classInfo.setDpIds(dpIds);
+			for(ClassDepartmentVO dpId : classInfo.getDpIds()) {
+				if(memDpId.equals(dpId.getDpId())) {
+					classInfo.setMatchClDp("match");
+				}
+			}
+			System.out.println("     오피씨엘  "+classInfo.getOpcl()+"        studydate"+classInfo.getStudyDate());
+			if(classInfo.getStudyDate().equals("D101")) {
+				classInfo.setStudyDate("7");	
+			}else if(classInfo.getStudyDate().equals("D102")) {
+				classInfo.setStudyDate("30");
+			}else {
+				classInfo.setStudyDate("제한없음");
+			}
+		}
+	
+		
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("likeClassList", likeClassList);
+		
+		return dataMap;
+	}
+
+	@Override
+	public Map<String,Object> getLikeClPoint(String memEmail) throws SQLException {
+		Map<String, Object> clpointMap = new HashMap<String, Object>();
+		ClassStasticsVO smallInfo = new ClassStasticsVO();
+		
+		int totalPoint = Integer.parseInt(likeClassDAO.selectLikeClPoint(memEmail).toString());
+		smallInfo.setMemEmail(memEmail);
+		smallInfo.setClCate("A201");
+		int pointA201 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		smallInfo.setClCate("A202");
+		int pointA202 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		smallInfo.setClCate("A203");
+		int pointA203 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		
+		clpointMap.put("totalPoint", totalPoint);
+		clpointMap.put("pointA201", pointA201);
+		clpointMap.put("pointA202", pointA202);
+		clpointMap.put("pointA203", pointA203);
+		
+		
+		
+		return clpointMap;
+	}
+
+	@Override
+	public void removeLikeCls(Map<String, Object> dataMap) throws SQLException {
+		likeClassDAO.deleteLikeCls(dataMap);
+		
+	}
+
+	/*@Override
+	public String exchangeStudyDate(List<ClassStasticsVO> likeClassList) throws SQLException {
+		for(ClassStasticsVO classInfo : likeClassList) {
+			if(classInfo.getStudyDate().equals("D101")) {
+				
+			}
+		}
+		return null;
+	}*/
+
+	
+
+	
+
+}

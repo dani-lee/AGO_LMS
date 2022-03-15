@@ -1,0 +1,37 @@
+package com.one.service;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.MemberCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.ReportCommand;
+import com.one.dto.ExtReportVO;
+import com.one.dto.FinishedClassVO;
+import com.one.dto.MemberClVO;
+
+public interface MyClassService {
+	
+	public List<MemberStudyClassCommand> selectStudyClassList (String memEmail) throws SQLException;
+	
+	public List<ReportCommand> selectFinishClassList (String memEmail) throws SQLException;
+	
+	public Map<String, Object> selectMyClassMain (String memEmail)throws SQLException;
+	
+	public Map<String, Object> selectListMyStudyingClass(MemberCriteria cri)throws SQLException;
+	
+	public String getClassUploadPath() throws IOException;
+	
+	public void modifyMemCLByQrScan(MemberClVO memberCL) throws SQLException;
+	
+	public void regisetMemChap(MemberClVO memberCL) throws SQLException;
+	
+	public Map<String, Object> getMemberClList(MemberCriteria cri,String email) throws SQLException;
+
+	public Map<String,Object> getExtList(MemberCriteria cri,String email) throws SQLException;
+	
+	public Map<String,Object> getExtReportList(MemberCriteria cri,String email) throws SQLException;
+}

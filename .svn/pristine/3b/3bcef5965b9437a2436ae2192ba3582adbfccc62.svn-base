@@ -1,0 +1,25 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+
+import com.one.dao.AdminDAO;
+import com.one.dto.AdminVO;
+import com.one.service.AdminService;
+
+public class AdminServiceImpl implements AdminService {
+
+	AdminDAO adminDAO;
+
+	public void setAdminDAO(AdminDAO adminDAO) {
+		this.adminDAO = adminDAO;
+	}
+
+	@Override
+	public AdminVO getAdmin(String login_id) throws SQLException {
+		AdminVO admin = new AdminVO();
+		admin.setAdminId("admin");
+		admin.setAdminPwd("admin");
+		admin.setAdminEmail("admin@gmail.com");
+		return admin;
+	}
+}

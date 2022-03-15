@@ -1,0 +1,95 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true" %>
+<head></head>
+<title>회원가입</title>
+
+<body>
+
+
+
+
+	<div class="col-md-6">
+		
+			<div class="card-header">
+				<div class="card-title">이메일 인증</div>
+			</div>
+			<div class="card-body">
+				<div class="form-group">
+					<label for="squareInput">이메일</label>
+					<div class="row"> 
+					<input type="text" class="form-control input-square" name="user_email" style="width:320px;">
+					<button class="btn btn-primary" name="check-btn" onclick = "checkCompanyMember();">인증</button>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row" style = "margin-left:20px; margin-right:20px;margin-bottom:20px;">
+				<div>
+				<button class="btn btn-primary" name="joinForm_go-btn" onclick = "joinForm_go('userJoinForm');" disabled="disabled">가입하기</button>
+				</div>
+				<div class="ml-auto">
+				<button class="btn btn-default" onclick="WindowClose();">취소</button>
+				</div>
+			</div>
+
+		
+	</div>
+
+
+<script src="<%=request.getContextPath() %>/resources/js/login.js"></script>
+<script>
+ window.onload = function(){
+	 var input_email = $('input[name="user_email"]');
+	 check_email_regx(input_email);
+ }
+ 
+ var checkedEmail = "";
+ function checkCompanyMember(){
+	 var input_email = $('input[name="user_email"]');
+	 
+	 if(!input_email.val()){
+		 alert("이메일을 입력해주세요.");
+		 input_email.focus();
+		 return;
+	 }else{
+		 if(!input_email.css("border","1px solid blue")){
+			 alert("이메일 형식에 맞게 작성해주세요.");
+			 return;
+		 }
+	 }
+	 
+	 $.ajax({
+		 url: 'checkedEmail?memEmail='+input_email.val().trim(),
+		 type: 'get',
+		 success: function(result){
+			if(result == "denied"){
+				alert("사내 전용입니다. 이메일을 확인 후 다시 입력해주세요.");
+			}else if(result == "joined"){
+				alert("이미 가입되어있습니다.");
+			}else{
+				alert("이메일이 인증되었습니다.");
+				checkedEmail = input_email.val().trim();
+				input_email.val(checkedEmail);
+				$('button[name="check-btn"]').attr("disabled",true);
+				$('button[name="joinForm_go-btn"]').attr("disabled",false);
+			}
+			
+		 },
+		 error : function(error){
+			 alert("시스템 장애로 가입이 불가합니다.");
+		 }
+	 })
+	 
+ }
+ 
+ function joinForm_go(url){
+	 alert("가입페이지로 이동합니다.");
+	 //일단 지금은 페이지 전환으로 함미다~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	 window.close();
+	 window.opener.location.href=url+"?memEmail="+checkedEmail;
+	 
+	 //checkedEmail
+ }
+</script>
+
+</body>

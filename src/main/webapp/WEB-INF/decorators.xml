@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/decorators">
+	<excludes>
+		<pattern>/**/loginTimeOut</pattern>
+		<pattern>/manager/redirectPage</pattern>
+		<pattern>/admin/loginPage.do</pattern>
+		<pattern>/admin/login/searchForPwd.do</pattern>
+		<pattern>/admin/login/modifyPwdForm.do</pattern>
+		<pattern>/resources/*</pattern>
+	</excludes>
+
+	<decorator
+		name="main"
+		page="main_decorator.jsp">
+		<pattern>/**/*</pattern>
+	</decorator>
+
+	<decorator
+		name="ifr"
+		page="open_decorator.jsp">
+		<pattern>/**/**/*</pattern>
+		<pattern>/**/**/**/*.do</pattern>
+		<pattern>/**/loginPage.do</pattern>
+	</decorator>
+
+	<decorator
+		name="admin"
+		page="admin_decorator.jsp">
+		<pattern>/admin/*</pattern>
+	</decorator>
+
+	<decorator
+		name="adminIfr"
+		page="adminIfr_decorator.jsp">
+		<pattern>/admin/**/*</pattern>
+		<pattern>/admin/**/**/*.do</pattern>
+	</decorator>
+</decorators>

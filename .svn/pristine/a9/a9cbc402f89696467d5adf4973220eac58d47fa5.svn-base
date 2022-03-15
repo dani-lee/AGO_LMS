@@ -1,0 +1,116 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<c:set var="claz" value="${ dataMap.claz }" />
+<c:set var="avg" value="${ dataMap.avg }" />
+
+
+<head></head>
+
+<title>학습중인 강의</title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header col-11 mx-auto">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<a href="#">내강의실</a>
+						</li>
+						<li class="breadcrumb-item active">학습중인 강의</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+	<section class="content">
+		<div class="container-fluid col-11">
+
+			<div class="class-detail row col-10 ml-2">
+				<img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 200px; height: 150px;">
+				<div class="col-8 column ui-sortable">
+					<span class="h6">${ claz.clName }</span>
+					<span class="badge badge-primary">${ claz.clFormat }</span>
+					<span class="badge badge-danger">${claz.clDivision }</span>
+					<br>
+					<span class="">${ claz.clCate }</span>
+					<br>
+					<i class="text-warning fas fa-star"></i>
+					<i class="text-warning fas fa-star"></i>
+					<i class="text-warning fas fa-star"></i>
+					<i class="text-warning fas fa-star"></i>
+					<i class="text-warning fas fa-star-half"></i>
+					<span class="text-warning">${ avg }</span>
+				</div>
+			</div>
+
+			<br>
+
+			<div class="col-12">
+				<div class="list-group d-flex flex-row" id="list-tab" role="tablist">
+					<a class="list-group-item list-group-item-action" id="class-info-list" data-toggle="list" href="#class-info" role="tab" aria-controls="info" onclick="restInfo();">강의정보</a>
+					<a class="list-group-item list-group-item-action active" id="list-index-list" data-toggle="list" href="#list-index" role="tab" aria-controls="home" onclick="restChap();">강의목차</a>
+					<a class="list-group-item list-group-item-action" id="list-reference-list" data-toggle="list" href="#list-reference" role="tab" aria-controls="profile" onclick="restDoc();">자료실</a>
+					<a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review" role="tab" aria-controls="messages" onclick="restReview();">수강후기</a>
+				</div>
+			</div>
+
+			<br>
+
+			<div class="col-12">
+				<div class="tab-content" id="nav-tabContent">
+
+					<!-- 강의정보 -->
+					<div class="tab-pane fade" id="class-info" role="tabpanel" aria-labelledby="class-info-list">
+
+					</div>
+
+					<!-- 강의목차 -->
+					<div class="tab-pane fade show active" id="list-index" role="tabpanel" aria-labelledby="list-index-list">
+
+					</div>
+					<!--/강의목차-->
+
+
+					<!-- 자료실-->
+					<div class="tab-pane fade" id="list-reference" role="tabpanel" aria-labelledby="list-reference-list">
+
+					</div>
+					<!--/자료실-->
+
+
+					<!--수강후기-->
+					<div class="tab-pane fade" id="list-review" role="tabpanel" aria-labelledby="list-review-list">
+
+					</div>
+
+					<div class="buttons">
+						<div class="col-1 ml-auto d-flex justify-content-between">
+							<!-- <button class="btn btn-primary float-right" onclick="fn_regist()"> &nbsp;등록&nbsp;</button> -->
+							<button class="btn btn-default float-right" onclick="location.href='list.do?mCode=M000201'">
+								<i class="la la-angle-double-left"></i>
+								&nbsp;목록
+							</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+<%@ include file="./detail_js.jsp"%>
+
+
+</body>

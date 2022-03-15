@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Stastics-Mapper">
+
+	<select id="selectInfoStasticsClass" resultType="classStastics">
+		SELECT
+		*
+		FROM
+		(SELECT
+		A.OPCL
+		, A.CL_SCO_AVG
+		, B.CL_CODE
+		, B.CL_IMG
+		, B.CL_NAME
+		, B.CL_FORMAT
+		, B.CL_CATE
+		, B.CL_DIVISION
+		, B.MAIN_EXPOSURE
+		, B.ENR_PERS
+		, C.OPEN_ROUND
+		FROM STCS_CL A,
+		V_CLASS B,
+		OPEN_CLASS C
+		WHERE  B.OPCL = A.OPCL
+		AND A.OPCL = C.OPCL
+		ORDER BY CL_SCO_AVG DESC)
+		WHERE 6 > ROWNUM
+	</select>
+	
+	<select id="selectClassGraphInfoByAges" parameterType="int" resultType="classStastics">
+		SELECT
+		*
+		FROM
+		(SELECT
+		OPCL,
+        CL_NAME,
+        OPEN_ROUND,
+		COUNT(*) AS COUNT
+		FROM
+		(SELECT 
+		OPCL,
+		MEM_EMAIL,
+        CL_NAME,
+        OPEN_ROUND,
+		TRUNC((EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM MEM_BIR)),-1) AS AGE
+		FROM AGE_SPECIFIC_PREFERENCE)A
+		WHERE A.AGE = #{age}
+		GROUP BY OPCL, CL_NAME, OPEN_ROUND
+		HAVING COUNT(*) > 0
+		ORDER BY COUNT(*) DESC)
+		WHERE 4 > ROWNUM
+	</select>
+	
+	
+	<select id="selectResultValuesByAge" resultType="class" parameterType="int">
+		SELECT
+    CL_CODE,
+    CL_IMG,
+    CL_NAME,
+    CL_INTRO,
+    CL_POINT,
+    CL_CREDIT_TIME,
+    CL_FORMAT,
+    CL_CATE,
+    CL_DIVISION,
+    OPCL,
+    CL_ROOM_NO,
+    POST_SDATE,
+    POST_EDATE,
+    MAIN_EXPOSURE,
+    ENR_PERS,
+    STUDY_DATE,
+    CL_QR,
+    CUTLINE,
+    LEC_DATE,
+    CL_ROOM_NAME,
+    CL_ROOM_LOC
+FROM
+    V_CLASS
+WHERE OPCL IN(
+    SELECT OPCL
+    FROM STCS_CL
+    WHERE STCS_CLS_NO IN (
+        SELECT STCS_CLS_NO
+        FROM(
+            SELECT
+                ASTCS_STAD,
+                ASTCS_SECOND,
+                ASTCS_FIRST,
+                ASTCS_THIRD
+            FROM STCS_AGE
+            WHERE ASTCS_STAD=#{age})
+            UNPIVOT (
+                STCS_CLS_NO FOR AGE IN(ASTCS_FIRST, ASTCS_SECOND, ASTCS_THIRD)
+            )
+        )
+    )
+ORDER BY OPCL
+	</select>
+	
+	<select id="selectFirstClassByDpId" resultType="classStastics">
+		SELECT
+		    cl_code,
+		    cl_img,
+		    cl_name,
+		    cl_point,
+		    cl_format,
+		    cl_cate,
+		    cl_division,
+		    a.opcl,
+		    post_sdate,
+		    post_edate,
+		    main_exposure,
+		    enr_pers,
+		    open_round,
+		    dp_id,
+		    cnt
+		FROM
+		    v_dp_memcnt_f a, v_class b
+		    where a.opcl = b.opcl
+		    order by dp_id asc
+	</select>
+	
+	<select id="selectSecondClassByDpId" resultType="classStastics">
+		SELECT
+		    cl_code,
+		    cl_img,
+		    cl_name,
+		    cl_point,
+		    cl_format,
+		    cl_cate,
+		    cl_division,
+		    a.opcl,
+		    post_sdate,
+		    post_edate,
+		    main_exposure,
+		    enr_pers,
+		    open_round,
+		    dp_id,
+		    cnt
+		FROM
+		    v_dp_memcnt_s a, v_class b
+		    where a.opcl = b.opcl
+		    order by dp_id asc
+	</select>
+	
+	<select id="selectThirdClassByDpId" resultType="classStastics">
+		SELECT
+		    cl_code,
+		    cl_img,
+		    cl_name,
+		    cl_point,
+		    cl_format,
+		    cl_cate,
+		    cl_division,
+		    a.opcl,
+		    post_sdate,
+		    post_edate,
+		    main_exposure,
+		    enr_pers,
+		    open_round,
+		    dp_id,
+		    cnt
+		FROM
+		    v_dp_memcnt_t a, v_class b
+		    where a.opcl = b.opcl
+		    order by dp_id asc
+	</select>
+	
+	
+	<sql id="search">
+		<if test="searchType == 'n'.toString()">
+			and CL_CATE = 'A203'
+			and CL_NAME like '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'g'.toString()">
+			and CL_CATE = 'A202'
+			and CL_NAME like '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 's'.toString()">
+			and CL_CATE = 'A203'
+			and CL_NAME like '%' || #{keyword} || '%'
+		</if>
+	</sql>
+	
+	<select id="selectTotalOpenClass" resultType="classStastics">
+		SELECT
+		 OPCL
+		, B.CL_CODE
+		, CL_NAME
+		, OPEN_ROUND
+		, CL_CATE
+		, CL_FORMAT
+		, CL_DIVISION
+		, POST_SDATE
+		, POST_EDATE
+		, MAIN_EXPOSURE
+		, ENR_PERS
+		, CL_IMG
+		, CL_POINT
+		, CL_DIVISION
+		FROM OPEN_CLASS A, CLASS B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND OPCL IS NOT NULL
+		<include refid="search" />
+		ORDER BY MAIN_EXPOSURE NULLS LAST, POST_SDATE DESC
+	</select>
+	
+	<select id="selectTotalOpenClassCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM OPEN_CLASS A, CLASS B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND OPCL IS NOT NULL
+		<include refid="search" />
+		ORDER BY POST_SDATE DESC
+	</select>
+	
+	<select id="selectClassDetailByOpcl" resultType="classStastics" parameterType="int"> 
+		SELECT
+		 OPCL
+		, B.CL_CODE
+		, CL_NAME
+		, OPEN_ROUND
+		, CL_CATE
+		, CL_FORMAT
+		, CL_DIVISION
+		, POST_SDATE
+		, POST_EDATE
+		, MAIN_EXPOSURE
+		, ENR_PERS
+		, CL_IMG
+		, CL_POINT
+		, CL_DIVISION
+		FROM OPEN_CLASS A, CLASS B
+		WHERE A.CL_CODE = B.CL_CODE
+        AND OPCL = #{opcl}
+		
+	</select>
+	
+	<select id="selectReviewAvgByOpcl" resultType="str">
+		select ROUND(avg(a.REVIEW_SCORE),1)
+		  from cl_review a
+		 where opcl=#{opcl}
+	</select>
+	
+	<select id="selectDataStudyRatioByDpId" resultType="classStastics">
+		SELECT
+        COUNT(DP_ID) AS COUNT,
+        CODE_NAME1 AS DP_ID
+        FROM AGE_SPECIFIC_PREFERENCE, COMMON
+        WHERE OPCL = #{opcl}
+        AND DP_ID = COMMON_CODE
+        GROUP BY DP_ID, CODE_NAME1
+        HAVING COUNT(DP_ID) > 0
+        ORDER BY COUNT DESC
+	</select>
+	
+	<select id="selectDataStudyRationByAges" resultType="classStastics">
+		SELECT 
+	    TRUNC((EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM MEM_BIR)),-1) AS AGES,
+	    COUNT(*) AS COUNT
+	    FROM AGE_SPECIFIC_PREFERENCE
+	    WHERE OPCL = #{opcl}
+	    GROUP BY TRUNC((EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM MEM_BIR)),-1)
+	    HAVING COUNT(TRUNC((EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM MEM_BIR)),-1)) > 0
+	    ORDER BY COUNT DESC
+	</select>
+
+	
+	<select id="selectMainExposureOpclNotNull" resultType="classStastics">
+		SELECT
+        OPCL
+        , MAIN_EXPOSURE
+        FROM OPEN_CLASS A, CLASS B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND OPCL IS NOT NULL
+        AND MAIN_EXPOSURE IS NOT NULL
+		ORDER BY POST_SDATE DESC
+	</select>
+	
+	<update id="updateMainExposureStatus" parameterType="classStastics">
+		UPDATE 
+        OPEN_CLASS
+        SET
+        MAIN_EXPOSURE = #{mainExposure}
+        WHERE OPCL = #{opcl}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	<update id="deleteMainExposureStatus" parameterType="int">
+		UPDATE 
+        OPEN_CLASS
+        SET
+        MAIN_EXPOSURE = NULL
+        WHERE OPCL = #{opcl}
+	</update>
+	
+	<select id="selectStasticsClassInfo1" resultType="classStastics">
+		SELECT OPCL
+        ,COUNT(MEM_EMAIL) AS COUNT
+        FROM MEM_CL 
+        GROUP BY OPCL
+	</select>
+	
+	<select id="selectStasticsClassInfo2" resultType="classStastics">
+		SELECT OPCL
+        , ROUND(AVG(REVIEW_SCORE),1) AS CL_SCO_AVG
+        FROM CL_REVIEW
+        GROUP BY OPCL
+	</select>
+	
+	<update id="updateStcsCl" parameterType="classStastics">
+		BEGIN
+		<foreach collection="stcsClInfo" item="i" separator="">
+		MERGE INTO STCS_CL
+        USING DUAL
+           ON (OPCL = #{i.opcl})
+        WHEN MATCHED THEN 
+             UPDATE SET 
+             CL_SCO_AVG = #{i.clScoAvg}
+             , STUDENT_CNT = #{i.count}
+        WHEN NOT MATCHED THEN 
+             INSERT (STCS_CLS_NO, OPCL, CL_SCO_AVG, STUDENT_CNT)
+             VALUES (SEQ_STCS_CLS_NO.NEXTVAL, #{i.opcl}, #{i.clScoAvg}, #{i.count});
+		</foreach>
+		END;
+	</update>
+	
+	<select id="selectClassInfoByDpId" parameterType="str" resultType="classStastics">
+		SELECT
+        F.OPCL
+        ,F.CL_NAME
+        ,F.OPEN_ROUND
+        ,F.DP_ID
+        ,F.COUNT
+        ,G.STCS_CLS_NO
+		FROM
+		(SELECT
+		OPCL,
+        CL_NAME,
+        OPEN_ROUND,
+        DP_ID,
+		COUNT(*) AS COUNT
+		FROM
+		(SELECT 
+		OPCL,
+		MEM_EMAIL,
+        CL_NAME,
+        OPEN_ROUND,
+		DP_ID
+		FROM AGE_SPECIFIC_PREFERENCE)A
+		WHERE DP_ID = #{dpId}
+		GROUP BY OPCL, CL_NAME, OPEN_ROUND, DP_ID
+		HAVING COUNT(*) > 0
+		ORDER BY COUNT(*) DESC)F, STCS_CL G
+        WHERE F.OPCL = G.OPCL
+        AND 4 > ROWNUM 
+        ORDER BY F.COUNT DESC
+	</select>
+	
+	<update id="updateStcsDp" parameterType="dstcsCMD">
+		UPDATE
+		STCS_DP
+		SET
+		DSTCS_FIRST = #{dstcsFirst}
+		, DSTCS_SECOND = #{dstcsSecond}
+		, DSTCS_THIRD = #{dstcsThird}
+		WHERE DP_ID = #{dpId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,45 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.Criteria;
+import com.one.dao.DebateReplyDAO;
+import com.one.dto.DebateReplyVO;
+import com.one.dto.FreeReplyVO;
+
+public class DebateReplyDAOImpl implements DebateReplyDAO {
+
+	private SqlSession session;
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+	
+	@Override
+	public int selectDebateReplySeqNextValue() throws SQLException {
+		return 0;
+	}
+
+	@Override
+	public List<DebateReplyVO> selectDebateReplyList(int dboardNo, Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DebateReplyVO> debateReplyList = session.selectList("DebateReply-Mapper.selectDebateReplyList", dboardNo, rowBounds);
+		return debateReplyList;
+	}
+
+	@Override
+	public int countDebateReply(int dboardNo) throws SQLException {
+		return session.selectOne("DebateReply-Mapper.countDebateReply", dboardNo);
+	}
+
+	@Override
+	public void deleteDebateReplyBydboardNo(int dboardNo) throws SQLException {
+		session.update("DebateReply-Mapper.deleteDebateReplyBydboardNo",dboardNo);
+	}
+
+}

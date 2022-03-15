@@ -1,0 +1,7 @@
+import com.one.utils.PwdToEncryption;
+
+public class test {
+	public static void main(String[] args) {
+		System.out.println(PwdToEncryption.encry("admin", "admin"));
+	}
+}

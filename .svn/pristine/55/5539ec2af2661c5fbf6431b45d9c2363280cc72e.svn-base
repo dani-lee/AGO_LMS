@@ -1,0 +1,63 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+
+import com.one.dao.MemRemdSetDAO;
+import com.one.dto.MemRemdSetVO;
+import com.one.service.MemRemdSetService;
+
+public class MemRemdSetServiceImpl implements MemRemdSetService{
+
+	private MemRemdSetDAO memRemdSetDAO;
+	public void setMemRemdSetDAO(MemRemdSetDAO memRemdSetDAO) {
+		this.memRemdSetDAO = memRemdSetDAO;
+	}
+
+	@Override
+	public MemRemdSetVO getMemRemdSetByMemEmail(String memEmail) throws SQLException {
+		MemRemdSetVO memAlarm = memRemdSetDAO.selectMemRemdSetByMemEmail(memEmail);
+		return memAlarm;
+	}
+
+	@Override
+	public void registMemRemdSetForUser(String memEmail) throws SQLException {
+		memRemdSetDAO.insertMemRemdSetForUser(memEmail);
+	}
+
+	@Override
+	public void regisetMemRemdSetForHead(String memEmail) throws SQLException {
+		memRemdSetDAO.insertMemRemdSetForHead(memEmail);
+	}
+
+	@Override
+	public void modifyReportDlFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateReportDlFlag(memRemdSetVO);
+	}
+
+	@Override
+	public void modifyIntrClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateIntrClFlag(memRemdSetVO);
+	}
+
+	@Override
+	public void modifyRealtimeClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateRealtimeClFlag(memRemdSetVO);
+	}
+
+	@Override
+	public void modifyDutyClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateDutyClFlag(memRemdSetVO);
+	}
+
+	@Override
+	public void modifyMsgFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateMsgFlag(memRemdSetVO);
+	}
+
+	@Override
+	public void modifyReportChkFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		memRemdSetDAO.updateReportChkFlag(memRemdSetVO);
+	}
+
+	
+}

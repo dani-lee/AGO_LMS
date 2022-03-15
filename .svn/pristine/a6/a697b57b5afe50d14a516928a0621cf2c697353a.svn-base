@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Department-Mapper">
+	<sql id="searchReportType">
+		<if test="sortType == 'f'.toString()">
+			AND STATE = 'B104'
+		</if>
+		<if test="sortType == 'r'.toString()">
+			AND STATE = 'B103'
+		</if>
+	</sql>
+	<sql id="searchReportTypeE">
+		<if test="sortType == 'f'.toString()">
+			AND EXT_STATE = 'B104'
+		</if>
+		<if test="sortType == 'r'.toString()">
+			AND EXT_STATE = 'B103'
+		</if>
+	</sql>
+	<sql id="searchReportList">
+		<if test="searchType == 'c'.toString()">
+			AND CL_NAME like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'm'.toString()">
+			AND MEM_NAME like '%'||#{keyword}||'%'
+		</if>
+		<if test="sortType == 'up'.toString()">
+			ORDER BY NOTICE_REGDATE DESC
+		</if>
+		<if test="sortType == 'down'.toString()">
+			ORDER BY NOTICE_REGDATE
+		</if>
+	</sql>
+	
+	<sql id="searchMemberClass">
+		<if test="searchType == 'c'.toString()">
+			AND c.CL_NAME like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'n'.toString()">
+			AND a.MEM_NAME like '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<sql id="searchDpClass">
+		<if test="searchType == 'c'.toString()">
+			AND CL_CODE like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'n'.toString()">
+			AND CL_NAME like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'cn'.toString()">
+			and (CL_NAME like '%'||#{keyword}||'%'
+			 OR CL_CODE like '%'||#{keyword}||'%')
+
+		</if>
+	</sql>
+	<select id="selectDpClassList" resultType="dpFavClassCommand">
+		SELECT CL_CODE
+		        , CL_NAME
+		        , ENR_PERS
+		        , CL_IMG
+                , POST_SDATE
+                , POST_EDATE
+                , CL_FORMAT
+                , CL_DIVISION
+                , b.opcl
+		  from V_CLASS a, CLASS_ORDER b
+		 where b.DP_ID = #{dpId}
+		   and CL_CATE = 'A202'
+		   and b.opcl = a.opcl
+		   and <![CDATA[ POST_EDATE >= TRUNC(SYSDATE)-1]]>
+		   <include refid="searchDpClass" />
+	</select>
+	
+	<select id="selectDpClassListForOrder" resultType="dpFavClassCommand">
+		SELECT CL_CODE
+		        , CL_NAME
+		        , ENR_PERS
+		        , CL_IMG
+                , POST_SDATE
+                , POST_EDATE
+                , CL_FORMAT
+                , CL_DIVISION
+                , b.opcl
+		  from V_CLASS a, CLASS_ORDER b
+		 where b.DP_ID = #{dpId}
+		   and CL_CATE = 'A202'
+		   and b.opcl = a.opcl
+		   and <![CDATA[ POST_EDATE >= TRUNC(SYSDATE)-1]]>
+	</select>
+	
+	<select id="selectDpClassListCount" resultType="int">
+		SELECT COUNT(*)
+		  from V_CLASS a, CLASS_ORDER b
+		 where b.DP_ID = #{dpId}
+		   and b.opcl = a.opcl
+		   and CL_CATE = 'A202'
+		   and <![CDATA[ POST_EDATE >= TRUNC(SYSDATE)-1]]>
+		 <include refid="searchDpClass" />
+	</select>
+	
+	<select id="selectDpClassMemberCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM MEM_CL
+		 where opcl = #{opcl}
+	</select>
+	
+	<select id="selectDpFavClass" resultType="int">
+		select opcl
+		  from DP_HEAD_FAV
+		 where opcl = #{opcl}
+
+	</select>
+	
+	<select id="selectDpFavList" resultType="dpFavClassCommand">
+		SELECT DP_ID
+			  ,OPCL
+		  FROM DP_HEAD_FAV
+		 WHERE DP_ID = #{dpId}
+	</select>
+	
+	<select id="selectDpClass" resultType="dpFavClassCommand">
+		select *
+		  from v_class
+		 where opcl = #{opcl}
+	</select>
+	
+	<select id="selectClassAvg" resultType="double">
+		select avg(REVIEW_SCORE)
+		from CL_REVIEW
+		where OPCL=#{opcl}
+
+	</select>
+	
+	<select id="selectDpClassChapter" resultType="classChapter">
+		select * 
+		  from CL_CHAPTER
+		 where CL_CODE = #{clCode}
+	  order by CL_CHAP_NUM
+	</select>
+	
+	<select id="selectDpClassReview" resultType="classReviewCommand">
+		select *
+		  from CL_REVIEW
+		 where opcl = #{opcl}
+	  order by REVIEW_REGDATE desc
+	</select>
+	
+	<select
+		id="selectDpHeadFav" resultType="class">
+		SELECT
+		A.CL_CODE,
+		A.CL_IMG,
+		A.CL_NAME,
+		A.CL_INTRO,
+		A.CL_POINT,
+		A.CL_CREDIT_TIME,
+		A.CL_FORMAT,
+		A.CL_CATE,
+		A.CL_DIVISION,
+		A.OPCL,
+		A.CL_ROOM_NO,
+		A.POST_SDATE,
+		A.POST_EDATE,
+		A.MAIN_EXPOSURE,
+		A.ENR_PERS,
+		A.STUDY_DATE,
+		A.CL_QR,
+		A.CUTLINE,
+		A.CL_ROOM_NAME,
+		A.CL_ROOM_LOC
+		FROM
+		V_CLASS A,
+		DP_HEAD_FAV B
+		WHERE A.OPCL=B.OPCL
+		AND B.DP_ID=#{dpId}
+	</select>
+	
+	<select id="selectOrderClassList" resultType="orderClass">
+		select DISTINCT 
+		    b.OPCL
+		    , c.CL_NAME
+		from DP_HEAD_OD a, DP_OD_OPCL b, v_class c
+		where DP_ID = #{department}
+		AND b.OD_ID = a.OD_ID
+		AND b.opcl = c.opcl
+	</select>
+	
+	<select id="selectOpclFromOdId" resultType="orderClass">
+		SELECT DISTINCT a.OPCL, b.CL_NAME
+		  FROM DP_OD_OPCL a, V_CLASS b
+         where a.opcl = b.opcl
+		   and OD_ID = #{odId}
+	</select>
+	
+	<select id="selectDashMemberClassList" resultType="dpHeadDash">
+		select DISTINCT 
+		       b.opcl
+		     , a.mem_name
+		     , a.POSITION_ID
+		     , c.CL_CODE
+		     , c.CL_NAME
+		     , c.CL_FORMAT
+		     , c.CL_CATE
+		     , c.CL_DIVISION
+		     , b.PROG_RATE
+		  from MEMBER a
+		     , MEM_CL b
+		     , V_CLASS c
+		 where a.MEM_EMAIL = b.MEM_EMAIL
+		   and b.opcl=c.opcl
+		   and a.DP_ID = #{sortType}
+		   <include refid="searchMemberClass" />
+		   and a.AUTHORITY_ID != 'A102'
+	</select>
+	
+	<select id="selectDepartmentMemberList" resultType="member">
+		select MEM_EMAIL, mem_name
+		  from MEMBER
+		 where DP_ID = #{department}
+		 AND AUTHORITY_ID != 'A102'
+	</select>
+	
+	<select id="selectMemberClassCheck" resultType="departmentMemberClassCommand">
+		select a.PROG_RATE
+		  from MEM_CL a, MEMBER b
+		 where a.opcl=#{opcl}
+		   and a.MEM_EMAIL = #{memEmail}
+		   and a.MEM_EMAIL = b.MEM_EMAIL
+	</select>
+	
+	<select id="selectMemberClassName" resultType="string">
+		select CL_NAME
+		  from v_class
+		 where opcl=#{opcl}
+	</select>
+	
+	<select id="selectReportList" parameterType="map" resultType="headReportCommand">
+ 		SELECT * 
+	        FROM
+	         (SELECT
+	             'I' AS RE_TYPE,
+	             NO,
+	             CL_NAME,
+	             MEM_NAME,
+	             REGDATE,
+	             STATE,
+	             DP_ID,
+	             POSITION_ID
+	         FROM V_INT_REPORT_LIST
+	         where STATE = 'B102'
+	         AND DP_ID = #{department}
+	         
+	         UNION
+	         
+	         
+	         SELECT
+	             'E' AS RE_TYPE,
+	             EXT_NO AS NO,
+	             CL_NAME,
+	             MEM_NAME,
+	             EXT_REGDATE AS REGDATE,
+	             EXT_STATE AS STATE,
+	             DP_ID,
+	             POSITION_ID
+	         FROM EXT_REPORT
+	         where EXT_STATE = 'B102'
+	         AND DP_ID = #{department})
+	      WHERE RE_TYPE IS NOT NULL
+	      <include refid="searchReportList" />
+	   ORDER BY REGDATE DESC
+   </select>
+
+	
+	<select id="selectReportListCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+      FROM
+         (SELECT
+             'I' AS RE_TYPE,
+             NO,
+             CL_NAME,
+             MEM_NAME,
+             REGDATE,
+             STATE,
+             DP_ID,
+             POSITION_ID
+         FROM V_INT_REPORT_LIST
+         where STATE = 'B102'
+         AND DP_ID = #{department}
+         
+         UNION
+         
+         
+         SELECT
+             'E' AS RE_TYPE,
+             EXT_NO AS NO,
+             CL_NAME,
+             MEM_NAME,
+             EXT_REGDATE AS REGDATE,
+             EXT_STATE AS STATE,
+             DP_ID,
+             POSITION_ID
+         FROM EXT_REPORT
+         where EXT_STATE = 'B102'
+         AND DP_ID = #{department})
+         WHERE RE_TYPE IS NOT NULL
+      <include refid="searchReportList" />
+      ORDER BY REGDATE DESC   
+
+	</select>
+	
+	<select id="selectDashReportList" parameterType="map" resultType="headReportCommand">
+	  SELECT * FROM
+	      (SELECT
+	          'I' AS RE_TYPE,
+	          NO,
+	          CL_NAME,
+	          MEM_NAME,
+	          REGDATE,
+	          STATE,
+	          DP_ID,
+	          POSITION_ID
+	      FROM V_INT_REPORT_LIST
+	      WHERE DP_ID = #{department}
+	      
+	      
+	      UNION
+	      
+	      
+	      SELECT
+	          'E' AS RE_TYPE,
+	          EXT_NO AS NO,
+	          CL_NAME,
+	          MEM_NAME,
+	          EXT_REGDATE AS REGDATE,
+	          EXT_STATE AS STATE,
+	          DP_ID,
+	          POSITION_ID
+	      FROM EXT_REPORT
+	      where DP_ID = #{department}
+	      )
+	      WHERE RE_TYPE IS NOT NULL
+	      <include refid="searchReportType" />
+      ORDER BY REGDATE DESC 
+	</select>
+	
+	<select id="selectIntReport" resultType="intReport">
+		 SELECT EDU_REVIEW
+				, CODE_NAME1 as position_name
+				, EDU_CONTENT
+				, DP_ID
+				, INT_DATE
+				, INT_STATE
+				, OPCL
+				, MEM_CL_NO
+				, INT_NO
+		  FROM INT_REPORT a, common b
+          where POSITION_ID = COMMON_CODE
+		    and INT_NO = #{no}
+	</select>
+	
+	<select id="selectIntReportClass" resultType="reportClassCommand">
+	 select CTF_DATE
+	 		, CL_NAME
+	 		, CODE_NAME1 as CL_CATE
+	 		, MEM_EMAIL
+	   from mem_cl a, v_class b, common c
+	  where a.opcl = b.opcl
+        and b.CL_CATE = c.COMMON_CODE
+	    and a.MEM_CL_NO = #{memClNo}
+	</select>
+	
+	<select id="selectExtReport" resultType="extReport">
+		SELECT EXT_NO
+				, MEM_NAME
+				, CL_NAME
+				, EDU_CONTENT
+				, EDU_REVIEW
+				, ATTACH_DOC
+				, EXT_STATE
+				, EXT_REGDATE
+				, MEM_EMAIL
+				, DP_ID
+				, INSERT_CTF_DATE
+				, CODE_NAME1 as position_name
+		  FROM EXT_REPORT a, common b
+		 WHERE EXT_NO = #{no}
+		   and POSITION_ID = COMMON_CODE
+	</select>
+	
+	<select id="selectAutograph" resultType="String">
+	 select OPTION1
+	   from COMMON
+	  where COMMON_CODE = #{dpId}
+	</select>
+
+	<select id="selectExtReportClass" resultType="reportClassCommand">
+	 select CTF_DATE
+	   from EXT_CL
+	  where EXT_NO = #{no}
+	</select>
+	
+	<select id="selectCretificateByEmail" resultType="memberCertificate">
+		select a.ctf_date
+		     , b.cl_name
+		     , b.cl_credit_time
+		     , d.mem_name
+		     , d.mem_bir
+		     , CERTIFICATE_SEQ.nextval as count_print
+		  from mem_cl a
+		     , v_class b
+		     , member d
+		 where a.mem_cl_no=#{clCode}
+		   and d.MEM_Email=#{memEmail}
+		   and a.opcl = b.opcl
+		   and a.mem_email=d.mem_email
+	</select>
+	
+	<select id="selectCertificate" resultType="certificate">
+		select CTF_TITLE
+			 , CTF_CONTENT
+			 , CTF_SEAL
+			 , RET_NAME
+			 , CTF_DESIGN 
+		  from CERTIFICATE
+	</select>
+	
+	<select id="selectMemEmail" resultType="str">
+	 select mem_email
+	   from mem_cl
+	  where mem_cl_no = #{memClNo}
+	</select>
+	
+	<select id="selectClPoint" resultType="int">
+	 select CL_POINT
+	   from v_class
+	  where opcl = #{opcl}
+	</select>
+	
+	<update id="updateExtReportApproval">
+		UPDATE EXT_REPORT
+			SET
+			EXT_STATE = 'B104'
+		WHERE
+			EXT_NO = #{ no }
+	</update>
+	
+	<update id="updateIntReportApproval">
+		UPDATE INT_REPORT
+			SET
+			INT_STATE = 'B104'
+		WHERE
+			INT_NO = #{ no }
+	</update>
+	
+	<update id="updateExtReportReturn">
+		UPDATE EXT_REPORT
+			SET
+			EXT_STATE = 'B103'
+		WHERE
+			EXT_NO = #{ no }
+	</update>
+	
+	<update id="updateIntReportReturn">
+		UPDATE INT_REPORT
+			SET
+			INT_STATE = 'B103'
+		WHERE
+			INT_NO = #{ no }
+	</update>
+
+	<update id="updateDpSeal">
+		UPDATE COMMON
+			SET
+			OPTION1 = #{fileName}
+		WHERE
+			COMMON_CODE = #{ dpId}
+	</update>
+	
+	<update id="updateMemCredit">
+		UPDATE member
+			SET
+			MEM_CREDIT = MEM_CREDIT+#{point}
+		WHERE
+			mem_email = #{memEmail}
+	</update>
+	
+	<update id="insertDpHeadFav">
+		INSERT INTO DP_HEAD_FAV (
+		DP_ID,
+		OPCL
+		) VALUES (
+		#{dpId},
+		#{opcl}
+		)
+	</update>
+
+	<update id="deleteDpHeadFav">
+		DELETE FROM DP_HEAD_FAV
+		WHERE
+		DP_ID =#{dpId}
+		AND
+		OPCL =#{opcl}
+	</update>
+
+	<select id="getOdId" resultType="int">
+		SELECT OD_ID_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+
+	<update id="insertDpHeadOd">
+		INSERT INTO DP_HEAD_OD (
+		    OD_ID,
+		    DP_ID,
+		    OD_MSG,
+		    OD_DATE
+		) VALUES (
+		    #{odId},
+		    #{dpId},
+		    #{odMsg},
+		    TRUNC(SYSDATE)
+		)
+	</update>
+
+	<update id="insertDpOdOpcl">
+		INSERT INTO DP_OD_OPCL (
+		    OD_ID,
+		    OPCL
+		) VALUES (
+		    #{odId},
+		    #{opcl}
+		)
+	</update>
+
+	<update id="insertDpOdMem">
+		INSERT INTO DP_OD_MEM (
+		    OD_ID,
+		    MEM_EMAIL
+		) VALUES (
+		    #{odId},
+		    #{memEmail}
+		)
+	</update>
+
+	<select id="DpHeadFavByDpIdAndOpclCount" resultType="int">
+		SELECT COUNT(*)
+		FROM DP_HEAD_FAV
+		WHERE DP_ID=#{dpId}
+		AND OPCL=#{opcl}
+	</select>
+	
+	<select id="selectMemDpOdList" resultType="dpHead">
+		SELECT
+		    A.OD_ID
+		   ,A.DP_ID
+		   ,A.OD_DATE
+		   ,B.MEM_EMAIL
+		   ,C.OPCL
+		FROM
+		    DP_HEAD_OD A, DP_OD_MEM B, DP_OD_OPCL C
+		WHERE 
+		    A.OD_ID = B.OD_ID
+		    AND B.OD_ID = C.OD_ID
+		    AND B.MEM_EMAIL = #{memEmail}
+	</select>
+</mapper>

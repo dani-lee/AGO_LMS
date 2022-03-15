@@ -1,0 +1,751 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<c:set var="classList" value="${dataMap.classList }" />
+
+
+<head></head>
+<title></title>
+
+<body>
+	<div class="container-fluid col-9">
+
+		<div id="demo" class="carousel slide" data-ride="carousel">
+			<ul class="carousel-indicators" style="z-index: 1">
+				<li data-target="#demo" data-slide-to="0" class=""></li>
+				<li data-target="#demo" data-slide-to="1" class=""></li>
+				<li data-target="#demo" data-slide-to="2" class="active"></li>
+			</ul>
+			<div class="carousel-inner">
+				<div class="carousel-item card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title"><strong>강의별 평점순 </strong></h4>
+						<p class="card-category">&nbsp;&nbsp;[강의별 평점 순 상위 10개 강의]</p>
+					</div>
+					<div class="card-body">
+						<table>
+							<tbody>
+								<tr>
+									<td style="width: 60px;"><svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" class="ct-chart-bar" style="width: 100%; height: 245px;">
+									<foreignObject style="overflow: hidden;" y="196" x="10" height="49" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 49px; width: 30px;">1.0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="147" x="10" height="49" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 49px; width: 30px;">2.0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="98" x="10" height="49" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 49px; width: 30px;">3.0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="49" x="10" height="49" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 49px; width: 30px;">4.0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="0" x="10" height="49" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 49px; width: 30px;">5.0</span></foreignObject>
+								</svg></td>
+									<td>
+										<div style="width: 700px;">
+											<div id="salesChart" class="chart" style="width: 790px; white-space: nowrap;">
+												<div class="chartist-tooltip" style="top: 7.71875px; left: 543.016px;">
+													<span class="chartist-tooltip-value">8</span>
+												</div>
+												<svg width="1300px" height="245px">
+											<g class="ct-series ct-series-g">
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="30.0143229166667" x2="30.0143229166667" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="89.95703125" x2="89.95703125" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="38" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="149.89973958333334" x2="149.89973958333334" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="70" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="209.84244791666669" x2="209.84244791666669" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="55" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="269.78515625" x2="269.78515625" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="38" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="329.7278646" x2="329.7278646" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="100"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="389.6705729" x2="389.6705729" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="38"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="449.6132812" x2="449.6132812" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="70"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="509.5559895" x2="509.5559895" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="569.4986978" x2="569.4986978" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="38"></line>
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="629.4414061" x2="629.4414061" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="689.3841144" x2="689.3841144" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="38"></line>
+												</a>
+											</g>
+											<g class="ct-grids">
+												<line y1="210" y2="210" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="185.625" y2="185.625" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="161.25" y2="161.25" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="136.875" y2="136.875" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="112.5" y2="112.5" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="88.125" y2="88.125" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="63.75" y2="63.75" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="39.375" y2="39.375" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="15" y2="15" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+											</g>
+											
+											<foreignObject style="overflow: hidden;" x="16.02864583333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">20</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="74.97135416666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">30</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="134.9140625" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">40</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="194.85677083333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">50</span>
+											</foreignObject>
+										</svg>
+											</div>
+										</div> <!-- table-responsive -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+				<div class="carousel-item card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title">연령별 선호도</h4>
+						<p class="card-category">20대부터 50대까지 선호하는 강의를 나타내는 그래프</p>
+					</div>
+					<div class="card-body">
+						<table>
+							<tbody>
+								<tr>
+									<td style="width: 60px;"><svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" class="ct-chart-bar" style="width: 100%; height: 245px;">
+									<foreignObject style="overflow: hidden;" y="185.625" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="161.25" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">12.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="136.875" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">25</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="112.5" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">37.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="88.125" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">50</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="63.75" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">62.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="39.375" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">75</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="15" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">87.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="-15" x="10" height="30" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 30px; width: 30px;">100</span></foreignObject>
+								</svg></td>
+									<td>
+										<div style="width: 700px;">
+											<div id="salesChart" class="chart" style="width: 790px; white-space: nowrap;">
+												<div class="chartist-tooltip" style="top: 7.71875px; left: 543.016px;">
+													<span class="chartist-tooltip-value">8</span>
+												</div>
+												<svg width="1300px" height="245px">
+											<g class="ct-series ct-series-g">
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="30.0143229166667" x2="30.0143229166667" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="89.95703125" x2="89.95703125" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="149.89973958333334" x2="149.89973958333334" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="209.84244791666669" x2="209.84244791666669" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="269.78515625" x2="269.78515625" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="329.7278646" x2="329.7278646" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="389.6705729" x2="389.6705729" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="449.6132812" x2="449.6132812" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="509.5559895" x2="509.5559895" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="569.4986978" x2="569.4986978" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38"></line>
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="629.4414061" x2="629.4414061" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="689.3841144" x2="689.3841144" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38"></line>
+												</a>
+											</g>
+											<g class="ct-grids">
+												<line y1="210" y2="210" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="185.625" y2="185.625" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="161.25" y2="161.25" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="136.875" y2="136.875" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="112.5" y2="112.5" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="88.125" y2="88.125" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="63.75" y2="63.75" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="39.375" y2="39.375" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="15" y2="15" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+											</g>
+											
+											<foreignObject style="overflow: hidden;" x="16.02864583333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">핀테크</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="74.97135416666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">W-UP</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="134.9140625" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">프로그램 입문</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="194.85677083333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 C언어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="254.7994791666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차-자동화</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="313.7421875" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">전기기사</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="372.6848958" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보기사</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="431.6276041" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">sw엔지니어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="490.5703124" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">IT-바로알</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="549.5130207" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="608.455729" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">JAVA</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="667.3984373" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">C++</span>
+											</foreignObject>
+										</svg>
+											</div>
+										</div> <!-- table-responsive -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+				<div class="carousel-item active card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title">연령별 선호도</h4>
+						<p class="card-category">20대부터 50대까지 선호하는 강의를 나타내는 그래프</p>
+					</div>
+					<div class="card-body">
+						<table>
+							<tbody>
+								<tr>
+									<td style="width: 60px;"><svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" class="ct-chart-bar" style="width: 100%; height: 245px;">
+									<foreignObject style="overflow: hidden;" y="185.625" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="161.25" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">12.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="136.875" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">25</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="112.5" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">37.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="88.125" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">50</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="63.75" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">62.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="39.375" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">75</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="15" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">87.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="-15" x="10" height="30" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 30px; width: 30px;">100</span></foreignObject>
+								</svg></td>
+									<td>
+										<div style="width: 700px;">
+											<div id="salesChart" class="chart" style="width: 790px; white-space: nowrap;">
+												<div class="chartist-tooltip" style="top: 7.71875px; left: 543.016px;">
+													<span class="chartist-tooltip-value">8</span>
+												</div>
+												<svg width="1300px" height="245px">
+											<g class="ct-series ct-series-g">
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="30.0143229166667" x2="30.0143229166667" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="89.95703125" x2="89.95703125" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="149.89973958333334" x2="149.89973958333334" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="209.84244791666669" x2="209.84244791666669" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="269.78515625" x2="269.78515625" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38" />
+												</a>
+
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="329.7278646" x2="329.7278646" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="389.6705729" x2="389.6705729" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="449.6132812" x2="449.6132812" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="509.5559895" x2="509.5559895" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="569.4986978" x2="569.4986978" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38"></line>
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="629.4414061" x2="629.4414061" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55"></line>
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="689.3841144" x2="689.3841144" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38"></line>
+												</a>
+											</g>
+											<g class="ct-grids">
+												<line y1="210" y2="210" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="185.625" y2="185.625" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="161.25" y2="161.25" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="136.875" y2="136.875" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="112.5" y2="112.5" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="88.125" y2="88.125" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="63.75" y2="63.75" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="39.375" y2="39.375" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+												<line y1="15" y2="15" x1="10" x2="800" class="ct-grid ct-vertical"></line>
+											</g>
+											
+											<foreignObject style="overflow: hidden;" x="16.02864583333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">핀테크</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="74.97135416666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">W-UP</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="134.9140625" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">프로그램 입문</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="194.85677083333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 C언어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="254.7994791666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차-자동화</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="313.7421875" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">전기기사</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="372.6848958" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보기사</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="431.6276041" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">sw엔지니어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="490.5703124" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">IT-바로알</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="549.5130207" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="608.455729" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">JAVA</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="667.3984373" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">C++</span>
+											</foreignObject>
+										</svg>
+											</div>
+										</div> <!-- table-responsive -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+		<a class="carousel-control-prev" href="#demo" data-slide="prev"> 
+		<i class="la la-chevron-circle-left" style="font-size:30px; color : black; height : 270px;"></i>
+		</a>
+		<a class="carousel-control-next" href="#demo" data-slide="next">
+			<i class="la la-chevron-circle-right" style="font-size:30px; color : black;height : 270px;"></i>
+		</a>
+	</div>
+	
+	
+
+
+		<div class="card col-md-12">
+			<div class="card-header">
+				<h4 class="card-title">강의 통계</h4>
+				<p class="card-category">강의 목록</p>
+			</div>
+			<div class="column ui-sortable" style="width: 100%;">
+				<table class="col-md-12 column" style="border: none;">
+					<tr>
+						<div class="col-12 p-3" style="background-color: #EDEDED;">
+							<div class="input-group justify-content-center">
+								<select class="col-md-2 form-control" style="height: 39px;">
+									<option>전체</option>
+									<option>온라인 강의</option>
+									<option>오프라인 강의</option>
+									<option>실시간 강의</option>
+								</select>
+								<input type="text" placeholder="Search..." class="form-control col-md-4">
+								<button class="col-md-1 btn btn-primary">검색</button>
+							</div>
+						</div>
+					</tr>
+				</table>
+				<div class="col-md-12 column ui-sortable"></div>
+				<table class="table mt-3">
+					<thead>
+						<tr>
+							<th class="col-md-1 column ui-sortable">강의코드</th>
+							<th class="col-md-5 column ui-sortable text-center">강의명</th>
+							<th class="col-md-2 column ui-sortable text-center">수강 인원</th>
+							<th class="col-md-2 column ui-sortable text-center">게시 상태</th>
+							<th class="col-md-2 column ui-sortable text-center">메인 노출</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>20220101</td>
+							<td>
+								<div class="column ui-sortable">
+									<span class="h6" style="cursor:poiner;" onclick="location.href='statisticsDetail.do?mCode=M010203'">멀티미디어의 이해</span> <br>
+									<br>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star-half-empty" style="font-size: 20px;"></i>
+									<span class="h6 text-warning">(4.5)</span>
+
+								</div>
+							</td>
+							<td class="text-center">30</td>
+							<td class="text-center"><span class=" badge badge-primary">게시 중</span></td>
+							<td class="text-center">
+								<div class="dropdown">
+
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+										<a class="dropdown-item" href="#">인기</a>
+										<a class="dropdown-item" href="#">추천</a>
+										<a class="dropdown-item" href="#">신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>20220101</td>
+							<td>
+								<div class="column ui-sortable">
+									<span class="h6">업무용 네트워크 기술</span> <br>
+									<br>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star-half-empty" style="font-size: 20px;"></i>
+									<span class="h6 text-warning">(4.5)</span>
+								</div>
+
+							</td>
+							<td class="text-center">30</td>
+							<td class="text-center"><span class="badge badge-primary">게시 중</span></td>
+							<td class="text-center">
+								<div class="dropdown">
+
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+										<a class="dropdown-item" href="#">인기</a>
+										<a class="dropdown-item" href="#">추천</a>
+										<a class="dropdown-item" href="#">신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>20220101</td>
+							<td>
+								<div class=" column ui-sortable">
+									<span class="h6">JSP ＆ Servlet Programming</span> <br> 
+									<br>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star-half-empty" style="font-size: 20px;"></i>
+									<span class="h6 text-warning">(4.5)</span>
+
+								</div>
+								<div class="col-md-3 column ui-sortable"></div>
+							</td>
+							<td class="text-center">30</td>
+							<td class="text-center"><span class="badge badge-danger">게시 종료</span></td>
+							<td class="text-center">
+								<div class="dropdown">
+
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+										<a class="dropdown-item" href="#">인기</a>
+										<a class="dropdown-item" href="#">추천</a>
+										<a class="dropdown-item" href="#">신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>20220101</td>
+							<td>
+								<div class="column ui-sortable">
+									<span class="h6">디자인 시스템 구축</span> <br>
+									<br>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star-half-empty" style="font-size: 20px;"></i>
+									<span class="h6 text-warning">(4.5)</span>
+								</div>
+							</td>
+							<td class="text-center">30</td>
+							<td class="text-center"><span class="badge badge-danger">게시 종료</span></td>
+							<td class="text-center">
+								<div class="dropdown">
+
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+										<a class="dropdown-item" href="#">인기</a>
+										<a class="dropdown-item" href="#">추천</a>
+										<a class="dropdown-item" href="#">신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>20220101</td>
+							<td>
+								<div class=" column ui-sortable">
+									<span class="h6">딥러닝 프로젝트</span> <br>
+									<br>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star" style="font-size: 20px;"></i>
+									<i class="text-warning la la-star-half-empty" style="font-size: 20px;"></i>
+									<span class="h6 text-warning">(4.5)</span>
+								</div>
+
+								<div class="col-md-3 column ui-sortable"></div>
+							</td>
+							<td class="text-center">30</td>
+							<td class="text-center"><span class="badge badge-primary">게시 중</span></td>
+							<td class="text-center">
+								<div class="dropdown">
+
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+										<a class="dropdown-item" href="#">인기</a>
+										<a class="dropdown-item" href="#">추천</a>
+										<a class="dropdown-item" href="#">신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="card-body col-md-12 column ui-sortable ">
+					<ul class="pagination pg-primary justify-content-center">
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">«</span> <span class="sr-only">Previous</span>
+							</a>
+						</li>
+						<li class="page-item active">
+							<a class="page-link" href="#">1</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="#">2</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="#">3</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">»</span> <span class="sr-only">Next</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+
+<script>
+  $(function () {
+    /* ChartJS
+     * -------
+     * Here we will create a few charts using ChartJS
+     */
+
+    //--------------
+    //- AREA CHART -
+    //--------------
+
+    // Get context with jQuery - using jQuery's .get() method.
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+
+    var areaChartData = {
+      labels  : [
+    	  <c:forEach var="class" items="${classList}" >
+    	  	'${class.clName}',
+    	  </c:forEach>
+    	  
+      ],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [
+        	  <c:forEach var="class" items="${classList}">
+        	  	'${class.clScoAvg}',
+        	  </c:forEach>
+        	  
+          ]
+        },
+        {
+          label               : 'Electronics',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [
+			<c:forEach var="i" begin="1" end="${fn:length(classList)}" >
+				0,
+			</c:forEach>
+          ]
+        },
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    })
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+
+  })
+</script>
+</body>

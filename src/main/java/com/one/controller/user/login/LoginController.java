@@ -1,0 +1,202 @@
+package com.one.controller.user.login;
+
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.javassist.compiler.MemberResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.one.command.MemberSeachIdPwdCommand;
+import com.one.dto.MemberVO;
+import com.one.service.MemRemdSetService;
+import com.one.service.MemberService;
+import com.one.utils.MimeAttachNotifier;
+import com.one.utils.PwdToEncryption;
+
+@Controller
+@RequestMapping("/user/login")
+public class LoginController {
+
+	@Autowired
+	private MemberService memberService;
+	@Autowired
+	private MimeAttachNotifier notifier;
+	@Autowired
+	private MemRemdSetService memRemdSetService;
+
+	@RequestMapping(value = "/searchIdForm.do", method = RequestMethod.GET)
+	public String searchForIdForm() {
+		String url = "user/login/searchForId";
+		return url;
+	}
+
+	@RequestMapping(value = "/searchId.do", method = RequestMethod.POST)
+	public String searchForId(MemberSeachIdPwdCommand memberCMD, RedirectAttributes rttr) throws Exception {
+		String url = "redirect:/user/login/searchIdForm.do";
+		MemberVO member = memberCMD.toMemberVO();
+
+		MemberVO chk = memberService.getMemberByEmail(member.getMemEmail());
+
+		if(chk.getMemName().equals(member.getMemName()) && chk.getMemBir().equals(member.getMemBir())){
+
+			String text = "<h5>아이디는 ["+chk.getMemId()+"] 입니다.</h5>";
+			String subject = "사용자 아이디 찾기";
+
+			notifier.sendMail(member.getMemEmail(), subject, text);
+
+			rttr.addFlashAttribute("chk", true);
+			rttr.addFlashAttribute("message", "해당 이메일로 아이디 정보를 발송하였습니다.");
+
+		}else {
+			rttr.addFlashAttribute("chk", false);
+			rttr.addFlashAttribute("message","기본 정보가 일치하지 않습니다.");
+		}
+
+		return url;
+	}
+
+	@RequestMapping(value = "/searchPwdForm.do", method = RequestMethod.GET)
+	public String searchPwdForm() {
+		String url = "user/login/searchForPwd";
+
+		return url;
+	}
+
+	@RequestMapping(value = "/searchPwd.do", method = RequestMethod.POST)
+	public String searchPwd(MemberSeachIdPwdCommand memberCMD, RedirectAttributes rttr, HttpServletResponse response) throws Exception{
+		String url = "redirect:/user/login/searchPwdForm.do";
+		MemberVO member = memberCMD.toMemberVO();
+		MemberVO chk = memberService.getMember(member.getMemId());
+
+		if(member.getMemName().equals(chk.getMemName()) && member.getMemBir().equals(chk.getMemBir())) {
+			String key = UUID.randomUUID().toString();
+
+			Cookie cookie = new Cookie(key, chk.getMemId());
+			cookie.setMaxAge(60 * 30);
+
+			response.addCookie(cookie);
+
+			String text = "<h3>[비밀번호 재설정]</h3>" +
+						  "<p>아래 링크를 클릭하여 비밀번호를 재설정 해주시기 바랍니다.</p>"+
+						  "<a href='https://192.168.143.25/ago/user/login/modifyPwdForm?key="+key+"'target='_blenk'>비밀번호 재설정하기</a>";
+			String subject = "사용자 비밀번호 재설정";
+
+			notifier.sendMail(chk.getMemEmail(), subject, text);
+
+			rttr.addFlashAttribute("chk", true);
+			rttr.addFlashAttribute("message", "가입하신 이메일로 비밀번호 설정 링크를 발송하였습니다.");
+		}else {
+			rttr.addFlashAttribute("chk", false);
+			rttr.addFlashAttribute("message","기본 정보가 일치하지 않습니다.");
+		}
+
+		return url;
+	}
+
+
+	@RequestMapping(value="/modifyPwdForm",method=RequestMethod.GET)
+	public String mdofyPwdForm() {
+		String url = "user/login/modifyPwd";
+		return url;
+	}
+
+	@RequestMapping(value="/modifyPwd.do", method=RequestMethod.POST)
+	public String mdofyPwd(HttpServletRequest request,MemberSeachIdPwdCommand memberCMD, RedirectAttributes rttr) throws Exception{
+		String url = "redirect:/user/loginPage.do";
+
+		MemberVO member = memberCMD.toMemberVO();
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for(int i = 0; i < cookies.length; i++) {
+				System.out.println(cookies[i]);
+				if(cookies[i].getName().equals(memberCMD.getKey())) {
+					String id = cookies[i].getValue();
+					member.setMemId(id);
+					member.setMemPwd(PwdToEncryption.encry(member.getMemId(), member.getMemPwd()));
+					memberService.modifyPwdById(member);
+				}
+			}
+		}
+
+		return url;
+	}
+
+
+	@RequestMapping(value = "/userJoinForm", method = RequestMethod.GET)
+	public ModelAndView userJoin(String memEmail, ModelAndView mnv) throws SQLException {
+		String url = "user/login/userJoin";
+		MemberVO member = memberService.getMemberByEmail(memEmail);
+		mnv.addObject("member", member);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@RequestMapping(value = "/checkEmailForm.pop", method = RequestMethod.GET)
+	public String checkEmail() {
+		String url = "user/login/checkEmail";
+
+		return url;
+	}
+
+	@RequestMapping(value = "/checkedEmail")
+	public ResponseEntity<String> checkedEmail(String memEmail) throws SQLException {
+		ResponseEntity<String> entity = null;
+		MemberVO member = memberService.getMemberByEmail(memEmail);
+
+		if (member == null) {
+			entity = new ResponseEntity<String>("denied", HttpStatus.OK);
+		} else if (member != null && member.getMemId() != null) {
+			entity = new ResponseEntity<String>("joined", HttpStatus.OK);
+		} else {
+			entity = new ResponseEntity<String>("", HttpStatus.OK);
+		}
+		return entity;
+	}
+
+	@RequestMapping(value = "/confirmId")
+	public ResponseEntity<String> confirmId(String confirmId) throws SQLException {
+		ResponseEntity<String> entity = null;
+
+		MemberVO member = memberService.getMember(confirmId);
+
+		if (member == null) {
+			entity = new ResponseEntity<String>("possible", HttpStatus.OK);
+		}else {
+			entity = new ResponseEntity<String>("duplicated", HttpStatus.OK);
+		}
+		return entity;
+	}
+
+	@RequestMapping(value="/joinMember",method=RequestMethod.POST)
+	public String joinMember(MemberVO member, RedirectAttributes rttr) throws SQLException{
+		String url = "redirect:/user/loginPage.do";
+		member.setMemPwd(PwdToEncryption.encry(member.getMemId(),member.getMemPwd()));
+		memberService.insertIdAndPwd(member);
+		rttr.addFlashAttribute("from", "join");
+
+		if(member.getAuthorityId().equals("A101")) {
+			memRemdSetService.registMemRemdSetForUser(member.getMemEmail());
+		}
+		if(member.getAuthorityId().equals("A102")) {
+			memRemdSetService.regisetMemRemdSetForHead(member.getMemEmail());
+		}
+
+
+
+		return url;
+
+	}
+
+}

@@ -1,0 +1,276 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="siteInfo" value="${dataMap.siteInfo }" />
+
+<title></title>
+<head></head>
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0" style="width: 1100px; margin: 0 auto;">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">사이트정보변경</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="<%=request.getContextPath() %>/manager/managementSite/logo.do">사이트관리</a>
+						</li>
+						<li class="breadcrumb-item active">사이트정보변경</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content" style="width: 1100px; margin: 0 auto;">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-12">
+					<div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+						<div class="row">
+							<div class="col-sm-12">
+								<form role="form" method="post" action="siteInforegist.do" name="siteInfoRegistForm">
+									<table id="example2" class="table table-bordered dataTable dtr-inline" role="grid" aria-describedby="example2_info">
+										<tbody style="border-left-style: none;">
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">
+													<label class="text-danger mr-1">*</label>
+													회사명
+												</td>
+												<td colspan="2">
+													<input type="text" class="form-control form-control-sm col-8" style="display: inline-block;" name="compName" value="${siteInfo.compName}">
+													<label class="text-danger ml-2" style="font-size: 12px;">*회사명은 반드시 작성해야합니다.</label>
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">주소</td>
+												<td colspan="2">
+													<input type="text" class="form-control form-control-sm col-8" name="compAddr" value="${siteInfo.compAddr}">
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">대표자</td>
+												<td colspan="2">
+													<input type="text" class="form-control form-control-sm col-8" name="compRetName" value="${siteInfo.compRetName}">
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">사업자등록번호</td>
+												<td colspan="2">
+													<input id="corpNum" type="text" class="form-control form-control-sm col-8" style="display: inline-block;" name="corpNum" value="${siteInfo.corpNum}">
+													<label class="text-secondary ml-2" style="font-size: 12px;">-&nbsp;를 포함하여 작성해주세요.</label>
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">이메일</td>
+												<td colspan="2">
+													<div class="d-flex d-block">
+														<input id="compEmail1" type="text" class="form-control form-control-sm col-3" name="compEmail" value="${dataMap.compEmail1}">
+														<span class="ml-2 mr-2">@</span>
+														<input id="compEmail2" type="text" class="form-control form-control-sm col-3" name="compEmail" value="${dataMap.compEmail2}">
+													</div>
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">전화번호</td>
+												<td>
+													<div class="d-flex d-block">
+														<select class="form-control form-control-sm col-2" id="smallSelect" name="compTel">
+															<option>선택</option>
+															<option value="02" ${dataMap.compTel1 == 02 ? 'selected':''}>02</option>
+															<option value="031" ${dataMap.compTel1 == 031 ? 'selected':''}>031</option>
+															<option value="032" ${dataMap.compTel1 == 032 ? 'selected':''}>032</option>
+															<option value="033" ${dataMap.compTel1 == 033 ? 'selected':''}>033</option>
+															<option value="041" ${dataMap.compTel1 == 041 ? 'selected':''}>041</option>
+															<option value="042" ${dataMap.compTel1 == 042 ? 'selected':''}>042</option>
+															<option value="043" ${dataMap.compTel1 == 043 ? 'selected':''}>043</option>
+															<option value="050" ${dataMap.compTel1 == 050 ? 'selected':''}>050</option>
+															<option value="051" ${dataMap.compTel1 == 051 ? 'selected':''}>051</option>
+															<option value="052" ${dataMap.compTel1 == 052 ? 'selected':''}>052</option>
+															<option value="053" ${dataMap.compTel1 == 053 ? 'selected':''}>053</option>
+															<option value="054" ${dataMap.compTel1 == 054 ? 'selected':''}>054</option>
+															<option value="055" ${dataMap.compTel1 == 055 ? 'selected':''}>055</option>
+															<option value="061" ${dataMap.compTel1 == 061 ? 'selected':''}>061</option>
+															<option value="062" ${dataMap.compTel1 == 062 ? 'selected':''}>062</option>
+															<option value="063" ${dataMap.compTel1 == 063 ? 'selected':''}>063</option>
+															<option value="064" ${dataMap.compTel1 == 064 ? 'selected':''}>064</option>
+															<option value="070" ${dataMap.compTel1 == 070 ? 'selected':''}>070</option>
+															<option value="010" ${dataMap.compTel1 == 010 ? 'selected':''}>010</option>
+														</select>
+														<!-- <input type="text" class="form-control form-control-sm col-2" name="pup_start_date"> -->
+														<span class="ml-3 mr-3">-</span>
+														<input id="compTel1" type="text" class="form-control form-control-sm col-2" name="compTel" value="${dataMap.compTel2}">
+														<span class="ml-3 mr-3">-</span>
+														<input id="compTel2" type="text" class="form-control form-control-sm col-2" name="compTel" value="${dataMap.compTel3}">
+													</div>
+												</td>
+											</tr>
+											<tr class="form-group">
+												<td class="dtr-control font-weight-bold text-center" style="background: #f9f9f9;">팩스번호</td>
+												<td>
+													<input id="compFax" type="text" class="form-control form-control-sm col-8" style="display: inline-block;" name="compFax" value="${siteInfo.compFax}">
+													<label class="text-secondary ml-2" style="font-size: 12px;">-&nbsp;를 포함하여 최대 21자 이내로 작성하세요.</label>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-11">
+					<button class="btn btn-secondary float-right" style="width: 130px;" type="button" onclick="siteInfo_regist()">등록</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script>
+		function siteInfo_regist() {
+			var email_id_regx = /^[0-9a-zA-Z]{5,12}$/i;
+			var email_link_regx = /^((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+			var corpNum_regx = /^([0-9]{3})-?([0-9]{2})-?([0-9]{5})$/i;
+			var compFax_regx = /^([0-9\-]{10,21})$/i;
+			var compFax_regx = /^([0-9\-]{10,21})$/i;
+			var tel_regx = /^([0-9]{3,4})$/i;
+			
+			let form = document.querySelector('form[role="form"]');
+			var compName = document.querySelector('input[name="compName"]');
+			var email_id = document.getElementById('compEmail1');
+			var email_url = document.getElementById('compEmail2');
+			var corpNum = document.getElementById('corpNum');
+			var compFax = document.getElementById('compFax');
+			var compTel1 = document.getElementById('compTel1');
+			var compTel2 = document.getElementById('compTel2');
+			
+// 			회사명
+			if (form.compName.value == "") {
+				alert("회사명은 필수 항목입니다.");
+				compName.focus();
+				compName.style.border="1px solid #dc3545";
+				compName.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				compName.style.border="1px solid #ced4da";
+				compName.style.backgroundColor="white";
+			}
+			
+// 			사업자등록번호
+			if(!corpNum_regx.test(corpNum.value)){
+				alert("잘못된 사업자등록번호 형식입니다.");
+				corpNum.focus();
+				corpNum.style.border="1px solid #dc3545";
+				corpNum.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				corpNum.style.border="1px solid #ced4da";
+				corpNum.style.backgroundColor="white";
+			}
+			
+// 			이메일
+			if (!email_id_regx.test(email_id.value)) {
+				alert("잘못된 이메일 형식입니다.");
+				email_id.focus();
+				email_id.style.border="1px solid #dc3545";
+				email_id.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				email_id.style.border="1px solid #ced4da";
+				email_id.style.backgroundColor="white";
+			}
+			
+// 			이메일
+			if(!email_link_regx.test(email_url.value)){
+				alert("잘못된 이메일 형식입니다.");
+				email_url.focus();
+				email_url.style.border="1px solid #dc3545";
+				email_url.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				email_url.style.border="1px solid #ced4da";
+				email_url.style.backgroundColor="white";
+			}
+			
+// 			전화번호
+			if(!tel_regx.test(compTel1.value) && !tel_regx.test(compTel2.value)){
+				alert("잘못된 전화번호 형식입니다.");
+				compTel1.focus();
+				compTel1.style.border="1px solid #dc3545";
+				compTel1.style.backgroundColor="#FFE4E1";
+				compTel2.style.border="1px solid #dc3545";
+				compTel2.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				compTel1.style.border="1px solid #ced4da";
+				compTel1.style.backgroundColor="white";
+				compTel2.style.border="1px solid #ced4da";
+				compTel2.style.backgroundColor="white";
+			}
+			
+// 			팩스번호
+			if(!compFax_regx.test(compFax.value)){
+				alert("팩스번호는 숫자와 -만으로 작성해야합니다.");
+				compFax.focus();
+				compFax.style.border="1px solid #dc3545";
+				compFax.style.backgroundColor="#FFE4E1";
+				return;
+			}else{
+				compFax.style.border="1px solid #ced4da";
+				compFax.style.backgroundColor="white";
+			}
+			
+
+			console.log(form);
+ 			form.submit();
+//  			window.location.reload();
+		}
+
+	</script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

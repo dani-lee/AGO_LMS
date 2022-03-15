@@ -1,0 +1,137 @@
+package com.one.controller.admin;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.one.dto.MenuVO;
+import com.one.dto.SiteInfoVO;
+import com.one.service.AdminService;
+import com.one.service.MenuService;
+import com.one.service.impl.ManagementSiteServiceImpl;
+import com.one.utils.MimeAttachNotifier;
+import com.one.utils.PwdToEncryption;
+
+
+@Controller
+@RequestMapping("/admin")
+public class AdminLoginController {
+
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	MenuService menuService;
+
+	@Autowired
+	private ManagementSiteServiceImpl siteService;
+	@Autowired
+	private MimeAttachNotifier notifier;
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String admin() throws Exception {
+		String url = "redirect:/admin/indexPage.do";
+		return url;
+	}
+
+	@RequestMapping("/loginPage.do")
+	public String adLogin() throws Exception {
+		String url = "/admin/login/loginPage";
+		return url;
+	}
+
+
+
+	@RequestMapping(value = "/login/searchForPwd.do", method = RequestMethod.GET)
+	public String adSearchForPwd() throws Exception {
+		String url = "admin/login/searchForPwd";
+		return url;
+	}
+
+	@RequestMapping(value = "/login/searchPwd.do", method = RequestMethod.POST)
+	public String searchPwd(String email, RedirectAttributes rttr, HttpServletResponse response) throws Exception{
+		String url = "redirect:/admin/login/searchForPwd.do";
+
+			String key = UUID.randomUUID().toString();
+
+			Cookie cookie = new Cookie(key, email);
+			cookie.setMaxAge(60 * 30);
+
+			response.addCookie(cookie);
+
+			String text = "<h3>[비밀번호 재설정]</h3>" +
+						  "<p>아래 링크를 클릭하여 비밀번호를 재설정 해주시기 바랍니다.</p>"+
+						  "<a href='https://192.168.143.25/ago/admin/login/modifyPwdForm.do?key="+key+"'target='_blenk'>비밀번호 재설정하기</a>";
+			String subject = "사용자 비밀번호 재설정";
+
+			notifier.sendMail(email, subject, text);
+
+			rttr.addFlashAttribute("chk", true);
+
+		return url;
+	}
+
+	@RequestMapping(value ="/login/checkPwd", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Boolean> checkPwd(String adminEmail) throws Exception {
+		ResponseEntity<Boolean> entity = null;
+		Boolean result = false;
+		System.out.println(adminEmail);
+		if(adminService.selectAdminEmailCheck(adminEmail)>0) {
+			result=true;
+		}
+
+		entity = new ResponseEntity<Boolean>(result ,HttpStatus.OK);
+		return entity;
+	}
+
+	@RequestMapping(value = "/login/modifyPwdForm.do", method = RequestMethod.GET)
+	public String adModifyPwd() throws Exception {
+		String url = "admin/login/modifyPwdForm";
+		return url;
+	}
+
+	@RequestMapping(value="/login/modifyPwd.do", method=RequestMethod.POST)
+	public String mdofyPwd(HttpServletRequest request, String pwd, String key,RedirectAttributes rttr) throws Exception{
+		String url = "redirect:/admin/loginPage.do";
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for(int i = 0; i < cookies.length; i++) {
+				if(cookies[i].getName().equals(key)) {
+					adminService.updateAdminPwd(cookies[i].getValue(), pwd);
+				}
+			}
+		}
+
+		return url;
+	}
+
+	@RequestMapping(value = "/indexPage.do", method = RequestMethod.GET)
+	public ModelAndView adminIndexPage(@RequestParam(defaultValue = "M020000") String mCode, ModelAndView mnv) throws Exception {
+		String url = "/admin/indexPage";
+		List<MenuVO> menuList = menuService.getMainMenuList(mCode);
+		MenuVO menu = menuService.getMenuByMcode(mCode);
+		SiteInfoVO siteInfo = siteService.getSiteInfo();
+
+		mnv.setViewName(url);
+		mnv.addObject("menuList", menuList);
+		mnv.addObject("menu", menu);
+		mnv.addObject("siteInfo", siteInfo);
+
+		return mnv;
+	}
+
+}

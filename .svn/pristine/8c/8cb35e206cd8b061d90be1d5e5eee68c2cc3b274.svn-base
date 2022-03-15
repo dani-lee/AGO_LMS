@@ -1,0 +1,21 @@
+package com.one.controller.admin;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminLogController {
+
+	@RequestMapping(value = "/managerManagement/logList.do")
+	public String userManagementMain() throws Exception {
+		String url = "admin/managerManagement/logList";
+		return url;
+	}
+
+	@RequestMapping(value = "/userManagement/logList.do")
+	public String userManagementLogList() throws Exception {
+		String url = "admin/userManagement/logList";
+		return url;
+	}
+}

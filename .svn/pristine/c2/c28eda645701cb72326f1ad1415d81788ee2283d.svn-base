@@ -1,0 +1,291 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.util.SystemPropertyUtils;
+
+import com.one.command.Criteria;
+import com.one.command.MemberClassCommand;
+import com.one.command.PageMaker;
+import com.one.dao.CommonDAO;
+import com.one.dao.ManagementMemberDAO;
+import com.one.dao.MemberDAO;
+import com.one.dto.CommonVO;
+import com.one.dto.DepartmentVO;
+import com.one.dto.MemberVO;
+import com.one.service.ManagementMemberService;
+
+public class ManagementMemberServiceImpl implements ManagementMemberService {
+
+	private ManagementMemberDAO managementMemberDAO;
+	private CommonDAO commonDAO;
+	private MemberDAO memberDAO;
+
+	public void setManagementMemberDAO(ManagementMemberDAO managementMemberDAO) {
+		this.managementMemberDAO = managementMemberDAO;
+	}
+
+	public void setCommonDAO(CommonDAO commonDAO) {
+		this.commonDAO = commonDAO;
+	}
+
+	public void setMemberDAO(MemberDAO memberDAO) {
+		this.memberDAO = memberDAO;
+	}
+
+	@Override
+	public Map<String, Object> getMemberList(Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<MemberVO> memberList = new ArrayList<MemberVO>();
+		List<DepartmentVO> depList = new ArrayList<DepartmentVO>();
+		List<MemberClassCommand> classList = new ArrayList<MemberClassCommand>();
+		
+		PageMaker pageMaker = new PageMaker();
+		
+		if(cri.getSearchType().equals("p")) {
+			String keyword = cri.getKeyword();
+			String position = commonDAO.selectPositionByKeyword(keyword);
+			cri.setKeyword(position);
+	
+			memberList = managementMemberDAO.selectMemberList(cri);
+			depList = managementMemberDAO.selectDepartment();
+			int totalCount = managementMemberDAO.selectMemberListCount(cri);
+	
+			cri.setKeyword(keyword);
+			
+			for(MemberVO member : memberList) {
+				classList = memberDAO.selectMemberClassList(member.getMemEmail());
+				int c101Cnt = 0;
+				int c102Cnt = 0;
+				int c103Cnt = 0;
+				for(int i = 0; i < classList.size(); i++) {
+					if(classList.get(i).getMemclState().equals("C101")) {
+						c101Cnt++;
+					}
+					if(classList.get(i).getMemclState().equals("C102")) {
+						c102Cnt++;
+					}
+					if(classList.get(i).getMemclState().equals("C103")) {
+						c103Cnt++;
+					}
+				}
+				
+				member.setC101Cnt(c101Cnt);
+				member.setC102Cnt(c102Cnt);
+				member.setC103Cnt(c103Cnt);
+				member.setMemClassCnt(classList.size());
+				
+			}
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+	
+			dataMap.put("memberList", memberList);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+		}else{
+			memberList = managementMemberDAO.selectMemberList(cri);
+			depList = managementMemberDAO.selectDepartment();
+			int totalCount = managementMemberDAO.selectMemberListCount(cri);
+			
+			for(MemberVO member : memberList) {
+				classList = memberDAO.selectMemberClassList(member.getMemEmail());
+				int c101Cnt = 0;
+				int c102Cnt = 0;
+				int c103Cnt = 0;
+				for(int i = 0; i < classList.size(); i++) {
+					if(classList.get(i).getMemclState().equals("C101")) {
+						c101Cnt++;
+					}
+					if(classList.get(i).getMemclState().equals("C102")) {
+						c102Cnt++;
+					}
+					if(classList.get(i).getMemclState().equals("C103")) {
+						c103Cnt++;
+					}
+				}
+				
+				member.setC101Cnt(c101Cnt);
+				member.setC102Cnt(c102Cnt);
+				member.setC103Cnt(c103Cnt);
+				member.setMemClassCnt(classList.size());
+			}
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+			
+			dataMap.put("memberList", memberList);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+		}
+		return dataMap;
+	}
+
+	
+	//퇴사자 목록
+	@Override
+	public Map<String, Object> getResignerList(Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		if(cri.getSearchType().equals("p")) {
+			String keyword = cri.getKeyword();
+			String position = commonDAO.selectPositionByKeyword(keyword);
+			cri.setKeyword(position);
+			
+			List<MemberVO> resignerList = managementMemberDAO.selectResignerList(cri);
+			List<DepartmentVO> depList = managementMemberDAO.selectDepartment();
+			List<CommonVO> postList = commonDAO.selectCommonByGroupCode("PS1");
+			
+			int totalCount = managementMemberDAO.selectMemberListCount(cri);
+			
+			cri.setKeyword(keyword);
+	
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+	
+			if(resignerList != null) {
+				for(MemberVO resigner : resignerList) {
+					for(DepartmentVO department : depList) {
+						if(resigner.getDpId().equals(department.getCommonCode())) {
+							resigner.setDpId(department.getCodeName1());
+						}
+					}
+					for(CommonVO post : postList) {
+						if(resigner.getPositionId().equals(post.getCommonCode())) {
+							resigner.setPositionId(post.getCodeName1());
+						}
+					}
+					
+				}
+			}
+			
+			dataMap.put("resignerList", resignerList);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+		}else {
+			List<MemberVO> resignerList = managementMemberDAO.selectResignerList(cri);
+			List<DepartmentVO> depList = managementMemberDAO.selectDepartment();
+			List<CommonVO> postList = commonDAO.selectCommonByGroupCode("PS1");
+			
+			int totalCount = managementMemberDAO.selectResignerListCount(cri);
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+			
+			if(resignerList != null) {
+				for(MemberVO resigner : resignerList) {
+					for(DepartmentVO department : depList) {
+						if(resigner.getDpId().equals(department.getCommonCode())) {
+							resigner.setDpId(department.getCodeName1());
+						}
+					}
+					for(CommonVO post : postList) {
+						if(resigner.getPositionId().equals(post.getCommonCode())) {
+							resigner.setPositionId(post.getCodeName1());
+						}
+					}
+					
+				}
+			}
+			
+			dataMap.put("resignerList", resignerList);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+			
+		}
+		
+		return dataMap;
+	}
+	
+	//퇴사자 이외의 목록
+	public Map<String, Object> getMemberListExceptResigners(Criteria cri)throws SQLException{
+		Map<String, Object> dataMap = new HashMap<String,Object>();;
+		
+		if(cri.getSearchType().equals("p")) {
+			String keyword = cri.getKeyword();
+			String position = commonDAO.selectPositionByKeyword(keyword);
+			cri.setKeyword(position);
+			
+			List<MemberVO> listNoResigners = managementMemberDAO.selectMemberListExceptResigners(cri);
+			List<DepartmentVO> depList = managementMemberDAO.selectDepartment();
+			List<CommonVO> postList = commonDAO.selectCommonByGroupCode("PS1");
+			
+			int totalCount = managementMemberDAO.selectMemberListExceptResignersCount(cri);
+			
+			cri.setKeyword(keyword);
+	
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+	
+			if(listNoResigners != null) {
+				for(MemberVO resigner : listNoResigners) {
+					for(DepartmentVO department : depList) {
+						if(resigner.getDpId().equals(department.getCommonCode())) {
+							resigner.setDpId(department.getCodeName1());
+						}
+					}
+					for(CommonVO post : postList) {
+						if(resigner.getPositionId().equals(post.getCommonCode())) {
+							resigner.setPositionId(post.getCodeName1());
+						}
+					}
+					
+				}
+			}
+			dataMap.put("listNoResigner", listNoResigners);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+			
+			
+		}else {
+			List<MemberVO> listNoResigners = managementMemberDAO.selectMemberListExceptResigners(cri);
+			List<DepartmentVO> depList = managementMemberDAO.selectDepartment();
+			List<CommonVO> postList = commonDAO.selectCommonByGroupCode("PS1");
+			
+			int totalCount = managementMemberDAO.selectMemberListExceptResignersCount(cri);
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(totalCount);
+			
+			
+			if(listNoResigners != null) {
+				for(MemberVO noResigners : listNoResigners) {
+					for(DepartmentVO department : depList) {
+						if(noResigners.getDpId().equals(department.getCommonCode())) {
+							noResigners.setDpId(department.getCodeName1());
+						}
+					}
+					for(CommonVO post : postList) {
+						if(noResigners.getPositionId().equals(post.getCommonCode())) {
+							noResigners.setPositionId(post.getCodeName1());
+						}
+					}
+					
+				}
+			}
+			
+			dataMap.put("listNoResigner", listNoResigners);
+			dataMap.put("depList", depList);
+			dataMap.put("pageMaker", pageMaker);
+		}
+		return dataMap;
+	}
+
+	@Override
+	public void modifyMemberStatus(MemberVO member) throws SQLException {
+		managementMemberDAO.updateMemberStatus(member);
+	}
+
+	@Override
+	public void modifyCheckedResigners(String[] memEmail) throws SQLException {
+		managementMemberDAO.updateCheckedMemberStatus(memEmail);
+		
+	}
+	
+}

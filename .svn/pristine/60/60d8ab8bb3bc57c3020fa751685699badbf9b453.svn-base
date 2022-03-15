@@ -1,0 +1,145 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<head></head>
+<title></title>
+<body>
+	<c:set var="classList" value="${ dataMap.mainList }" />
+	<c:set var="pageMaker" value="${ dataMap.pageMaker }" />
+	<c:set var="cri" value="${ pageMaker.cri }" />
+	<c:set var="url" value="classList.do" />
+
+
+	<div class="content-wrapper m-0" style="min-width: 1280px;">
+		<!-- 메인 헤더 -->
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6">
+						<h4 class="m-0">강의 목록</h4>
+					</div>
+					<!-- /.col -->
+					<div class="col-sm-6">
+						<ol class="breadcrumb float-sm-right">
+							<li class="breadcrumb-item">
+								<a href="#">부서장</a>
+							</li>
+							<li class="breadcrumb-item active">강의 목록</li>
+						</ol>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.content-header -->
+
+
+
+
+		<!-- 메인 바디 -->
+		<!-- Main content -->
+		<section class="content">
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-header">
+						<div class="input-group justify-content-end col-12 p-0 mb-1">
+							<div class="row col-7 justify-content-end p-0 mr-1">
+								<select class="col-md-2 form-control" name="searchType">
+									<option value="cn" ${ cri.searchType eq 'cn' ? 'selected' : '' }>전체</option>
+									<option value="c" ${ cri.searchType eq 'c' ? 'selected' : '' }>강의코드</option>
+									<option value="n" ${ cri.searchType eq 'n' ? 'selected' : '' }>겅의명</option>
+								</select>
+								<input type="text" placeholder="Search..." class="form-control col-md-7" name="keyword" value="${ cri.keyword }" />
+								<button class="col-md-1 btn btn-primary float-right" onclick="list_go(1);">검색</button>
+							</div>
+						</div>
+						<span class="text-muted" style="color: gray; cursor: pointer;" onclick="fn_list(1);">전체</span>
+						<span class="text-muted" style="color: gray;">&nbsp;|&nbsp;</span>
+						<span class="text-muted" style="color: gray; cursor: pointer;" id="sortOption" data-sort="r" onclick="fn_sort(1);"> 형식 </span>
+						<span class="text-muted" style="color: gray;">&nbsp;|&nbsp;</span>
+						<span class="text-muted" style="color: gray; cursor: pointer;" id="sortOption" data-sort="r" onclick="fn_sort(1);"> 구분 </span>
+					</div>
+					<div class="card-body p-0">
+						<table class="table table-hover">
+							<thead>
+								<tr class="text-center">
+									<th scope="col" colspan="2">즐겨찾기</th>
+									<th scope="col" colspan="2">강의코드</th>
+									<th scope="col" colspan="3">강의명</th>
+									<th scope="col" colspan="2">수강인원</th>
+									<th scope="col" colspan="2">구분</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${ classList }" var="claz">
+									<tr class="text-center">
+										<td class="align-middle" colspan="2">
+											<a href="javascript:;" onclick="fav_go(this, '${ claz.opcl }');">
+
+												<i class="text-warning ${ claz.fav ? 'fas' : 'far' } fa-star"></i>
+											</a>
+										</td>
+										<td class="align-middle" colspan="2">${ claz.opcl }</td>
+										<td class="text-left" colspan="3" onclick="location.href='classDetail.do?opcl=${ claz.opcl }'">
+											<div class="row">
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<img src="${ claz.clImg }" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6" style="cursor: pointer;">${ claz.clName }</span>
+													<br>
+													<span class="text-primary">
+														<fmt:formatDate value="${ claz.postSdate }" pattern="yyyy-MM-dd" />
+														~
+														<fmt:formatDate value="${ claz.postEdate }" pattern="yyyy-MM-dd" />
+													</span>
+													<span class=" badge badge-primary" style="margin-left: 30px;">${ claz.clFormat }</span>
+												</div>
+												<div class="col-md-3 column ui-sortable"></div>
+											</div>
+										</td>
+										<td class="align-middle" colspan="2">[17/20]</td>
+										<td class="align-middle" colspan="2">${ claz.clDivision }</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+					<div class="card-footer text-center">
+						<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		function fav_go(aTag, opcl){
+			let url = "favRegist.do";
+			let $i = $(aTag).children('i');
+			if($i.hasClass('fas')){
+				url = "favRemove.do";
+			}
+
+			$.ajax({
+				url : url,
+				type: 'post',
+				data : {"opcl" : opcl},
+				dataType: 'json',
+				success:function(data){
+					$i.removeClass(data.remove);
+					$i.addClass(data.add);
+				},
+				error:function(error){
+					alert("에러라네요...");
+				}
+			});
+
+
+
+
+		}
+	</script>
+</body>

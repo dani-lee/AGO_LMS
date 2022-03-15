@@ -1,0 +1,177 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="ctfDesign" value="${fn:split(certificate.ctfDesign,'$$')[1]}" />
+<c:set var="ctfSeal" value="${fn:split(certificate.ctfSeal,'$$')[1]}" />
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">수료증 관리</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="<%=request.getContextPath() %>/manager/classManagement/main.do">강의관리</a>
+						</li>
+						<li class="breadcrumb-item active">수료증 관리</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="p-4"></div>
+				<div class="col-md-2">
+					<button class="btn btn-default float-left" style="width: 120px; height: 36px;" type="button" onclick="location.reload();">되돌리기</button>
+				</div>
+				<div class="col-md-9">
+					<button class="btn btn-secondary float-right" style="width: 120px; height: 36px;" type="button" onclick="certificate_regist();">등록</button>
+					<button class="btn btn-block btn-outline-secondary float-right mr-2" style="width: 120px; height: 36px;" type="button" onclick="showCertificate();">미리보기</button>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="p-2"></div>
+				<div class="col-md-11 mt-2">
+					<form role="form" method="post" action="certificateregist.do" name="registForm">
+						<div class="row text-center">
+							<div class="col-md-1"></div>
+							<div>
+								<input type="hidden" name="ctfDesign">
+								<div class="input-group">
+									<div class="col-md-12">
+										<p class="h5">수료증 디자인</p>
+										<div id="ctfDesignView" data-id="${certificate.ctfDesign}" style="border: 1px solid black; height: 560px; width: 440px; margin: 0px; margin-bottom: 5px;  background-size: 560px 440px;"></div>
+										<div class="input-group input-group-sm">
+											<label for="ctfDesignFile" class=" btn btn-info btn-sm btn-flat input-group-addon">
+												<span style="color: white;">이미지변경</span>
+											</label>
+											<input id="ctfDesignFileName" class="form-control" type="text" name="tempPicture" value="${ctfDesign}" disabled />
+											<span class="input-group-append-sm">
+												<button type="button" class="btn btn-secondary btn-sm btn-append" onclick="ctfDesign_upload_go();">업로드</button>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="p-3"></div>
+							<div class="col-6">
+								<input type="hidden" name="ctfSeal">
+								<div class="input-group">
+									<div class="col-md-12">
+										<p class="h5">직인 디자인</p>
+										<div class="" id="ctfSealView" data-id="${certificate.ctfSeal}" style="border: 1px solid green; height: 180px; width: 180px; margin: 0 auto; margin-bottom: 5px;"></div>
+										<div class="input-group input-group-sm ml-5 col-10">
+											<label for="ctfSealFile" class=" btn btn-info btn-sm btn-flat input-group-addon">
+												<span style="color: white;">이미지변경</span>
+											</label>
+											<input id="ctfSealFileName" class="form-control" type="text" name="tempPicture" value="${ctfSeal}" disabled />
+											<span class="input-group-append-sm">
+												<button type="button" class="btn btn-secondary btn-sm btn-append" onclick="ctfSeal_upload_go();">업로드</button>
+											</span>
+										</div>
+									</div>
+								</div>
+								<br>
+								<div class="col-12">
+									<table class="table">
+										<tbody>
+											<tr>
+												<td class="col-2" style="font-size: 15px;">제목 :</td>
+												<td>
+													<input type="text" class="form-control " id="ctfTitle" name="ctfTitle" placeholder="수료증 제목" value="${certificate.ctfTitle}">
+												</td>
+											</tr>
+											<tr>
+												<td style="font-size: 15px;">내용 :</td>
+												<td>
+													<textarea class="form-control" id="ctfContent" rows="7" name="ctfContent">${certificate.ctfContent}</textarea>
+												</td>
+											</tr>
+											<tr>
+												<td style="font-size: 15px;">대표자명 :</td>
+												<td>
+													<input type="text" class="form-control " id="retName" name="retName" placeholder="대표자명" value="${certificate.retName}">
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<form enctype="multipart/form-data" role="ctfDesignForm" action="upload/picture" method="post">
+		<input type="file" id="ctfDesignFile" name=pictureFile class="form-control" onchange="ctfDesign_go();" style="display: none;" />
+		<input type="hidden" id="oldCtfDesignFile" name="oldCtfDesign" value="" />
+		<input type="hidden" name="ctfDesignCheckUpload" value="0">
+	</form>
+
+	<form enctype="multipart/form-data" role="ctfSealForm" action="upload/picture" method="post">
+		<input type="file" id="ctfSealFile" name="pictureFile" class="form-control" onchange="ctfSeal_go();" style="display: none;" />
+		<input type="hidden" id="oldCtfSealFile" name="oldCtfSeal" value="" />
+		<input type="hidden" name="ctfSealCheckUpload" value="0">
+	</form>
+
+	<!-- 이미지 불러오기 -->
+	<script>
+		var myCtfDesign;
+		var myCtfSeal;
+		
+		window.onload=function(){
+			ShowCertificatePictureThumb(document.querySelector('[data-id="${certificate.ctfDesign}"]'), '${certificate.ctfDesign}', '<%=request.getContextPath()%>');
+			ShowCertificatePictureThumb(document.querySelector('[data-id="${certificate.ctfSeal}"]'), '${certificate.ctfSeal}', '<%=request.getContextPath()%>');
+			   
+			myCtfDesign = '${certificate.ctfDesign}';
+			myCtfSeal = '${certificate.ctfSeal}';
+		}
+		
+
+		function showCertificate() {
+			var retName = document.getElementById('retName').value;
+			var ctfTitle = document.getElementById('ctfTitle').value;
+			var ctfContent = document.getElementById('ctfContent').value;
+
+			var ctfDesign = $('input[name="ctfDesign"]').val();
+			var ctfSeal = $('input[name="ctfSeal"]').val();
+
+			if (!$('input[name="ctfDesign"]').val()) {
+				ctfDesign = myCtfDesign;
+			}
+			if (!$('input[name="ctfSeal"]').val()) {
+				ctfSeal = myCtfSeal;
+			}
+
+			console.log(retName + " \\ " + ctfTitle + " \\ " + ctfContent + " \\ "+ ctfSeal + " \\ " + ctfDesign);
+
+			OpenWindow('<%=request.getContextPath()%>/manager/certificateManagement/certificate.pop?ctfSeal='+ ctfSeal + '&ctfDesign=' + ctfDesign + '&retName='+ retName + '&ctfTitle=' + ctfTitle+ '&ctfContent=' + ctfContent, '수료증 미리보기', 900, 930);
+		}
+	</script>
+
+	<script src="<%=request.getContextPath()%>/resources/js/certificate.js"></script>
+
+</body>
+

@@ -1,0 +1,184 @@
+package com.one.dao.impl;
+
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.Criteria;
+import com.one.command.MemberClassCommand;
+import com.one.command.MemberCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.ReportCommand;
+import com.one.dao.MyClassDAO;
+import com.one.dto.DepartmentVO;
+import com.one.dto.ExtReportVO;
+import com.one.dto.FinishedClassVO;
+import com.one.dto.MemberClVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassIntr;
+
+public class MyClassDAOImpl implements MyClassDAO {
+	
+	private SqlSession session;
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+	@Override
+	public List<MemberStudyClassCommand> selectStudyClassList(String memEmail) throws SQLException {
+		RowBounds rowBounds = new RowBounds(0, 8);
+		return session.selectList("MyClass-Mapper.selectStudyClassList", memEmail, rowBounds);
+	}
+	@Override
+	public List<ReportCommand> selectFinishClass(String memEmail) throws SQLException {
+		
+		return session.selectList("MyClass-Mapper.selectFinishClassList", memEmail);
+	}
+	@Override
+	public List<FinishedClassVO> selectExtFinishedClassList(String memEmail) throws SQLException {
+		return session.selectList("MyClass-Mapper.selectExtFinishedClassList", memEmail);
+	}
+	@Override
+	public ReportCommand selectReportClass(int opcl) throws SQLException {
+		
+		return session.selectOne("MyClass-Mapper.selectReportClass", opcl);
+	}
+	@Override
+	public int selectFinishClassCount(String memEmail) throws SQLException {
+		
+		return session.selectOne("MyClass-Mapper.selectFinishClassCount", memEmail);
+	}
+	@Override
+	public int selectStudyClassCount(String memEmail) throws SQLException {
+		
+		return session.selectOne("MyClass-Mapper.selectStudyClassCount", memEmail);
+	}
+	@Override
+	public List<ClassIntr> selectIntrClass(String memEmail) throws SQLException {
+		
+		return session.selectList("MyClass-Mapper.selectIntrClassList", memEmail);
+	}
+	@Override
+	public List<DepartmentVO> selectDepartmentClassList() throws SQLException {
+		return session.selectList("Class-Mapper.selectDepartmentClassList");
+	}
+	@Override
+	public List<MemberStudyClassCommand> selectListStudyingClass(MemberCriteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		List<MemberStudyClassCommand> myClassList = session.selectList("MyClass-Mapper.selectListStudyingClass",cri , rowBounds); 
+		return myClassList;
+	}
+	@Override
+	public int selectListStudyingClassCount(Criteria cri) throws SQLException {
+		int totalCount = session.selectOne("MyClass-Mapper.selectListStudyingClassCount",cri);
+		
+		return totalCount;
+	}
+	@Override
+	public void updateMemCLByQrScan(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateMemCLByQrScan", memberCL);
+	}
+	@Override
+	public void insertMemChap(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.insertMemChap",memberCL);
+	}
+	@Override
+	public List<MemberClassCommand> selectMemClListByYear(MemberCriteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<MemberClassCommand> memberClassList = session.selectList("MyClass-Mapper.selectMemClListByYear", cri, rowBounds);
+		return memberClassList;
+	}
+	@Override
+	public int selectMemClListByYearCnt(String memId) throws SQLException {
+		int totalCount = session.selectOne("MyClass-Mapper.selectMemClListByYearCnt",memId);
+		return totalCount;
+	}
+	@Override
+	public MemberClassCommand getIntReport(MemberClassCommand emailOpcl) throws SQLException {
+		MemberClassCommand reportData = session.selectOne("getIntReport",emailOpcl);
+
+		return reportData;
+	}
+	@Override
+	public int getmemClNoByOpcl(MemberClassCommand emailOpcl) throws SQLException {
+		int memClNo = session.selectOne("MyClass-Mapper.getmemClNoByOpcl",emailOpcl);
+		return memClNo;
+	}
+	@Override
+	public List<FinishedClassVO> getExtList(MemberCriteria cri) throws SQLException {
+		System.out.println("@@@@@@@@sub       "+ cri.getSubKeyword());
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<FinishedClassVO> extList = session.selectList("MyClass-Mapper.getExtList",cri, rowBounds);
+		
+		
+		return extList;
+	}
+	@Override
+	public List<ExtReportVO> getExtReportList(MemberCriteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<ExtReportVO> extReportList = session.selectList("MyClass-Mapper.getExtReportList",cri, rowBounds);
+		return extReportList;
+	}
+	@Override
+	public String getExtPoint() throws SQLException {
+		String extPoint = session.selectOne("MyClass-Mapper.getExtPoint");
+		return extPoint;
+	}
+	@Override
+	public int countExtReport(String email) throws SQLException {
+
+		int totalcount = session.selectOne("MyClass-Mapper.countExtReport11222",email);
+		return totalcount;
+	}
+	@Override
+	public List<MemberStudyClassCommand> selectMemEssentialList(String memEmail) throws SQLException {
+		List<MemberStudyClassCommand> essentialList = session.selectList("MyClass-Mapper.selectMemEssentialList", memEmail);
+		return essentialList;
+	}
+	@Override
+	public void updateMemChap(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateMemChap",memberCL);
+	}
+	@Override
+	public void updateMemCLProgRate(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateMemCLProgRate", memberCL);
+	}
+	@Override
+	public int selectClChapterCount(String clCode) throws SQLException {
+		int chapterCnt = session.selectOne("MyClass-Mapper.selectClChapterCount", clCode);
+		return chapterCnt;
+	}
+	@Override
+	public void updateMidTestSco(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateMidTestSco", memberCL);
+	}
+	@Override
+	public void updateFinTestSco(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateFinTestSco", memberCL);
+	}
+	@Override
+	public MemberClVO selectMemCLByOpclAndEmail(MemberClVO memberCL) throws SQLException {
+		MemberClVO memberClass = session.selectOne("MyClass-Mapper.selectMemCLByOpclAndEmail", memberCL);
+		return memberClass;
+	}
+	@Override
+	public void updateTestCpl(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateTestCpl", memberCL);
+	}
+	@Override
+	public void updateStudyCpl(MemberClVO memberCL) throws SQLException {
+		session.update("MyClass-Mapper.updateStudyCpl", memberCL);
+	}
+	
+}

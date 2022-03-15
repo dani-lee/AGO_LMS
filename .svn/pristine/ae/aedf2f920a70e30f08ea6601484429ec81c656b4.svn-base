@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean
+		id="classUploadPath"
+		class="java.lang.String">
+		<constructor-arg value="${class.picture.upload}" />
+	</bean>
+
+	<bean
+		id="certificateUploadPath"
+		class="java.lang.String">
+		<constructor-arg value="${certificate.picture.upload}" />
+	</bean>
+
+	<bean
+		id="fileUploadPath"
+		class="java.lang.String">
+		<constructor-arg value="${pds.upload}" />
+	</bean>
+
+	<bean
+		id="excelFormPath"
+		class="java.lang.String">
+		<constructor-arg value="${excel.form}" />
+	</bean>
+
+	<bean
+		id="excelTempPath"
+		class="java.lang.String">
+		<constructor-arg value="${excel.temp}" />
+	</bean>
+
+	<bean
+		id="summernoteImg"
+		class="java.lang.String">
+		<constructor-arg value="${summernote.img}" />
+	</bean>
+
+	<bean
+		id="qrCodeimg"
+		class="java.lang.String">
+		<constructor-arg value="${qrCode.img}" />
+	</bean>
+
+	<bean
+		id="extReportCertificate"
+		class="java.lang.String">
+		<constructor-arg value="${extreport.certificate}" />
+	</bean>
+
+	<bean
+		id="extReportStamp"
+		class="java.lang.String">
+		<constructor-arg value="${extreport.stamp}" />
+	</bean>
+
+
+	<!-- Repository -->
+	<bean
+		id="menuDAO"
+		class="com.one.dao.impl.MenuDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="managerDAO"
+		class="com.one.dao.impl.ManagerDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="memberDAO"
+		class="com.one.dao.impl.MemberDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="faqDAO"
+		class="com.one.dao.impl.FaqDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="freeBoardDAO"
+		class="com.one.dao.impl.FreeBoardDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="freeReplyDAO"
+		class="com.one.dao.impl.FreeReplyDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="managementSiteDAO"
+		class="com.one.dao.impl.ManagementSiteDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="noticeDAO"
+		class="com.one.dao.impl.NoticeDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="attachDAO"
+		class="com.one.dao.impl.AttachDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="certificateDAO"
+		class="com.one.dao.impl.CertificateDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="askDAO"
+		class="com.one.dao.impl.AskDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="managementMemberDAO"
+		class="com.one.dao.impl.ManagementMemberDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="commonDAO"
+		class="com.one.dao.impl.CommonDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="debateBoardDAO"
+		class="com.one.dao.impl.DebateBoardDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="debateReplyDAO"
+		class="com.one.dao.impl.DebateReplyDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="userClassDAO"
+		class="com.one.dao.impl.UserClassDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="popupDAO"
+		class="com.one.dao.impl.PopUpDAOImpl"
+		p:session-ref="sqlSession" />
+	<bean
+		id="dpOrderDAO"
+		class="com.one.dao.impl.DpOrderDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="examStatisDAO"
+		class="com.one.dao.impl.ExamStatisDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="myClassDAO"
+		class="com.one.dao.impl.MyClassDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="messageDAO"
+		class="com.one.dao.impl.MessageDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="examManagementDAO"
+		class="com.one.dao.impl.ExamManagementDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="classReviewDAO"
+		class="com.one.dao.impl.ClassReviewDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="finishedClassDAO"
+		class="com.one.dao.impl.FinishedClassDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="jmsClassDAO"
+		class="com.one.dao.impl.JMSClassDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="classStasticsDAO"
+		class="com.one.dao.impl.ClassStasticsDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="likeClassDAO"
+		class="com.one.dao.impl.LikeClassDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="memRemdSetDAO"
+		class="com.one.dao.impl.MemRemdSetDAOImpl"
+		p:session-ref="sqlSession" />
+
+	<bean
+		id="adminDAO"
+		class="com.one.dao.impl.AdminDAOImpl"
+		p:session-ref="sqlSession" />
+		
+		
+	<bean 
+		id="scheduledManagementClassDAO"
+		class="com.one.dao.scheduler.impl.ScheduleManagementClassDAOImpl"
+	 	p:session-ref="sqlSession" />
+
+	<bean 
+		id="scheduledStasticsDAO"
+		class="com.one.dao.scheduler.impl.ScheduledStasticsDAOImpl"
+		p:session-ref="sqlSession" />
+		
+		
+		
+	<!-- Service -->
+	<bean
+		id="menuService"
+		class="com.one.service.impl.MenuServiceImpl"
+		p:menuDAO-ref="menuDAO" />
+
+	<bean
+		id="faqService"
+		class="com.one.service.impl.FaqServiceImpl"
+		p:faqDAO-ref="faqDAO" />
+
+	<bean
+		id="memberService"
+		class="com.one.service.impl.MemberServiceImpl"
+		p:memberDAO-ref="memberDAO"
+		p:managerDAO-ref="managerDAO"
+		p:commonDAO-ref="commonDAO"
+		p:classDAO-ref="classDAO"
+		p:myClassDAO-ref="myClassDAO"
+		p:noticeDAO-ref="noticeDAO" />
+
+	<bean
+		id="freeBoardService"
+		class="com.one.service.impl.FreeBoardServiceImpl"
+		p:freeBoardDAO-ref="freeBoardDAO"
+		p:freeReplyDAO-ref="freeReplyDAO" />
+
+	<bean
+		id="freeReplyService"
+		class="com.one.service.impl.FreeReplyServiceImpl"
+		p:freeReplyDAO-ref="freeReplyDAO" />
+
+	<bean
+		id="managementSiteService"
+		class="com.one.service.impl.ManagementSiteServiceImpl"
+		p:managementSiteDAO-ref="managementSiteDAO" />
+
+	<bean
+		id="noticeService"
+		class="com.one.service.impl.NoticeServiceImpl"
+		p:noticeDAO-ref="noticeDAO"
+		p:attachDAO-ref="attachDAO" />
+
+	<bean
+		id="certificateService"
+		class="com.one.service.impl.CertificateServiceImpl"
+		p:certificateDAO-ref="certificateDAO" />
+	<bean
+		id="managerService"
+		class="com.one.service.impl.ManagerServiceImpl"
+		p:managerDAO-ref="managerDAO" />
+
+	<bean
+		id="askService"
+		class="com.one.service.impl.AskServiceImpl"
+		p:askDAO-ref="askDAO" />
+
+	<bean
+		id="managementMemberService"
+		class="com.one.service.impl.ManagementMemberServiceImpl"
+		p:managementMemberDAO-ref="managementMemberDAO"
+		p:commonDAO-ref="commonDAO"
+		p:memberDAO-ref="memberDAO" />
+
+	<bean
+		id="commonService"
+		class="com.one.service.impl.CommonServiceImpl"
+		p:commonDAO-ref="commonDAO" />
+
+	<bean
+		id="debateBoardService"
+		class="com.one.service.impl.DebateBoardServiceImpl"
+		p:debateBoardDAO-ref="debateBoardDAO"
+		p:debateReplyDAO-ref="debateReplyDAO" />
+
+	<bean
+		id="debateReplyService"
+		class="com.one.service.impl.DebateReplyServiceImpl"
+		p:debateReplyDAO-ref="debateReplyDAO"
+		p:memberDAO-ref="memberDAO" />
+
+	<bean
+		id="userClassService"
+		class="com.one.service.impl.UserClassServiceImpl"
+		p:classDAO-ref="userClassDAO" />
+
+	<bean
+		id="popupService"
+		class="com.one.service.impl.PopUpServiceImpl"
+		p:popupDAO-ref="popupDAO" />
+
+	<bean
+		id="dpOrderService"
+		class="com.one.service.impl.DpOrderServiceImpl"
+		p:dpOrderDAO-ref="dpOrderDAO" />
+
+	<bean
+		id="examStatisService"
+		class="com.one.service.impl.ExamStatisServiceImpl"
+		p:examStatisDAO-ref="examStatisDAO"
+		p:commonDAO-ref="commonDAO" />
+
+	<bean
+		id="myClassService"
+		class="com.one.service.impl.MyClassServiceImpl"
+		p:myClassDAO-ref="myClassDAO"
+		p:classReviewDAO-ref="classReviewDAO"
+		p:classDAO-ref="classDAO"
+		p:finishedClassDAO-ref="finishedClassDAO" 
+		p:excelTempPath-ref="excelTempPath"/>
+
+	<bean
+		id="messageService"
+		class="com.one.service.impl.MessageServiceImpl"
+		p:messageDAO-ref="messageDAO" />
+
+	<bean
+		id="examManagementService"
+		class="com.one.service.impl.ExamManagementServiceImpl"
+		p:examManagementDAO-ref="examManagementDAO"
+		p:excelFormPath-ref="excelFormPath"
+		p:excelTempPath-ref="excelTempPath" />
+
+
+	<bean
+		id="classReviewService"
+		class="com.one.service.impl.ClassReviewServiceImpl"
+		p:classReviewDAO-ref="classReviewDAO" />
+
+	<bean
+		id="finishedClassService"
+		class="com.one.service.impl.FinishedClassServiceImpl"
+		p:finishedClassDAO-ref="finishedClassDAO"
+		p:commonDAO-ref="commonDAO" />
+	<bean
+		id="jmsClassService"
+		class="com.one.service.impl.JMSClassServiceImpl"
+		p:jmsClassDAO-ref="jmsClassDAO"
+		p:commonDAO-ref="commonDAO" />
+
+	<bean
+		id="classStasticsService"
+		class="com.one.service.impl.ClassStasticsServiceImpl"
+		p:classStasticsDAO-ref="classStasticsDAO"
+		p:managementMemberDAO-ref="managementMemberDAO" />
+
+	<bean
+		id="likeClassService"
+		class="com.one.service.impl.LikeClassServiceImpl"
+		p:likeClassDAO-ref="likeClassDAO" />
+
+	<bean
+		id="memRemdSetService"
+		class="com.one.service.impl.MemRemdSetServiceImpl"
+		p:memRemdSetDAO-ref="memRemdSetDAO" />
+	<bean
+		id="adminService"
+		class="com.one.service.impl.AdminServiceImpl"
+		p:adminDAO-ref="adminDAO" />
+		
+	<bean
+		id="scheduledManagementClassService"
+		class="com.one.service.scheduler.impl.ScheduledManagementClassServiceImpl"
+		p:scheduledManagementClassDAO-ref="scheduledManagementClassDAO" />
+		
+	<bean 
+		id="scheduledStasticsService"
+		class="com.one.service.scheduler.impl.ScheduledStasticsServiceImpl"
+		p:scheduledStasticsDAO-ref="scheduledStasticsDAO" />
+		
+</beans>

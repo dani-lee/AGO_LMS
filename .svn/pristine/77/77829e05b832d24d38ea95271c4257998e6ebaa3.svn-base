@@ -1,0 +1,20 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public interface ClassStasticsService {
+
+	public List<ClassStasticsVO> selectStasticsClassInfoList()throws SQLException;
+	
+	//public Map<String, Object> getClassGraphInfo
+	
+	public Map<String, Object> getAgeSpecificPreferenceData()throws SQLException;
+	
+	public Map<String, Object> getClassGraphInfo()throws SQLException;
+	
+	
+}

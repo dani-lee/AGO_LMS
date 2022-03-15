@@ -1,0 +1,101 @@
+package com.one.dto.ClassVO;
+
+public class ClassChapterVO {
+
+	private String clCode;
+	private int clChapNum;
+	private String clChapName;
+	private String clChapTime;
+	private String clChapVideo;
+
+	// 조명석이 학습중인 상세 만들면서 사용합니다.
+	private Boolean memFinishChk = false;
+	private Boolean mTestCheck = false;
+	private Boolean fTestCheck = false;
+
+	private int progChap;
+	
+	public Boolean getmTestCheck() {
+		return mTestCheck;
+	}
+
+	public void setmTestCheck(Boolean mTestCheck) {
+		this.mTestCheck = mTestCheck;
+	}
+
+	public Boolean getfTestCheck() {
+		return fTestCheck;
+	}
+
+	public void setfTestCheck(Boolean fTestCheck) {
+		this.fTestCheck = fTestCheck;
+	}
+
+	public Boolean getMemFinishChk() {
+		return memFinishChk;
+	}
+
+	public void setMemFinishChk(Boolean memFinishChk) {
+		this.memFinishChk = memFinishChk;
+	}
+
+	public String getClCode() {
+		return clCode;
+	}
+
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+
+	public int getClChapNum() {
+		return clChapNum;
+	}
+
+	public void setClChapNum(int clChapNum) {
+		this.clChapNum = clChapNum;
+	}
+
+	public String getClChapName() {
+		return clChapName;
+	}
+
+	public void setClChapName(String clChapName) {
+		this.clChapName = clChapName;
+	}
+
+	public String getClChapTime() {
+		return clChapTime;
+	}
+
+	public void setClChapTime(String clChapTime) {
+		this.clChapTime = clChapTime;
+	}
+
+	public String getClChapVideo() {
+		return clChapVideo;
+	}
+
+	public void setClChapVideo(String clChapVideo) {
+		this.clChapVideo = clChapVideo;
+	}
+
+	public int getProgChap() {
+		return progChap;
+	}
+
+	public void setProgChap(int progChap) {
+		this.progChap = progChap;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassChapterVO [clCode=" + clCode + ", clChapNum=" + clChapNum + ", clChapName=" + clChapName
+				+ ", clChapTime=" + clChapTime + ", clChapVideo=" + clChapVideo + ", memFinishChk=" + memFinishChk
+				+ ", mTestCheck=" + mTestCheck + ", progChap=" + progChap + "]";
+	}
+
+	
+	
+
+	
+}

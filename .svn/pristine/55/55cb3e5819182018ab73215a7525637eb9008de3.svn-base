@@ -1,0 +1,119 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/scroll.css">
+<script type="text/javascript" charset="utf-8">
+	function logout() {
+		let logout = confirm('로그아웃 하시겠습니까?');
+		if (logout) {
+			location.href = "logout.do";
+		}
+	}
+</script>
+</head>
+<title></title>
+<body>
+	<script type="text/javascript">
+	function resize(frame){
+		console.log("index");
+		let height = frame.contentWindow.document.body.scrollHeight + 20;
+		let winHeight = window.innerHeight- 170;
+		if(height < winHeight){
+			height = winHeight ;
+			$('body').addClass("layout-footer-fixed");
+		}else{
+			$('body').removeClass("layout-footer-fixed");
+		}
+		frame.style.height = height + 'px';
+	}
+</script>
+
+	<iframe id="ifr" name="ifr" src="" frameborder="0" scrolling='no' style="width: 100%;" onload="resize(this);"></iframe>
+
+	
+	<script type="text/javascript">
+
+function goPage(url,mCode){
+	//alert(url);
+	//alert(mCode);
+	$('iframe[name="ifr"]').attr("src",url);
+	//document.querySelector('iframe[name="ifr"]').src=url;
+
+
+	  // HTML5 지원브라우저에서 사용 가능
+	if (typeof(history.pushState) == 'function') {
+	    //현재 주소를 가져온다.
+	    var renewURL = location.href;
+	    //현재 주소 중 .do 뒤 부분이 있다면 날려버린다.
+	    renewURL = renewURL.substring(0, renewURL.indexOf(".do")+3);
+
+	    if (mCode != 'M000000') {
+	        renewURL += "?mCode="+mCode;
+	    }
+	    //페이지를 리로드하지 않고 페이지 주소만 변경할 때 사용
+	    history.pushState(mCode, null, renewURL);
+
+	} else {
+	    location.hash = "#"+mCode;
+	}
+}
+
+function subMenu_go(mCode){
+	//alert(mCode);
+	if(mCode!="M000000"){
+		$.getJSON("<%=request.getContextPath()%>/subMenu.do?mCode="+mCode,function(data){
+			console.log(data);
+			printData(data,$('#subMenuList'),$('#subMenu-list-template'),'.subMenu');
+		});
+	}else{
+		$('#subMenuList').html("");
+	}
+}
+
+
+//handelbars printElement (args : data Array, appent target, handlebar template, remove class)
+function printData(dataArr,target,templateObject,removeClass){
+
+	var template=Handlebars.compile(templateObject.html());
+
+	var html = template(dataArr);
+
+	$(removeClass).remove();
+	target.append(html);
+}
+
+function printPopup(popupArr, target, templateObject){
+	let template = Handlebars.compile(templateObject.html());
+	let html = template(popupArr);
+	$('#layer').remove();
+	target.after(html);
+}
+
+function active(aTag){
+// 	$('.subMenu a').removeClass("active");
+// 	$(aTag).addClass("active");
+// 	$(aTag).parent().style.backgroundColor = "#E6EFFC";
+	$('.subMenu').css("background-color","white");
+	$(aTag).parent().css("background-color","#E6EFFC");
+}
+
+window.onload=function(){
+	goPage('<%=request.getContextPath()%>${menu.murl}','${menu.mcode}');
+	subMenu_go('${menu.mcode}'.substring(0,5)+"00");
+}
+
+</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+	<script type="text/x-handlebars-template" id="subMenu-list-template">
+{{#each .}}
+    <li class="nav-item d-none d-sm-inline-block subMenu py-2">
+		<a href="javascript:goPage('<%=request.getContextPath() %>{{murl}}','{{mcode}}');" onclick="active(this);" class="nav-link">
+			<i class="{{micon}}"></i>
+   			<p>{{mname}}</p>
+		</a>
+	</li>
+{{/each}}
+</script>
+</body>

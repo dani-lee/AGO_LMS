@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="JMSClass-Mapper">
+<!-- opcl로 v_clss, clDoc, clChapter, clReview 를 불러옴 -->
+
+<select id="selectClassAndOpClByOpcl" resultType="class">
+	SELECT
+	    CL_CODE,
+	    CL_IMG,
+	    CL_NAME,
+	    CL_INTRO,
+	    CL_POINT,
+	    CL_CREDIT_TIME,
+	    CL_FORMAT,
+	    CL_CATE,
+	    CL_DIVISION,
+	    OPCL,
+	    CL_ROOM_NO,
+	    POST_SDATE,
+	    POST_EDATE,
+	    MAIN_EXPOSURE,
+	    ENR_PERS,
+	    STUDY_DATE,
+	    CL_QR,
+	    CUTLINE,
+	    LEC_DATE,
+	    CL_ROOM_NAME,
+	    CL_ROOM_LOC
+	FROM
+	    V_CLASS
+	WHERE OPCL = #{opcl}
+</select>
+
+<select id = "selectClDocListByOpcl" resultType="classDocument">
+	SELECT
+	    CL_DOC_NO,
+	    A.CL_CODE,
+	    CL_DOC_NAME,
+	    CL_DOC_REGDATE
+	FROM
+	    CL_DOC A,
+	    OPEN_CLASS B
+	WHERE A.CL_CODE = B.CL_CODE
+	AND   B.OPCL = #{opcl}
+</select>
+
+<select id="selectClChapterListByOpcl" resultType="classChapter">
+	SELECT
+	    A.CL_CODE,
+	    CL_CHAP_NUM,
+	    CL_CHAP_NAME,
+	    CL_CHAP_TIME,
+	    CL_CHAP_VIDEO
+	FROM
+	    CL_CHAPTER A,
+	    OPEN_CLASS B
+	WHERE A.CL_CODE = B.CL_CODE
+	AND   B.OPCL = #{opcl}
+</select>
+
+<select id="checkMemChap" resultType="memberCl">
+	SELECT
+	    MEM_CL_NO,
+	    OPCL,
+	    CL_CHAP,
+	    NVL(PROG_CHAP,0) as PROG_CHAP
+	FROM MEM_CHAP
+    WHERE MEM_CL_NO = (
+		SELECT MEM_CL_NO
+		FROM MEM_CL
+  		WHERE OPCL = #{opcl}
+     	AND MEM_EMAIL = #{memEmail})
+	AND CL_CHAP = #{clChap}
+</select>
+
+
+
+<!-- 나머지 데이터는 classAndOpClByOpcl에서 가져왔음 -->
+<select id="selectClReviewListByOpcl" resultType="classReview">
+	SELECT
+	    REVIEW_NO,
+	    OPCL,
+	    REVIEW_SCORE,
+	    REVIEW_CONTENT,
+	    REVIEW_REGDATE,
+	    MEM_ID
+	FROM
+	    CL_REVIEW
+    WHERE OPCL = #{opcl}
+</select>
+
+<!-- review에서 작성자 이름을 가져온다. -->
+ <select id="selectMemberByMemId" resultType="member">
+	SELECT
+	    MEM_EMAIL,
+	    MEM_NAME,
+	    MEM_BIR,
+	    MEM_PHONE,
+	    MEM_ID,
+	    MEM_PWD,
+	    MEM_CREDIT,
+	    POSITION_ID,
+	    DP_ID,
+	    AUTHORITY_ID,
+	    MEM_STATUS
+	FROM
+	    MEMBER
+    WHERE MEM_ID = #{memId}
+ </select>
+
+<!-- review 평균을 opcl로 검색뒤 문자열로 반환 -->
+<select id="selectAvgReviewScoreByOpcl" resultType="str">
+	SELECT RTRIM(TO_CHAR(AVG(REVIEW_SCORE),'FM9990.9'),'.')
+    FROM CL_REVIEW
+    WHERE OPCL = #{opcl}
+    GROUP BY OPCL
+</select>
+
+
+<delete id="deleteStudyingClass" parameterType="memberCl">
+	 DELETE
+    FROM MEM_CL
+    WHERE OPCL = #{opcl}
+    AND MEM_EMAIL = #{memEmail}
+</delete>
+
+
+</mapper>

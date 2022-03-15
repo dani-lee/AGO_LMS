@@ -1,0 +1,100 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>   
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="classInfo" value="${dataMap.classInfo }" />
+<c:set var="memClassList" value="${dataMap.memberClassList }" />
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">수강내역</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">마이페이지</a>
+						</li>
+						<li class="breadcrumb-item active">수강내역</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<select class="form-control form-control-sm col-1">
+				<option>전체</option>
+				<option>2022</option>
+			</select>
+			<div class="col-md-12 column ui-sortable"></div>
+			<table class="table mt-3 table-sm">
+				<thead>
+					<tr>
+						<th class="col-md-1 column ui-sortable">강의코드</th>
+						<th class="col-md-5 column ui-sortable text-center">강의명</th>
+						<th class="col-md-1 column ui-sortable text-center">이수점수</th>
+						<th class="col-md-1 column ui-sortable text-center">진도율</th>
+						<th class="col-md-2 column ui-sortable text-center">보고서제출여부</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${empty memClass}">
+						<tr>
+							<td colspan="5" class="text-center text-bold" style="hover:none;">
+								<strong>해당 내용이 없습니다.</strong>
+							</td>
+					</tr>
+					</c:if>
+					<c:forEach items="${ memClassList }" var="memClass">
+					<tr>
+						<td>${memClass.opcl }</td>
+						<td class="row">
+							<div class="col-md-8 column ui-sortable">
+								<span class="h6">${classInfo.clName }</span> <br> 
+								<span class="text-primary">
+								<fmt:formatDate value="${memClass.studySdate}" pattern="yyyy-MM-dd"/>~
+								<fmt:formatDate value="${memClass.studyEdate}" pattern="yyyy-MM-dd"/></span> 
+								<span class=" badge badge-primary" style="margin-left: 10px;">오프라인</span> 
+								<span class=" badge badge-danger">필수</span>
+							</div>
+						</td>
+						<td class="text-center">30</td>
+						<td class="text-center">
+							<div class="progress">
+								<div class="progress-bar bg-success" role="progressbar" style="width: 60%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</td>
+						<td class="text-center"><button class="btn btn-primary">제출완료</button></td>
+					</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+		</div>
+	</section>
+
+
+</body>

@@ -1,0 +1,28 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.dto.AdminVO;
+import com.one.dto.MemberVO;
+
+public interface AdminDAO {
+	
+	public List<MemberVO> selectEmployeeList(Criteria cri) throws SQLException;
+	
+	public List<MemberVO> selectManagerList() throws SQLException;
+	
+	public void updateMemberAuthority(String[] memId) throws SQLException;
+	
+	public void updateManagerAuthority(String[] memId) throws SQLException;
+
+	public AdminVO selectAdminById(String loginId) throws SQLException;
+	
+	public int selectAdminEmailCheck(String adminEmail) throws SQLException;
+	
+	public void updateAdminPwd(Map<String, String> map)throws SQLException;
+
+}

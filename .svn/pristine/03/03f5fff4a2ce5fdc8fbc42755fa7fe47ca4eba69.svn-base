@@ -1,0 +1,107 @@
+// 팜업창 뛰우기
+// 새로운 Window창을 Open할 경우 하용되는 함수 (arg: 주소, 창타이틀, 넓이, 길이)
+
+function OpenWindow(UrlStr, WinTitle, WinWidth, WinHeight) {
+	winleft = (screen.width = WinWidth) / 2;
+	wintop = (screen.height = WinHeight) / 2;
+
+	var win = window.open(UrlStr, WinTitle, "scrollbars=yes,width=" + WinWidth
+			+ ",height=" + WinHeight + ", top=" + wintop + ", left=" + winleft
+			+ ",resizable=yes, status=yes");
+
+	win.focus();
+}
+
+function CloseWindow(parentURL) {
+	window.opener.location.reload(true);
+	window.close();
+}
+
+// 사용자 없으니까 내가 쓸래 
+function MemberPictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+
+	targetObj.style.backgroundImage = "url('" + contextPath + "/user/myClass/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "cover";
+}
+
+
+//강의 등록 썸네일 출력
+function ClassRegistPictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+
+	targetObj.style.backgroundImage = "url('" + contextPath + "/manager/classManagement/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "cover";
+}
+
+//사용자 수강후기 강의 썸네일 출력
+function UserClassRegistPictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+
+	targetObj.style.backgroundImage = "url('" + contextPath + "/user/community/classReview/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "80%";
+}
+
+
+//수료증 사진 출력
+function CertificatePictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+
+	targetObj.style.backgroundImage = "url('" + contextPath + "/manager/certificateManagement/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "cover";
+}
+function UserCertificatePictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+
+	targetObj.style.backgroundImage = "url('" + contextPath + "/user/myPage/certificate/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "cover";
+}
+
+//보고서 도장
+function ReportPictureThumb(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+	
+	targetObj.style.backgroundImage = "url('" + contextPath + "/user/myClass/clsFinished/getPicture.do?picture=" + fileName + "')";
+	targetObj.style.backgroundPosition = "center";
+	targetObj.style.backgroundRepeat = "no-repeat";
+	targetObj.style.backgroundSize = "95%";
+	targetObj.style.height = "100%";
+}
+
+//Qr코드 사진 출력
+function getQRCodeImg(targetObj, fileName, contextPath) {
+	if (!contextPath)
+		contextpath = "";
+	
+	targetObj.setAttribute("src",contextPath + "/manager/classManagement/getQRImg.do?picture=" + fileName);
+}
+
+// spring_security redirect loginForm
+function AjaxErrorSecurityRedirectHandler(status) {
+	if (status == "302") {
+		alert("세션이 만료되었습니다.\n로그인하세요.");
+		location.reload();
+	} else if (status == "403") {
+		alert("권한이 유효하지 않았습니다.");
+		history.go(-1);
+	} else {
+		alert("시스템장애로 실행이 불가합니다.");
+		history.go(-1);
+	}
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="java.lang.String" alias="str" />
+		<typeAlias type="java.lang.Integer" alias="int" />
+		<typeAlias type="java.lang.Double" alias="double" />
+
+		<typeAlias type="com.one.dto.MenuVO" alias="menu" />
+		<typeAlias type="com.one.dto.MemberVO" alias="member"/>
+		<typeAlias type="com.one.dto.MemberClVO" alias="memberCl"/>
+		
+		<typeAlias type="com.one.dto.ManagerVO" alias="manager"/>
+		<typeAlias type="com.one.dto.FaqVO" alias="faq" />
+		<typeAlias type="com.one.dto.AskVO" alias="ask" />
+		<typeAlias type="com.one.dto.FreeBoardVO" alias="freeBoard" />
+		<typeAlias type="com.one.dto.FreeReplyVO" alias="freeReply" />
+		<typeAlias type="com.one.dto.DebateBoardVO" alias="debateBoard" />
+		<typeAlias type="com.one.dto.SiteInfoVO" alias="siteInfo" />
+		<typeAlias type="com.one.dto.CertificateVO" alias="certificate" />
+		<typeAlias type="com.one.dto.DepartmentVO" alias="department" />
+		<typeAlias type="com.one.dto.CommonVO" alias="common" />
+		<typeAlias type="com.one.dto.DebateReplyVO" alias="debateReply" />
+		
+		<typeAlias type="com.one.dto.PopUpVO" alias="popUp" />
+		<typeAlias type="com.one.command.MemberClassCommand" alias="memberClassCommand"/>
+		<typeAlias type="com.one.command.ReportCommand" alias="reportCommand"/>
+		<typeAlias type="com.one.dto.MessageVO" alias="message"/>
+		<typeAlias type="com.one.dto.CertificateListVO" alias="certificateList"/>
+		<typeAlias type="com.one.dto.MemberCertificateVO" alias="memberCertificate"/>
+		<typeAlias type="com.one.command.MessageComand" alias="msgCMD"/>
+		<typeAlias type="com.one.dto.OpclVO" alias="opcl"/>		
+		<typeAlias type="com.one.dto.ExamStatisVO" alias="examStatis"/>
+		<typeAlias type="com.one.dto.ExamExcelVO" alias="examExcel"/>
+		
+		<typeAlias type="com.one.dto.ManageExamVO" alias="manageExam" />
+		<typeAlias type="com.one.dto.ExamStastisDetailVO" alias="eStastisDetail"/>
+		<typeAlias type="com.one.command.ExamRegistCommand" alias="examCMD" />
+		<typeAlias type="com.one.dto.MemRemdSetVO" alias="memAlram" />
+		
+		<typeAlias type="com.one.command.DepartmentHeadReportCommand" alias="headReportCommand" />
+		<typeAlias type="com.one.dto.OrderClassVO" alias="orderClass"/>
+		<typeAlias type="com.one.command.DepartmentMemberClassCommand" alias="departmentMemberClassCommand"/>
+		<typeAlias type="com.one.command.RegistClassOrderCommand" alias="registClassOrderCommand"/>
+		<typeAlias type="com.one.dto.DpHeadDashVO" alias="dpHeadDash"/>
+		
+		<typeAlias type="com.one.command.DstcsCommand" alias="dstcsCMD"/>
+		
+		
+			<!-- ClassVO -->
+		<typeAlias type="com.one.dto.ClassVO.ClassVO" alias="classVo"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassListVO" alias="class"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassChapterVO" alias="classChapter"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassDocumentVO" alias="classDocument"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassReviewVO" alias="classReview"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassRegistFormVO" alias="classRegist"/>
+		<typeAlias type="com.one.dto.NoticeVO" alias="notice" />
+		<typeAlias type="com.one.dto.AttachVO" alias="attach" />
+		<typeAlias type="com.one.command.ClassCommand" alias="classCommand"/>
+		<typeAlias type="com.one.command.MemberStudyClassCommand" alias="memberStudyClass"/>
+		<typeAlias type="com.one.command.ClassReviewCommand" alias="classReviewCommand"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassDepartmentVO" alias="classDepartment"/>
+		<typeAlias type="com.one.dto.ClassVO.TestVO" alias="test"/>
+		<typeAlias type="com.one.command.ClassModifyCommand" alias="classModifyCommand"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassIntr" alias="classIntr"/>
+		<typeAlias type="com.one.dto.ClassVO.ClassEXT" alias="classEXT"/>
+		<typeAlias type="com.one.command.CompletedAvgCommand" alias="completedAvg"/>
+		
+		<typeAlias type="com.one.dto.IntReportVO" alias="intReport"/>
+		<typeAlias type="com.one.dto.ExtReportVO" alias="extReport"/>
+		<typeAlias type="com.one.dto.FinishedClassVO" alias="finishedClass"/>
+		<typeAlias type="com.one.command.ReportClassCommand" alias="reportClassCommand"/>
+		<typeAlias type="com.one.command.DpFavClassCommand" alias="dpFavClassCommand"/>
+		
+		<typeAlias type="com.one.dto.ClassVO.ClassStasticsVO" alias="classStastics"/>
+		
+		
+	</typeAliases>
+
+</configuration>
+
+
+
+
+
+
+
+
+
+

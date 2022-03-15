@@ -1,0 +1,56 @@
+package com.one.service.scheduler.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.DstcsCommand;
+import com.one.dao.scheduler.ScheduledStasticsDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.scheduler.ScheduledStasticsService;
+
+public class ScheduledStasticsServiceImpl implements ScheduledStasticsService {
+
+	private ScheduledStasticsDAO scheduledStasticsDAO;
+	public void setScheduledStasticsDAO(ScheduledStasticsDAO scheduledStasticsDAO) {
+		this.scheduledStasticsDAO = scheduledStasticsDAO;
+	}
+
+	@Override
+	public List<ClassStasticsVO> getStasticsClassInfos() throws SQLException {
+		List<ClassStasticsVO> studentCntList = scheduledStasticsDAO.selectStasticsClassInfo1();
+		List<ClassStasticsVO> avgList = scheduledStasticsDAO.selectStasticsClassInfo2();
+		
+		for(ClassStasticsVO studentInfo : studentCntList) {
+			for(ClassStasticsVO avgInfo : avgList) {
+				if(studentInfo.getOpcl() == avgInfo.getOpcl()) {
+					studentInfo.setClScoAvg(avgInfo.getClScoAvg());
+				}
+			}
+		}
+		return studentCntList;
+	}
+
+	@Override
+	public void updateStcsClInfo() throws SQLException {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		List<ClassStasticsVO> stcsClList = getStasticsClassInfos();
+		paramMap.put("stcsClInfo", stcsClList);
+		
+		scheduledStasticsDAO.updateStcsCl(paramMap);
+	}
+
+	@Override
+	public List<ClassStasticsVO> getClassInfoByDpId(String dpId) throws SQLException {
+		List<ClassStasticsVO> classInfoByparamDpId = scheduledStasticsDAO.selectClassInfoByDpId(dpId);
+		return classInfoByparamDpId;
+	}
+
+	@Override
+	public void updateStcsDp(DstcsCommand dstcsCMD) throws SQLException {
+		scheduledStasticsDAO.updateStcsDp(dstcsCMD);
+		
+	}
+
+}

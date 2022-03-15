@@ -1,0 +1,88 @@
+package com.one.command;
+
+import java.util.Date;
+
+public class MemberStudyClassCommand extends MemberClassCommand{
+	
+	private String clFormat ;
+	private String clDivision   ;
+	private String clName;
+	private String clImg;
+	private String clCate;
+	private double reviewScore;
+	private int reScrIntPart;
+	private int reScrDecimal;
+	private int openRound;
+	
+	public String getClFormat() {
+		return clFormat;
+	}
+	public String getClImg() {
+		return clImg;
+	}
+	public void setClImg(String clImg) {
+		this.clImg = clImg;
+	}
+	public String getClCate() {
+		return clCate;
+	}
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+
+	
+	public String getClDivision() {
+		return clDivision;
+	}
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public double getReviewScore() {
+		return reviewScore;
+	}
+	public void setReviewScore(double reviewScore) {
+		this.reviewScore = reviewScore;
+	}
+	
+	public int getReScrIntPart() {
+		return reScrIntPart;
+	}
+	public void setReScrIntPart(int reScrIntPart) {
+		this.reScrIntPart = reScrIntPart;
+	}
+	public int getReScrDecimal() {
+		return reScrDecimal;
+	}
+	public void setReScrDecimal(int reScrDecimal) {
+		this.reScrDecimal = reScrDecimal;
+	}
+	public int getOpenRound() {
+		return openRound;
+	}
+	public void setOpenRound(int openRound) {
+		this.openRound = openRound;
+	}
+	
+	@Override
+	public String toString() {
+		return "MemberStudyClassCommand [clFormat=" + clFormat + ", clDivision=" + clDivision + ", clName=" + clName
+				+ ", clImg=" + clImg + ", clCate=" + clCate + ", reviewScore=" + reviewScore + ", reScrIntPart="
+				+ reScrIntPart + ", reScrDecimal=" + reScrDecimal + ", openRound=" + openRound + "]";
+	}
+	
+	
+	
+	
+	
+	
+	
+}

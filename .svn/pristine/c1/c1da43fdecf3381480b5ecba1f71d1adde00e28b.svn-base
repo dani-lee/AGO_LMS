@@ -1,0 +1,142 @@
+package com.one.dto;
+
+import java.util.Date;
+
+public class IntReportVO {
+
+	private int intNo;
+	private int memClNo;
+	private int opcl;
+	private String eduContent;
+	private String eduReview;
+	private String intState;
+	private Date intDate;
+	private Date ctfDate;
+	private String clName;
+	
+	private String clCate; // 교육분류 (자기개발,일반,신입의무)
+	private String clCateName;
+	
+	private String intStateName; // 수료증 상태명
+	
+	private String memName; // 성명
+	
+	private String dpId; // 부서코드
+	private String dpName; // 부서명
+	
+	private String positionId; // 직위코드
+	private String positionName; // 직위명
+	
+	private String insertCtfDate; // 보고서 작성할때 날짜
+	
+	
+	public String getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public String getInsertCtfDate() {
+		return insertCtfDate;
+	}
+	public void setInsertCtfDate(String insertCtfDate) {
+		this.insertCtfDate = insertCtfDate;
+	}
+	public String getClCate() {
+		return clCate;
+	}
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+	public String getClCateName() {
+		return clCateName;
+	}
+	public void setClCateName(String clCateName) {
+		this.clCateName = clCateName;
+	}
+	public String getMemName() {
+		return memName;
+	}
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+	public String getDpId() {
+		return dpId;
+	}
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+	public String getDpName() {
+		return dpName;
+	}
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
+	}
+	public int getIntNo() {
+		return intNo;
+	}
+	public void setIntNo(int intNo) {
+		this.intNo = intNo;
+	}
+	public int getMemClNo() {
+		return memClNo;
+	}
+	public void setMemClNo(int memClNo) {
+		this.memClNo = memClNo;
+	}
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public String getEduContent() {
+		return eduContent;
+	}
+	public void setEduContent(String eduContent) {
+		this.eduContent = eduContent;
+	}
+	public String getEduReview() {
+		return eduReview;
+	}
+	public void setEduReview(String eduReview) {
+		this.eduReview = eduReview;
+	}
+	public String getIntState() {
+		return intState;
+	}
+	public void setIntState(String intState) {
+		this.intState = intState;
+	}
+	public Date getIntDate() {
+		return intDate;
+	}
+	public void setIntDate(Date intDate) {
+		this.intDate = intDate;
+	}
+	public Date getCtfDate() {
+		return ctfDate;
+	}
+	public void setCtfDate(Date ctfDate) {
+		this.ctfDate = ctfDate;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public String getIntStateName() {
+		return intStateName;
+	}
+	public void setIntStateName(String intStateName) {
+		this.intStateName = intStateName;
+	}
+	
+}

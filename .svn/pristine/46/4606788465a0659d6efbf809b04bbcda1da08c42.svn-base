@@ -1,0 +1,18 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.dto.AdminVO;
+import com.one.dto.MemberVO;
+
+public interface AdminService {
+
+	AdminVO getAdmin(String login_id) throws SQLException;
+
+	public Map<String, Object> selectMemberList(Criteria cri) throws SQLException;
+	
+	public void updateAuthority(String[] memId, boolean check) throws SQLException;
+}

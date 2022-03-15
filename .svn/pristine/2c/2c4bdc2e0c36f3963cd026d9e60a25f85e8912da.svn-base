@@ -1,0 +1,42 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.command.Criteria;
+import com.one.command.DepartmentHeadReportCommand;
+import com.one.command.DepartmentMemberClassCommand;
+import com.one.dto.DpHeadVO;
+import com.one.dto.OrderClassVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassVO;
+
+public interface DpOrderDAO {
+	public int getOdId() throws SQLException;
+
+	public void insertDpHeadOd(DpHeadVO order) throws SQLException;
+
+	public void insertDpOdOpcl(DpHeadVO order) throws SQLException;
+
+	public void insertDpOdMem(DpHeadVO order) throws SQLException;
+
+	public List<ClassListVO> selectDpHeadFav(String dpId) throws SQLException;
+
+	public void insertDpHeadFav(DpHeadVO fav) throws SQLException;
+
+	public void deleteDpHeadFav(DpHeadVO fav) throws SQLException;
+
+	public int favCheck(DpHeadVO fav) throws SQLException;
+	
+	public List<DepartmentHeadReportCommand> selectReportList(Criteria cri, String department) throws SQLException;
+	
+	public List<DepartmentHeadReportCommand> selectDashReportList(Criteria cri, String department) throws SQLException;
+	
+	public int selectReportCount(Criteria cri, String department) throws SQLException;
+	
+	public List<OrderClassVO> selectOrderClassList(String department) throws SQLException;
+	
+	public List<DepartmentMemberClassCommand> selectMemberClassList(Criteria cri) throws SQLException;
+	
+	public List<DepartmentMemberClassCommand> selectMemberClassCheckList(String department, int opcl) throws SQLException;
+}

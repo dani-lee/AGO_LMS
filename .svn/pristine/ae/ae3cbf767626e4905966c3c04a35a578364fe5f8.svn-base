@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Site-Mapper">
+
+	
+	<update id="insertSiteInfo" parameterType="siteInfo">
+		INSERT INTO SITE(COMP_NAME, COMP_ADDR, COMP_RET_NAME, COMP_TEL, COMP_FAX, COMP_EMAIL, CORP_NUM)
+        VALUES (#{compName},#{compAddr},#{compRetName},#{compTel},#{compFax},#{compEmail},#{corpNum})
+	</update>
+	
+	<select id="selectSiteInfo" resultType="siteInfo">
+		SELECT COMP_NAME
+			 , COMP_ADDR
+			 , COMP_RET_NAME
+			 , COMP_TEL
+			 , COMP_FAX
+			 , COMP_EMAIL
+			 , CORP_NUM
+		  FROM SITE
+	</select>
+</mapper>  

@@ -1,0 +1,301 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.ClassModifyCommand;
+import com.one.command.CompletedAvgCommand;
+import com.one.command.Criteria;
+import com.one.command.RegistClassOrderCommand;
+import com.one.dao.ClassDAO;
+import com.one.dto.OpclVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDocumentVO;
+import com.one.dto.ClassVO.ClassEXT;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassRegistFormVO;
+import com.one.dto.ClassVO.ClassReviewVO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.dto.ClassVO.ClassVO;
+import com.one.dto.ClassVO.TestVO;
+
+public class ClassDAOImpl implements ClassDAO {
+	private SqlSession session;
+
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<ClassListVO> getClassList(Criteria cri) throws SQLException {
+
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<ClassListVO> mainList = session.selectList("Class-Mapper.getClassList", cri, rowBounds);
+		System.out.println(mainList.size());
+		return mainList;
+
+	}
+
+	@Override
+	public List<ClassListVO> getClassAllList() throws SQLException {
+		List<ClassListVO> classList = session.selectList("Class-Mapper.selectClassAllList");
+		return classList;
+
+	}
+
+	@Override
+	public ClassListVO getClassByclCode(String clCode) throws SQLException {
+		ClassListVO detail = session.selectOne("Class-Mapper.getClassByclCode", clCode);
+		return detail;
+	}
+
+	@Override
+	public List<ClassChapterVO> getClassChapter(String clCode) throws SQLException {
+		List<ClassChapterVO> chapterList = session.selectList("Class-Mapper.getClassChapter", clCode);
+		return chapterList;
+	}
+
+	@Override
+	public List<ClassDocumentVO> getClassDocument(String clCode) throws SQLException {
+		List<ClassDocumentVO> documentList = session.selectList("Class-Mapper.getClassDocument", clCode);
+		return documentList;
+	}
+
+	@Override
+	public List<ClassReviewVO> getClassReview(String clCode) throws SQLException {
+		List<ClassReviewVO> reviewList = session.selectList("Class-Mapper.getClassReview", clCode);
+		return reviewList;
+	}
+
+	@Override
+	public List<ClassRegistFormVO> getClCateList() throws SQLException {
+		List<ClassRegistFormVO> CateList = session.selectList("Class-Mapper.getClCateList");
+		return CateList;
+	}
+
+	@Override
+	public List<ClassRegistFormVO> getDpIdList() throws SQLException {
+		List<ClassRegistFormVO> DpIdList = session.selectList("Class-Mapper.getDpIdList");
+		return DpIdList;
+	}
+
+	@Override
+	public void RegistClassWithoutSubInfo(ClassVO cls) throws SQLException {
+		System.out.println("RegistClassWithoutSubInfo before");
+		session.selectOne("Class-Mapper.RegistClassWithoutSubInfo", cls);
+		System.out.println("RegistClassWithoutSubInfo after");
+
+	}
+
+	@Override
+	public String getclCode() throws SQLException {
+		String clCode = session.selectOne("Class-Mapper.getclCode");
+		return clCode;
+	}
+
+	@Override
+	public int getTestNo() throws SQLException {
+		int testNo = session.selectOne("Class-Mapper.getTestNo");
+		return testNo;
+	}
+
+	@Override
+	public List<ClassListVO> getClassRoom() throws SQLException {
+		List<ClassListVO> roomList = session.selectList("Class-Mapper.getClassRoom");
+		return roomList;
+	}
+
+	@Override
+	public void RegistOpcl(OpclVO opcl) throws SQLException {
+		session.update("Class-Mapper.RegistOpcl", opcl);
+	}
+
+	@Override
+	public int getOpcl() throws SQLException {
+		int opcl = session.selectOne("Class-Mapper.getOpcl");
+		return opcl;
+	}
+
+	@Override
+	public void insertClChapter(List<ClassChapterVO> chapterList) throws Exception {
+		session.update("Class-Mapper.insertClChapter", chapterList);
+
+	}
+
+	@Override
+	public int getClassTotalCount(Criteria cri) throws SQLException {
+		int totalCount = session.selectOne("Class-Mapper.getClassTotalCount", cri);
+		return totalCount;
+	}
+
+	@Override
+	public void modifyClass(ClassVO clModify) throws Exception {
+		session.update("Class-Mapper.modifyClass", clModify);
+
+	}
+
+	@Override
+	public void ModifyClChapter(List<ClassChapterVO> chapterList, String clCode) throws Exception {
+		session.update("Class-Mapper.ModifyClChapter", clCode);
+		session.update("Class-Mapper.insertClChapter", chapterList);
+	}
+
+	@Override
+	public TestVO getTest(String opcl) throws SQLException {
+		TestVO test = session.selectOne("Class-Mapper.getTest", opcl);
+		return test;
+	}
+
+	@Override
+	public void InsertTestNull(ClassModifyCommand cmc) throws SQLException {
+		session.update("Class-Mapper.InsertTestNull", cmc);
+
+	}
+
+	@Override
+	public void deleteOpenClass(OpclVO opcl) throws SQLException {
+		session.delete("Class-Mapper.deleteOpenClass", opcl);
+
+	}
+
+	@Override
+	public List<OpclVO> getOpclByclCode(String clCode) throws SQLException {
+		List<OpclVO> opcl = session.selectList("Class-Mapper.getOpclByclCode", clCode);
+
+		return opcl;
+	}
+
+	@Override
+	public int getRoundNo(String clCode) throws SQLException {
+		int RoundNo = session.selectOne("Class-Mapper.getRoundNo", clCode);
+		return RoundNo;
+	}
+
+	@Override
+	public OpclVO getOpclByopenRound(OpclVO opclDetail) throws SQLException {
+		OpclVO opcl = session.selectOne("Class-Mapper.getOpclByopenRound", opclDetail);
+		return opcl;
+	}
+
+	@Override
+	public int selectCountAllClass() throws SQLException {
+		int count = session.selectOne("Class-Mapper.selectCountAllClass");
+		return count;
+	}
+
+	@Override
+	public int selectCountIntern() throws SQLException {
+		int count = session.selectOne("Class-Mapper.selectCountIntern");
+		return count;
+	}
+
+	@Override
+	public int selectCountNormal() throws SQLException {
+		int count = session.selectOne("Class-Mapper.selectCountNormal");
+		return count;
+	}
+
+	@Override
+	public int selectCountHobby() throws SQLException {
+		int count = session.selectOne("Class-Mapper.selectCountHobby");
+		return count;
+	}
+
+	@Override
+	public void updateClQR(OpclVO opcl) throws SQLException {
+		session.update("Class-Mapper.updateClQR", opcl);
+	}
+
+	@Override
+	public ClassListVO selectClassInfo(int opcl) throws SQLException {
+		ClassListVO classInfo = session.selectOne("Class-Mapper.selectClassInfo", opcl);
+		return classInfo;
+	}
+
+	@Override
+	public List<CompletedAvgCommand> getCompletedAvgByOpenClass() throws SQLException {
+		List<CompletedAvgCommand> comAvg = session.selectList("Class-Mapper.getCompletedAvgByOpenClass");
+		return comAvg;
+	}
+
+	@Override
+	public List<ClassListVO> selectClassMemListByOpcl(int opcl) throws SQLException {
+		List<ClassListVO> classMemList = session.selectList("Class-Mapper.selectClassMemListByOpcl", opcl);
+		return classMemList;
+	}
+
+	@Override
+	public void modifyOpenClass(OpclVO opcl) throws SQLException {
+		System.out.println("@@@@@@@@@@@@@@@@@@@         세션 들어가기 전 투오피씨엘룸넘버        " + opcl.getClRoomNo());
+		System.out.println(opcl.toString());
+		session.update("Class-Mapper.modifyOpenClass", opcl);
+
+	}
+
+	@Override
+	public int countOpenClassByclCode(String clCode) throws SQLException {
+		int count = session.selectOne("Class-Mapper.countOpenClassByclCode", clCode);
+		return count;
+	}
+
+	@Override
+	public void deleteClass(String clCode) throws SQLException {
+		session.delete("Class-Mapper.deleteClass", clCode);
+
+	}
+
+	@Override
+	public List<ClassStasticsVO> getOnlyUseDetailMemListByOpcl(int opclNum, Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<ClassStasticsVO> memList = session.selectList("Class-Mapper.getOnlyUseDetailMemListByOpcl", opclNum, rowBounds);
+		return memList;
+	}
+
+	@Override
+	public List<ClassListVO> selectMainEPList() throws SQLException {
+		List<ClassListVO> EpList = session.selectList("Class-Mapper.selectMainEPList");
+		// System.out.println("##############################DAO" + EpList.get(0).getClImg());
+//		System.out.println("##############################DAO" + EpList.get(0).getClImg());
+		return EpList;
+	}
+
+	@Override
+	public void registClassOrderByDpid(RegistClassOrderCommand dpList) throws SQLException {
+		session.update("Class-Mapper.registClassOrderByDpid", dpList);
+
+	}
+
+	@Override
+	public List<RegistClassOrderCommand> getClassOrderByOpcl(int opcl) throws SQLException {
+		List<RegistClassOrderCommand> dpList = session.selectList("Class-Mapper.getClassOrderByOpcl", opcl);
+		return dpList;
+	}
+
+	@Override
+	public List<ClassDocumentVO> getclDocListByOpcl(int opcl) throws SQLException {
+		List<ClassDocumentVO> documentList = session.selectList("Class-Mapper.getclDocListByOpcl", opcl);
+		return documentList;
+	}
+
+	@Override
+	public List<ClassListVO> getclassEdate() throws SQLException {
+		List<ClassListVO> EdateClassList = session.selectList("Class-Mapper.getclassEdate");
+		return EdateClassList;
+	}
+
+	@Override
+	public int getOnlyUseDetailMemListByOpclCount(int opcl) throws SQLException {
+		int totalCount = session.selectOne("Class-Mapper.getOnlyUseDetailMemListByOpclCount",opcl);
+		return totalCount;
+	}
+
+}

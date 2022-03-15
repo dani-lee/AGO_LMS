@@ -1,0 +1,264 @@
+package com.one.dto.ClassVO;
+
+import java.util.Date;
+import java.util.List;
+
+public class ClassStasticsVO {
+
+	private int opcl;
+	private double clScoAvg;
+	private String clCode;
+	private String clImg;
+	private String clName;
+	private String clFormat;
+	private String clCate;
+	private String clDivision;
+	private String mainExposure;
+	private String enrPers;
+	private int openRound;
+	private String memEmail;
+	private String memBir;
+	private String memName;
+	private String memclState;
+	private String positionId;
+	private String dpId;
+	private Date postSdate;
+	private Date postEdate;
+	private String clPoint;
+	private String studySdate;
+	private int count;
+	private int cnt;
+	private String studyDate;
+	
+	private String reviewScore;
+	private int reScrIntPart;
+	private int reScrDecimal;
+	
+	private String postStatus;
+	
+	private int ages;
+	
+	private List<ClassDepartmentVO> dpIds;
+	private String matchClDp;
+	
+	private int stcsClsNo;
+	
+	public String getStudySdate() {
+		return studySdate;
+	}
+	public void setStudySdate(String studySdate) {
+		this.studySdate = studySdate;
+	}
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public double getClScoAvg() {
+		return clScoAvg;
+	}
+	public void setClScoAvg(double clScoAvg) {
+		this.clScoAvg = clScoAvg;
+	}
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClImg() {
+		return clImg;
+	}
+	public void setClImg(String clImg) {
+		this.clImg = clImg;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public String getClFormat() {
+		return clFormat;
+	}
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+	public String getClCate() {
+		return clCate;
+	}
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+	public String getClDivision() {
+		return clDivision;
+	}
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+	public String getMainExposure() {
+		return mainExposure;
+	}
+	public void setMainExposure(String mainExposure) {
+		this.mainExposure = mainExposure;
+	}
+	public String getEnrPers() {
+		return enrPers;
+	}
+	public void setEnrPers(String enrPers) {
+		this.enrPers = enrPers;
+	}
+	public int getOpenRound() {
+		return openRound;
+	}
+	public void setOpenRound(int openRound) {
+		this.openRound = openRound;
+	}
+	public String getMemEmail() {
+		return memEmail;
+	}
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+	public String getMemBir() {
+		return memBir;
+	}
+	public void setMemBir(String memBir) {
+		this.memBir = memBir;
+	}
+	public String getMemName() {
+		return memName;
+	}
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+	public String getMemclState() {
+		return memclState;
+	}
+	public void setMemclState(String memclState) {
+		this.memclState = memclState;
+	}
+	public String getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+	public String getDpId() {
+		return dpId;
+	}
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+	public Date getPostSdate() {
+		return postSdate;
+	}
+	public void setPostSdate(Date postSdate) {
+		this.postSdate = postSdate;
+	}
+	public Date getPostEdate() {
+		return postEdate;
+	}
+	public void setPostEdate(Date postEdate) {
+		this.postEdate = postEdate;
+	}
+	public String getClPoint() {
+		return clPoint;
+	}
+	public void setClPoint(String clPoint) {
+		this.clPoint = clPoint;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	public int getCnt() {
+		return cnt;
+	}
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+	public String getStudyDate() {
+		return studyDate;
+	}
+	public void setStudyDate(String studyDate) {
+		this.studyDate = studyDate;
+	}
+	public String getReviewScore() {
+		return reviewScore;
+	}
+	public void setReviewScore(String reviewScore) {
+		this.reviewScore = reviewScore;
+	}
+	public int getReScrIntPart() {
+		return reScrIntPart;
+	}
+	public void setReScrIntPart(int reScrIntPart) {
+		this.reScrIntPart = reScrIntPart;
+	}
+	public int getReScrDecimal() {
+		return reScrDecimal;
+	}
+	public void setReScrDecimal(int reScrDecimal) {
+		this.reScrDecimal = reScrDecimal;
+	}
+	public String getPostStatus() {
+		return postStatus;
+	}
+	public void setPostStatus(String postStatus) {
+		this.postStatus = postStatus;
+	}
+	public int getAges() {
+		return ages;
+	}
+	public void setAges(int ages) {
+		this.ages = ages;
+	}
+	
+	
+	
+	public List<ClassDepartmentVO> getDpIds() {
+		return dpIds;
+	}
+	public void setDpIds(List<ClassDepartmentVO> dpIds) {
+		this.dpIds = dpIds;
+	}
+	
+	
+	
+	
+	public String getMatchClDp() {
+		return matchClDp;
+	}
+	public void setMatchClDp(String matchClDp) {
+		this.matchClDp = matchClDp;
+	}
+	public int getStcsClsNo() {
+		return stcsClsNo;
+	}
+	public void setStcsClsNo(int stcsClsNo) {
+		this.stcsClsNo = stcsClsNo;
+	}
+	@Override
+	public String toString() {
+		return "ClassStasticsVO [opcl=" + opcl + ", clScoAvg=" + clScoAvg + ", clCode=" + clCode + ", clImg=" + clImg
+				+ ", clName=" + clName + ", clFormat=" + clFormat + ", clCate=" + clCate + ", clDivision=" + clDivision
+				+ ", mainExposure=" + mainExposure + ", enrPers=" + enrPers + ", openRound=" + openRound + ", memEmail="
+				+ memEmail + ", memBir=" + memBir + ", memName=" + memName + ", memclState=" + memclState
+				+ ", positionId=" + positionId + ", dpId=" + dpId + ", postSdate=" + postSdate + ", postEdate="
+				+ postEdate + ", clPoint=" + clPoint + ", studySdate=" + studySdate + ", count=" + count + ", cnt="
+				+ cnt + ", reviewScore=" + reviewScore + ", reScrIntPart=" + reScrIntPart + ", reScrDecimal="
+				+ reScrDecimal + ", postStatus=" + postStatus + ", ages=" + ages + "]";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}

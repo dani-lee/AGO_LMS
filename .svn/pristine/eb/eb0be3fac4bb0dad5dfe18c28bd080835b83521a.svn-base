@@ -1,0 +1,16 @@
+package com.one.command;
+
+public class MemberClassCriteria extends Criteria {
+
+	private String memId;
+
+	public String getMemId() {
+		return memId;
+	}
+
+	public void setMemId(String memId) {
+		this.memId = memId;
+	}
+	
+	
+}

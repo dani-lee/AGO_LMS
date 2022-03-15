@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #ddd;
+}
+
+* {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.paper {
+	width: 210mm;
+	min-height: 367mm;
+	padding: 20mm; /* set contents area */
+	margin: 10mm auto;
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+	padding: 0;
+/* 	border: 1px #888 dotted; */
+	height: 327mm;
+}
+
+@page {
+	size: A4;
+	margin: 0;
+}
+
+@media print {
+	html, body {
+		width: 210mm;
+		height: 367mm;
+		background: #fff;
+	}
+	.paper {
+		margin: 0;
+		border: initial;
+		border-radius: initial;
+		width: initial;
+		min-height: initial;
+		box-shadow: initial;
+		background: initial;
+		page-break-after: always;
+	}
+	#printReport {
+		display: none;
+	}
+	#submission {
+		display: none;
+	}
+	#onlyShow {
+		display: none;
+	}
+	.dawrasfsertgdrzhxdtez {
+		border: 2px soild red;
+	}
+	table .printColor{
+		background-color:#e8e8e8 !important; 
+		-webkit-print-color-adjust:exact;
+	}
+	table #printAgoStamp{
+		-webkit-print-color-adjust:exact;
+	}
+	table #agoStamp{
+		-webkit-print-color-adjust:exact;
+	}
+}
+
+@media screen {
+	#onlyPrint {
+		display: none;
+	}
+}
+
+.trHeight {
+	height: 55px;
+}
+
+.tdLabel {
+	background-color: lightgrey;
+}
+
+.showTrHeight {
+	height: 10px;
+}
+
+.showTdLabel {
+	background-color: lightgrey;
+}

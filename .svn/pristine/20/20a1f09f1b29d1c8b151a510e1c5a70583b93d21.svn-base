@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ClassFinished-Mapper">
+	
+	<sql id="searchClassFrom">
+		<if test="searchType == 'rs'.toString()">
+			<if test="keyword!=null and !keyword.equals('')">
+				, COMMON C
+     			, INT_REPORT D
+			</if>
+		</if>
+	</sql>
+	
+	<sql id="searchClass">
+		<if test="searchType == 'rs'.toString()">
+			<if test="keyword!=null and !keyword.equals('')">
+				AND B.MEM_CL_NO=D.MEM_CL_NO
+			    AND D.INT_STATE=C.COMMON_CODE
+				AND C.CODE_NAME1 LIKE '%' || #{keyword} || '%'
+			</if>
+		</if>
+		<if test="searchType == 'cn'.toString()">
+			AND A.CL_NAME LIKE '%' || #{keyword} || '%'
+		</if>
+	</sql>
+	
+	<sql id="searchExtClass">
+		<if test="searchType == 'cn'.toString()">
+			AND EXT_CL_NAME LIKE '%' || #{keyword} || '%'
+		</if>
+	</sql>
+	
+	<select id="selectIntFinishedClassList" resultType="finishedClass">
+		SELECT distinct 
+		       A.CL_CODE
+		     , A.OPCL
+		     , A.CL_NAME
+		     , A.CL_POINT
+		     , B.MEM_CL_NO
+		     , B.STUDY_EDATE
+		     , B.CTF_DATE
+		     , B.PROG_RATE
+		     , B.TEST_CPL
+		     , B.MIDTEST_SCORE
+			 , B.FINTEST_SCORE
+			 , E.TEST_STATUS
+		  FROM V_CLASS A
+		     , V_MEM_CL B
+		   <include refid="searchClassFrom" />
+		   	 , TEST E
+		 WHERE B.MEM_EMAIL = #{memEmail}
+		   AND A.OPCL = B.OPCL
+		   AND A.OPCL = E.OPCL
+		   <include refid="searchClass" />
+		   AND (B.CTF_DATE IS NOT NULL
+		   <![CDATA[ OR B.STUDY_EDATE < SYSDATE ]]>)
+		 ORDER BY B.STUDY_EDATE desc
+	</select>
+	
+	<select id="selectExtFinishedClassList" resultType="finishedClass">
+		SELECT DISTINCT
+		       MEM_EMAIL
+		     , EXT_CL_NAME
+		     , COMMON_CODE
+		     , EXT_NO
+		     , STUDY_SDATE
+		     , STUDY_EDATE
+		     , EXT_CODE
+		     , CTF_DATE
+		  FROM EXT_CL
+		 WHERE MEM_EMAIL = #{memEmail}
+		 	 <include refid="searchExtClass" />
+		   AND (COMMON_CODE = 'C302'
+		    OR COMMON_CODE = 'C303'
+		    <![CDATA[ OR STUDY_EDATE < SYSDATE ]]>)
+	</select>
+
+	<select id="selectIntReport" resultType="intReport">
+		SELECT A.INT_NO
+		     , A.MEM_CL_NO
+		     , B.OPCL
+		     , A.EDU_CONTENT
+		     , A.EDU_REVIEW
+		     , A.INT_STATE
+		     , A.INT_DATE
+		     , A.DP_ID
+		     , A.POSITION_ID
+		     , B.CTF_DATE
+		     , C.CL_NAME
+		     , c.CL_CATE
+		  FROM INT_REPORT A
+		     , MEM_CL B
+		     , V_CLASS C
+		 WHERE A.MEM_CL_NO= #{memClNo}
+		   AND A.MEM_CL_NO=B.MEM_CL_NO
+		   AND A.OPCL=C.OPCL
+	</select>
+	
+	<select id="selectIntReportInsertForm" resultType="intReport">
+		SELECT A.MEM_NAME
+			 , A.MEM_CL_NO
+		     , A.DP_ID
+		     , A.POSITION_ID
+		     , A.CTF_DATE
+		     , A.OPCL
+		     , B.CL_NAME
+		     , B.CL_FORMAT
+		     , B.CL_CATE
+		     , C.INT_NO
+			 , C.INT_STATE
+			 , C.INT_DATE
+			 , C.EDU_CONTENT
+			 , C.EDU_REVIEW
+		  FROM V_MEM_CL A
+		     , V_CLASS B
+		       LEFT OUTER JOIN INT_REPORT C ON (C.MEM_CL_NO = #{memClNo}) 
+		 WHERE A.OPCL=B.OPCL
+           AND A.MEM_CL_NO = #{memClNo}
+	</select>
+	
+	<update id="updateIntReport">
+		UPDATE INT_REPORT
+		   SET INT_STATE='B102', INT_DATE=sysdate, EDU_CONTENT=#{eduContent}, EDU_REVIEW=#{eduReview}
+		 WHERE INT_NO=#{intNo}
+	</update>
+	
+	<update id="insertIntReport">
+		INSERT INTO 
+		INT_REPORT ( INT_NO
+			       , MEM_CL_NO
+			       , OPCL
+			       , EDU_CONTENT
+			       , EDU_REVIEW
+			       , INT_STATE
+			       , INT_DATE
+			       , DP_ID
+			       , POSITION_ID) 
+			VALUES ( INT_REPORT_SEQ.nextval
+				   , #{memClNo}
+				   , #{opcl}
+				   , #{eduContent}
+				   , #{eduReview}
+				   , 'B102'
+				   , sysdate 
+				   , #{dpId}
+				   , #{positionId} )
+	</update>
+	
+	<select id="selectExtReport" resultType="extReport">
+		SELECT A.EXT_NO
+		     , A.MEM_NAME
+		     , A.CL_NAME
+		     , B.CTF_DATE
+		     , A.EDU_CONTENT
+		     , A.EDU_REVIEW
+		     , A.ATTACH_DOC
+		     , A.EXT_STATE
+		     , A.EXT_REGDATE  
+		     , A.DP_ID
+		     , A.POSITION_ID
+		  FROM EXT_REPORT A
+		     , EXT_CL B
+		 WHERE A.EXT_NO = B.EXT_NO
+		   AND A.EXT_NO = #{extNo}
+	</select>
+	
+	<update id="updateExtNo">
+		UPDATE EXT_CL
+		   SET EXT_NO=#{extNo}, CTF_DATE=#{insertCtfDate}
+		 WHERE EXT_CODE=#{extCode}
+		   AND MEM_EMAIL=#{memEmail}
+	</update>
+	
+	<update id="updateExtReport">
+		UPDATE EXT_REPORT
+		   SET EXT_STATE='B102', EXT_REGDATE=sysdate, EDU_CONTENT=#{eduContent}, EDU_REVIEW=#{eduReview}, ATTACH_DOC=#{attachDoc}
+		 WHERE EXT_NO=#{extNo}
+	</update>
+	
+	<update id="insertExtReport">
+		 <selectKey keyProperty="extNo" resultType="int" order="BEFORE">  
+        	select EXT_REPORT_SEQ.nextval FROM dual
+     	 </selectKey>
+	
+		INSERT INTO EXT_REPORT (EXT_NO
+							  , MEM_NAME
+							  , CL_NAME
+							  , EDU_CONTENT
+							  , EDU_REVIEW
+							  , ATTACH_DOC
+							  , EXT_STATE
+							  , EXT_REGDATE
+							  , DP_ID
+							  , POSITION_ID
+							  , MEM_EMAIL) 
+					    VALUES (#{extNo}
+					    	  , #{memName}
+					    	  , #{clName}
+					    	  , #{eduContent}
+					    	  , #{eduReview}
+					    	  , #{attachDoc}  
+					    	  , 'B102' 
+					    	  , sysdate
+					    	  , #{dpId}
+					    	  , #{positionId}
+					    	  , #{memEmail})
+	</update>
+	
+	<select id="selectIntClassReviewForm" resultType="classReview">
+		SELECT A.MEM_CL_NO
+	         , A.OPCL
+	         , A.MEM_EMAIL 
+	         , A.CTF_DATE  
+	         , B.CL_NAME
+	         , B.CL_CATE
+	      FROM MEM_CL A
+	         , V_CLASS B
+	     WHERE A.MEM_CL_NO=#{memClNo}
+	       AND A.OPCL=B.OPCL
+	</select>
+	
+	<select id="selectIntClassReview" resultType="classReview">
+		SELECT REVIEW_NO
+		     , OPCL
+		     , REVIEW_SCORE
+		     , REVIEW_CONTENT
+		     , REVIEW_REGDATE
+		     , MEM_ID
+		  FROM CL_REVIEW
+		 WHERE OPCL = #{opcl}
+		   AND MEM_ID = #{memId}
+	</select>
+	
+	<update id="insertClassReview">
+		INSERT INTO CL_REVIEW ( REVIEW_NO
+							  , OPCL
+							  , REVIEW_SCORE
+							  , REVIEW_CONTENT
+							  , REVIEW_REGDATE
+							  , MEM_ID) 
+						VALUES ( CL_REVIEW_SEQ.nextval
+							   , #{opcl}
+							   , #{reviewScore}
+							   , #{reviewContent}
+							   , sysdate
+							   , #{memId})
+	</update>
+	
+	<select id="countIntClass" resultType="int">
+		SELECT count(*)
+		  FROM V_CLASS A
+		     , V_MEM_CL B
+		 WHERE B.MEM_EMAIL = #{memEmail}
+		   AND A.OPCL = B.OPCL
+		   AND (B.CTF_DATE IS NOT NULL
+		   <![CDATA[ OR B.STUDY_EDATE < SYSDATE ]]>)
+		 ORDER BY B.STUDY_EDATE desc
+	</select>
+	
+	<select id="countExtClass" resultType="int">
+		SELECT count(*)
+		  FROM EXT_CL
+		 WHERE MEM_EMAIL = #{memEmail}
+		   AND (COMMON_CODE = 'C302'
+		    <![CDATA[ OR STUDY_EDATE < SYSDATE ]]>)
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

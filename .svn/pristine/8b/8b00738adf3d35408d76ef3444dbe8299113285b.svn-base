@@ -1,0 +1,155 @@
+package com.one.dto.ClassVO;
+
+public class ClassStasticsVO {
+
+	private int opcl;
+	private double clScoAvg;
+	private String clCode;
+	private String clImg;
+	private String clName;
+	private String clFormat;
+	private String clCate;
+	private String clDivision;
+	private String mainExposure;
+	private String enrPers;
+	private int openRound;
+	private String memEmail;
+	private String memBir;
+	private String memName;
+	private String memclState;
+	private String positionId;
+	private String dpId;
+	private String postSdate;
+	private String postEdate;
+	private String clPoint;
+	private int count;
+	
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public double getClScoAvg() {
+		return clScoAvg;
+	}
+	public void setClScoAvg(double clScoAvg) {
+		this.clScoAvg = clScoAvg;
+	}
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClImg() {
+		return clImg;
+	}
+	public void setClImg(String clImg) {
+		this.clImg = clImg;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public String getClFormat() {
+		return clFormat;
+	}
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+	public String getClCate() {
+		return clCate;
+	}
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+	public String getClDivision() {
+		return clDivision;
+	}
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+	public String getMainExposure() {
+		return mainExposure;
+	}
+	public void setMainExposure(String mainExposure) {
+		this.mainExposure = mainExposure;
+	}
+	public String getEnrPers() {
+		return enrPers;
+	}
+	public void setEnrPers(String enrPers) {
+		this.enrPers = enrPers;
+	}
+	public int getOpenRound() {
+		return openRound;
+	}
+	public void setOpenRound(int openRound) {
+		this.openRound = openRound;
+	}
+	public String getMemEmail() {
+		return memEmail;
+	}
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+	public String getMemBir() {
+		return memBir;
+	}
+	public void setMemBir(String memBir) {
+		this.memBir = memBir;
+	}
+	public String getMemName() {
+		return memName;
+	}
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+	public String getMemclState() {
+		return memclState;
+	}
+	public void setMemclState(String memclState) {
+		this.memclState = memclState;
+	}
+	public String getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+	public String getDpId() {
+		return dpId;
+	}
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+	public String getPostSdate() {
+		return postSdate;
+	}
+	public void setPostSdate(String postSdate) {
+		this.postSdate = postSdate;
+	}
+	public String getPostEdate() {
+		return postEdate;
+	}
+	public void setPostEdate(String postEdate) {
+		this.postEdate = postEdate;
+	}
+	public String getClPoint() {
+		return clPoint;
+	}
+	public void setClPoint(String clPoint) {
+		this.clPoint = clPoint;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	
+}

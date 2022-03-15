@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemRemdSet-Mapper">
+	
+	<select id="selectMemRemdSetByMemEmail" resultType="memAlram">
+		SELECT
+		    MEM_EMAIL
+		   ,REPORT_DL_FLAG
+		   ,INTR_CL_FLAG
+		   ,REALTIME_CL_FLAG
+		   ,REPORT_CHK_FLAG
+		FROM
+		    MEM_REMD_SET
+		WHERE
+			MEM_EMAIL = #{memEmail}
+	</select>
+	
+	<update id="insertMemRemdSetForUser">
+		INSERT INTO MEM_REMD_SET (
+		     MEM_EMAIL
+		   ,REPORT_DL_FLAG
+		   ,INTR_CL_FLAG
+		   ,REALTIME_CL_FLAG
+		   ,REPORT_CHK_FLAG
+		) VALUES (
+		    #{memEmail}
+		   ,1
+		   ,1
+		   ,1
+		   ,0
+		)	
+	</update>
+	
+	<update id="insertMemRemdSetForHead">
+		INSERT INTO MEM_REMD_SET (
+		     MEM_EMAIL
+		   ,REPORT_DL_FLAG
+		   ,INTR_CL_FLAG
+		   ,REALTIME_CL_FLAG
+		   ,REPORT_CHK_FLAG
+		) VALUES (
+		    #{memEmail}
+		   ,1
+		   ,1
+		   ,1
+		   ,1
+		)	
+	</update>
+	
+	<update id="updateReportDlFlag">
+		UPDATE MEM_REMD_SET
+		    SET
+		        REPORT_DL_FLAG = #{reportDlFlag}
+		WHERE
+		    MEM_EMAIL = #{memEmail}
+	</update>
+	
+	<update id="updateIntrClFlag">
+		UPDATE MEM_REMD_SET
+		    SET
+		        INTR_CL_FLAG = #{intrClFlag}
+		WHERE
+		    MEM_EMAIL = #{memEmail}
+	</update>
+	
+	<update id="updateRealtimeClFlag">
+		UPDATE MEM_REMD_SET
+		    SET
+		        REALTIME_CL_FLAG = #{realtimeClFlag}
+		WHERE
+		    MEM_EMAIL = #{memEmail}
+	</update>
+	
+	<update id="updateReportChkFlag">
+		UPDATE MEM_REMD_SET
+		    SET
+		        REPORT_CHK_FLAG = #{reportChkFlag}
+		WHERE
+		    MEM_EMAIL = #{memEmail}
+	</update>
+	
+	
+	
+</mapper>

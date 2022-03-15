@@ -1,0 +1,231 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header mx-auto">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">시험</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<a href="#">내강의실</a>
+						</li>
+						<li class="breadcrumb-item active">학습중인 강의</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+	<section class="content">
+		<div class="container-fluid">
+			<form role="fTestForm" action="test.do" method="post">
+			<input type="hidden" name="opcl" value="${testVO.opcl }">
+			<input type="hidden" name="fileName" value="${testVO.ftestFile }">
+			<input type="hidden" name="clChap" value="${clChap}">
+			<input type="hidden" name="clCode" value="${clCode}">
+			<input type="hidden" name="testCode" value="fTest">
+			
+			<div class="col-9 float-left">
+				<!-- Content Header (Page header) -->
+				<div class="row">
+					<section class="col-6">
+						<table id="exam-left" class="table table-bordered  mt-3" style="padding: 10px;">
+							
+						</table>
+					</section>
+					<section class="col-6">
+						<table id="exam-right" class="table table-bordered mt-3" style="padding: 10px;">
+
+
+						</table>
+					</section>
+				</div>
+
+			</div>
+
+			<aside class="col-3 float-right mt-3">
+
+				<!-- Sidebar -->
+				<div class="sidebar p-3" style="min-height:650px; background-color:#f4f6f9; position:absolute;">
+					<table class="table table-bordered">
+						<tr class="text-center font-weight-bold">
+							<td>번호</td>
+							<td>답안</td>
+							<td>번호</td>
+							<td>답안</td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">1번</td>
+							<td><span class="text-primary" id="num_1"></span></td>
+							<td class="font-weight-bold">11번</td>
+							<td><span class="text-primary" id="num_11"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">2번</td>
+							<td><span class="text-primary" id="num_2"></span></td>
+							<td class="font-weight-bold">12번</td>
+							<td><span class="text-primary" id="num_12"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">3번</td>
+							<td><span class="text-primary" id="num_3"></span></td>
+							<td class="font-weight-bold">13번</td>
+							<td><span class="text-primary" id="num_13"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">4번</td>
+							<td><span class="text-primary" id="num_4"></span></td>
+							<td class="font-weight-bold">14번</td>
+							<td><span class="text-primary" id="num_14"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">5번</td>
+							<td><span class="text-primary" id="num_5"></span></td>
+							<td class="font-weight-bold">15번</td>
+							<td><span class="text-primary" id="num_15"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">6번</td>
+							<td><span class="text-primary" id="num_6"></span></td>
+							<td class="font-weight-bold">16번</td>
+							<td><span class="text-primary" id="num_16"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">7번</td>
+							<td><span class="text-primary" id="num_7"></span></td>
+							<td class="font-weight-bold">17번</td>
+							<td><span class="text-primary" id="num_17"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">8번</td>
+							<td><span class="text-primary" id="num_8"></span></td>
+							<td class="font-weight-bold">18번</td>
+							<td><span class="text-primary" id="num_18"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">9번</td>
+							<td><span class="text-primary" id="num_9"></span></td>
+							<td class="font-weight-bold">19번</td>
+							<td><span class="text-primary" id="num_19"></span></td>
+						</tr>
+						<tr class="text-center">
+							<td class="font-weight-bold">10번</td>
+							<td><span class="text-primary" id="num_10"></span></td>
+							<td class="font-weight-bold">20번</td>
+							<td><span class="text-primary" id="num_20"></span></td>
+						</tr>
+					</table>
+					<button class="btn btn-primary float-right" type="button" onclick="fn_registTest()">제출하기</button>
+				</div>
+				<!-- /.sidebar -->
+			</aside>
+			</form>
+		</div>
+	</section>
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+<script type="text/x-handlebars-template" id="exam-detail-template">
+<tr>
+<td>
+	<table class="table table-borderless" style="min-height:235px;">
+		<tbody>
+			<tr>
+				<td class="p-0" style="font-size: 20px"><b style="font-size: 28px" class="text-center">{{testNum}}</b>
+				<td class="p-2">{{examQuestions}}</td> 
+			</tr>
+			<tr>
+				<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="radio_{{testNum}}" id="one_{{testNum}}" data-no="①"  value="1" onchange="fn_answer(this);">⑴ {{testNumber1}}</td>
+			</tr>
+			<tr>
+				<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="radio_{{testNum}}" id="two_{{testNum}}" data-no="②"  value="2" onchange="fn_answer(this);">⑵ {{testNumber2}}</td>
+			</tr>
+			<tr>
+				<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="radio_{{testNum}}" id="three_{{testNum}}" data-no="③"  value="3" onchange="fn_answer(this);">⑶ {{testNumber3}}</td>
+			</tr>
+			<tr>
+				<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="radio_{{testNum}}" id="four_{{testNum}}" data-no="④" value="4" onchange="fn_answer(this);">⑷ {{testNumber4}}</td>
+			</tr>
+		</tbody>
+	</table>
+</td>
+</tr>
+</script>
+<script type="text/x-handlebars-template" id="exam-detail-template">
+
+</script>
+	<script>
+	function printData(detail, target, templateObject) {
+		let template = Handlebars.compile(templateObject.html());
+		let html = template(detail);
+		$('.detail-body').remove();
+		target.append(html);
+	}
+	
+	window.onload = function(){
+		$.ajax({
+			url : 'getTest.do',
+			type : 'post',
+			data : {
+				"fileName"	: "${testVO.ftestFile}"
+			},
+			dataType : 'json',
+			success : function(data) {
+				for (i = 0; i < data.length; i++) {
+					if (i % 2 == 0) {
+						printData(data[i], $('#exam-left'), $('#exam-detail-template'));
+					} else {
+						printData(data[i], $('#exam-right'), $('#exam-detail-template'));
+					}
+				}
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+		
+		var currentPosition = parseInt($(".sidebar").css("top")); 
+		$(window).scroll(function() { 
+			var position = $(window).scrollTop(); 
+			$(".sidebar").stop().animate({"top":position+currentPosition+"px"},1000); 
+		});
+		
+	}
+	
+	function fn_answer(inputTag){
+		
+		let getId = inputTag.getAttribute("id");
+		let getNums = getId.split("_");
+		let getNum = getNums[1]
+		let getVal = inputTag.getAttribute("data-no");
+		document.querySelector("span[id=num_"+getNum+"]").innerHTML = getVal;
+	}
+	
+	function fn_registTest(){
+		let answers = document.querySelectorAll('.answer');
+		let inputTag = document.querySelectorAll('input[name="radio_'+i+'"]');
+		for(let i = 1; i <= 20; i++ ){
+			let spanVal = document.querySelector("span[id=num_"+i+"]").innerHTML;
+			if(!spanVal){
+				alert(i + "번 항목을 선택해주세요");
+				return;
+			}
+		}
+		document.querySelector('form[role="fTestForm"]').submit();
+		
+	}
+	</script>
+</body>

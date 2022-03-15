@@ -1,0 +1,305 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+<script type="text/x-handlebars-template" id="reply-list-template">
+{{#each .}}
+  {{#if @first}}
+	<div class="card-comment reply-div">
+	<div class="comment-text">
+		<div class="username">
+			<span class="username">{{memId}}
+				<div class="float-right dropdown">
+					<span class="text-muted float-left mr-3">{{prettifyDate dereplyRegdate}}</span> 
+					<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:{{VisibleByLoginCheck memId}};"> 
+						<i class="fas fa-ellipsis-v text-secondary"></i>
+					</span>
+					
+					<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+						<a onclick="fn_modifyForm({{@index}})" class="dropdown-item">수정</a>
+						<a onclick="deleteReply({{@index}},{{dereplyNo}})" class="dropdown-item">삭제</a>
+					</div>
+				</div>
+
+			</span>
+
+		</div>
+		<input type="text" style="border : none;" readonly id="{{@index}}repContent" value="{{dereplyContent}}"></input>
+	</div>
+  {{else}}
+	{{#if dereplyPreantNo}}
+		<div class="m-4 reReply-wrapper">
+		    <div class="m-4">
+		    	<i class="fas fa-reply fa-rotate-180 img-circle img-sm text-secondary"></i>
+		    	<div class="comment-text">
+		    		<span class="username">{{memId}}
+		    			<div class="float-right dropdown">
+		    				<span class="text-muted float-left mr-3">{{prettifyDate dereplyRegdate}}</span> 
+		    				</span>
+					<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:{{VisibleByLoginCheck memId}};"> 
+						<i class="fas fa-ellipsis-v text-secondary"></i>
+					</span>
+					
+					<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+						<a onclick="fn_modifyForm({{@index}})" class="dropdown-item">수정</a>
+						<a onclick="deleteReply({{@index}},{{dereplyNo}})" class="dropdown-item">삭제</a>
+					</div>
+		    			</div>
+
+		    		</span> 
+                    <input type="text"  style="border:none;" readonly id="{{@index}}repContent" value="{{dereplyContent}}"></input>
+		                <div class="form-group d-inline-flex col-11 mt-2">
+		                	<input type="text" class="form-control form-control-sm col-11" id="modifyInput" value="{{frreplyContent}}" style="display:none;">
+		                	<button class="btn btn-primary btn-sm" id="modifyBtn" onclick="fn_replyModify(this);" style="display:none;">댓글 수정</button>
+		                </div>
+		    	</div>
+		    </div>
+	    </div>
+    {{else}}
+	</div>
+	 <div class="card-comment">
+		<div class="comment-text reply-div">
+		<div class="username">
+			<span class="username">{{memId}}
+				<div class="float-right dropdown">
+					<span class="text-muted float-left mr-3" style="cursor: pointer;" onclick="registreReply({{dereplyNo}})">답글쓰기</span> 
+					<span class="text-muted float-left mr-3">{{prettifyDate dereplyRegdate}}</span> 
+					<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:{{VisibleByLoginCheck memId}};"> 
+						<i class="fas fa-ellipsis-v text-secondary"></i>
+					</span>
+					
+					<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+						<a onclick="fn_modifyForm({{@index}})" class="dropdown-item">수정</a>
+						<a onclick="deleteReply({{@index}},{{dereplyNo}})" class="dropdown-item">삭제</a>
+					</div>
+				</div>
+
+			</span>
+		</div>
+
+			<section>
+			<input type="text" style="border : none;" readonly id="{{@index}}repContent" value="{{dereplyContent}}"></input>
+			</section>	
+				<section>
+				<form role="{{@index}}reReplyForm" method="post">
+					<input type="hidden" name="dboardNo" value="{{dboardNo}}">
+					<input type="hidden" name="dereplyPreantNo" value="{{dereplyNo}}">
+
+					<input type="text" class="form-control col-2" id="{{@index}}replyer"  style="display: none;">
+					<input type="text" class="form-control form-control-sm col-10" id="reply" name="dereplyContent" placeholder="댓글을 입력하세요">
+					<button class="btn btn-primary btn-sm" type="button" onclick="reReply({{@index}});">답글 쓰기</button>
+				</form>			
+				</section>
+
+
+    {{/if}}
+  {{/if}}
+  {{#if @last}}
+	</li>
+  {{/if}}
+{{/each}}
+
+<form role="registReplyForm" method="post" action="regist.do">
+	<input type="hidden" name="dboardNo" value="${debateBoard.dboardNo }"/>
+	<div class="form-group d-inline-flex col-12">
+		<input type="text" class="form-control" id="replyer"  style="display: none;"> <input type="text" class="form-control form-control-sm col-11" id="reply" name="dereplyContent" placeholder="댓글을 입력하세요">
+		<button class="btn btn-primary btn-sm" type="button" onclick="registReply();">댓글 쓰기</button>
+	</div>
+		
+	</form>
+</script>
+
+<script type="text/x-handlebars-template" id="reply-pagination-template">
+<li class="page-item">
+<a class="page-link" href="javascript:list_go(1);">
+	<i class="fas fa-angle-double-left"></i>
+</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="javascript:list_go({{#if pageMaker.prev}}{{pageMaker.startPage-1}}{{else}}{{pageMaker.cri.page}}{{/if}});">
+	<i class="fas fa-angle-left"></i>
+</a>
+</li>
+
+{{#each page}}
+<li class="page-item  {{#ifCond pageMaker.cri.page this}}'active'{{/if}}">
+	<a class="page-link" href="javascript:list_go({{this}});"> {{this}} </a>
+</li>
+{{/each}}
+
+<li class="page-item">
+<a class="page-link" href="javascript:list_go({{#if pageMaker.next}}{{pageMaker.startPage+1}}{{else}}{{pageMaker.cri.page}}{{/if}});">
+	<i class="fas fa-angle-right"></i>
+</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="javascript:list_go({{ pageMaker.realEndPage }});">
+	<i class="fas fa-angle-double-right"></i>
+</a>
+</li>
+</script>
+
+
+<script>
+let replyPage = 1;
+
+window.onload=function(){
+	getPage("<%=request.getContextPath()%>/user/debateReply/${debateBoard.dboardNo}/"+replyPage);
+
+	$('ul.pagination').on('click', 'li a', function(event){
+		//alert('ul click');
+		if($(this).attr("href")){
+			replyPage=$(this).attr("href");
+			getPage("<%=request.getContextPath()%>/user/debateReply/${debateBoard.dboardNo}/"+ replyPage);
+		}
+		return false;
+	});
+
+	}
+
+	function printData(replyArr, target, templateObject) {
+		let template = Handlebars.compile(templateObject.html());
+		let html = template(replyArr);
+		$('.reply-div').remove();
+		target.after(html);
+	}
+
+	function printPagination(data, target, templateObject) {
+		// array 사이즈 잡기(10)
+		var pageNum = new Array(data.pageMaker.endPage - data.pageMaker.startPage + 1);
+
+		for (var i = 0; i < data.pageMaker.endPage - data.pageMaker.startPage + 1; i++) {
+			pageNum[i] = data.pageMaker.startPage + i;
+		}
+
+		//pageNum 속성으로 pageNum값이 들어감
+		pageMaker.pageNum = pageNum;
+		pageMaker.prevPageNum = pageMaker.startPage - 1;
+		pageMaker.nextPageNum = pageMaker.endPage + 1;
+
+		var template = Handlebars.compile(templateObject.html());
+		var html = template(data);
+		target.html("").html(html);
+	}
+
+	function getPage(pageInfo) {
+		$.ajax({
+			url : pageInfo,
+			type : "get",
+			dataType : "json",
+			success : function(data) {
+				printData(data.debateReplyList, $('.replies'),$('#reply-list-template'));
+// 				printPagination(data, $('#pagination'),$('#reply-pagination-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+
+	Handlebars.registerHelper({
+		"prettifyDate" : function(timeValue) {
+			let dateObj = new Date(timeValue);
+			let year = dateObj.getFullYear();
+			let month = dateObj.getMonth() + 1;
+			let date = dateObj.getDate();
+			return year + "/" + month + "/" + date;
+		},
+		"VisibleByLoginCheck" : function(replyer) {
+			let result = "none";
+			if (replyer == "${loginUser.memId}")
+				result = "visible";
+			return result;
+		},
+		"signActive" : function(pageNum) {
+			if (pageNum == replyPage)
+				return 'active';
+		}
+	});
+
+	function registDabgul(){
+
+		var rere = document.getElementsByName('rere');
+
+
+
+			$(this).append($form);
+
+
+	}
+
+	$(document).on('click','.replyBtn',function(){
+		var $form = $('<input class="form-control col-5 ml-4" type="text" onkeyup="registReply();" name="dereplyContent" placeholder="댓글을 작성해주세요.">');
+		$(this).closest('li').append($form);
+	});
+
+	function registReply(){
+		alert("sfadf");
+
+	}
+	
+	function fn_modifyForm(aTag){
+		let modifyInput = $(aTag).parents('div.comment-text').find('#modifyInput');
+		let replyContent = $(aTag).parents('div.comment-text').find('#replyContent');
+		let modifyBtn = $(aTag).parents('div.comment-text').find('#modifyBtn');
+		
+		modifyInput.css("display","block")
+		replyContent.css("display","none")
+		modifyBtn.css("display","block")
+	}
+	
+	
+	function deleteReply(index,dereplyNo){
+		form = $('form[role='+index+'reReplyForm]')[0];
+		formData = new FormData(form);
+			
+		
+		$.ajax({
+			url 		: 'deleteReply.do',
+			data 		: formData,
+			type 		: 'post',
+			processData : false,
+			contentType : false,
+			success 	: function(data){
+				console.log(data);
+				alert(data);
+				location.reload();
+			},
+			error 		: function(error){
+				
+				console.log(error.status);
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		})		
+	}
+	
+	function registreReply(index){
+		
+	}
+	
+	function reReply(index){
+		form = $('form[role='+index+'reReplyForm]')[0];
+		formData = new FormData(form);
+			
+		
+		$.ajax({
+			url 		: 'registReply.do',
+			data 		: formData,
+			type 		: 'post',
+			processData : false,
+			contentType : false,
+			success 	: function(data){
+				console.log(data);
+				alert(data);
+				location.reload();
+			},
+			error 		: function(error){
+				
+				console.log(error.status);
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		})			
+	}
+	
+</script>

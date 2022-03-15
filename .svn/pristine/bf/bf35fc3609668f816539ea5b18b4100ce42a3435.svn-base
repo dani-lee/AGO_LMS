@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Certificate-Mapper">
+	
+	<sql id="search">
+		<if test="searchType !='all'">
+			<if test="searchType > '1000'">
+				and to_char(c.ctf_date, 'yyyy') = #{searchType}
+			</if>
+		</if>
+	</sql>
+
+	<select id="selectCertificate" resultType="certificate">
+		select CTF_TITLE
+			 , CTF_CONTENT
+			 , CTF_SEAL
+			 , RET_NAME
+			 , CTF_DESIGN 
+		  from CERTIFICATE
+	</select>
+	
+	<select id="selectCertificateByScheduled" resultType="certificate">
+		select CTF_TITLE
+			 , CTF_CONTENT
+			 , CTF_SEAL
+			 , RET_NAME
+			 , CTF_DESIGN  
+		  from CERTIFICATE
+		 where (CTF_DESIGN=#{picture}
+		    or CTF_SEAL=#{picture})
+	</select>
+	
+	<update id="insertCertificate" parameterType="certificate">
+		insert into CERTIFICATE(CTF_TITLE, CTF_CONTENT, CTF_SEAL, RET_NAME, CTF_DESIGN) 
+			   values(#{ctfTitle}, #{ctfContent}, #{ctfSeal}, #{retName}, #{ctfDesign})
+	</update>
+	
+	<select id="selectCretificateListByEmail" resultType="certificateList">
+		select b.cl_code
+			 , a.opcl
+		     , b.cl_name
+		     , c.ctf_date
+		  from open_class a
+		     , class b
+		     , mem_cl c
+		 where a.cl_code=b.cl_code
+		   and a.opcl=c.opcl
+		   and c.mem_email = #{memEmail}
+		   and c.ctf_date is not null
+		   <include refid="search" />
+		 order by c.ctf_date desc
+	</select>
+	
+	<select id="selectCretificateByEmail" resultType="memberCertificate">
+		select a.ctf_date
+		     , c.cl_name
+		     , c.cl_credit_time
+		     , d.mem_name
+		     , d.mem_bir
+		     , CERTIFICATE_SEQ.nextval as count_print
+		  from mem_cl a
+		     , open_class b
+		     , class c
+		     , member d
+		 where c.cl_code=#{clCode}
+		   and a.MEM_EMAIL=#{memEmail}
+		   and a.opcl = b.opcl
+		   and b.cl_code=c.cl_code
+		   and a.mem_email=d.mem_email
+	</select>
+	
+	<select id="countMemberCertificateList" resultType="int">
+		select count(*)
+		  from open_class a
+		     , class b
+		     , mem_cl c
+		 where a.cl_code=b.cl_code
+		   and a.opcl=c.opcl
+		   and c.mem_email = #{memEmail}
+		   and c.ctf_date is not null
+		   <include refid="search" />
+		 order by c.ctf_date desc
+	</select>
+	
+	<select id="selectCertificateYear" resultType="str">
+		select DISTINCT
+		       to_char(a.ctf_date,'yyyy') as ctf_date
+		  from mem_cl a
+		 where a.MEM_EMAIL=#{memEmail}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

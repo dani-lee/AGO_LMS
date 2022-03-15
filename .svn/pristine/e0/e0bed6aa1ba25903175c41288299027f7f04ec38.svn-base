@@ -1,0 +1,13 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dto.CommonVO;
+
+public interface CommonService {
+
+	public List<CommonVO> getCommonByGroupCode(String groupCode) throws SQLException;
+
+	public String getCodeName1ByCommonCode(String CommonCode) throws SQLException;
+}

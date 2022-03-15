@@ -1,0 +1,124 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.PageMaker;
+import com.one.dao.DebateReplyDAO;
+import com.one.dao.MemberDAO;
+import com.one.dto.DebateReplyVO;
+import com.one.dto.FreeReplyVO;
+import com.one.dto.MemberVO;
+import com.one.service.DebateReplyService;
+
+public class DebateReplyServiceImpl implements DebateReplyService {
+	
+	private DebateReplyDAO debateReplyDAO;
+	public void setDebateReplyDAO(DebateReplyDAO debateReplyDAO) {
+		this.debateReplyDAO = debateReplyDAO;
+	}
+	
+	private MemberDAO memberDAO;
+	public void setMemberDAO(MemberDAO memberDAO) {
+		this.memberDAO = memberDAO;
+	}
+	
+	@Override
+	public Map<String, Object> getDebateReplyList(int dboardNo, Criteria cri) throws Exception {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<DebateReplyVO> debateReplyList = debateReplyDAO.selectDebateReplyList(dboardNo, cri);
+		List<String> memDepartmentList = new ArrayList<String>();
+		if(debateReplyList != null) for(DebateReplyVO debateReply : debateReplyList) {
+			MemberVO member = memberDAO.selectMemberById(debateReply.getMemId());
+			String dpId = member.getDpId();
+			String dp = "";
+			if(dpId.equals("DP101")) dp = "총무부";
+			if(dpId.equals("DP102")) dp = "경리부";
+			if(dpId.equals("DP103")) dp = "구매자재부";
+			if(dpId.equals("DP104")) dp = "품질관리부";
+			if(dpId.equals("DP105")) dp = "생산1팀";
+			if(dpId.equals("DP106")) dp = "생산2팀";
+			if(dpId.equals("DP107")) dp = "상품관리부";
+			if(dpId.equals("DP108")) dp = "기술부";
+			if(dpId.equals("DP109")) dp = "해외영업부";
+			if(dpId.equals("DP110")) dp = "국내영업부";
+			if(dpId.equals("DP111")) dp = "고객관리부";
+			if(dpId.equals("DP112")) dp = "개발부";
+			if(dpId.equals("DP113")) dp = "부설연구소";
+			
+			debateReply.setDepartment(dp);
+		}
+	
+		debateReplyList = replySortList(debateReplyList);
+		int totalCount = debateReplyDAO.countDebateReply(dboardNo);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		
+		List<Integer> page = new ArrayList<Integer>();
+		for(int i = pageMaker.getStartPage(); i <= pageMaker.getEndPage(); i++ ) {
+			page.add(i);
+		}
+		
+		dataMap.put("debateReplyList", debateReplyList);
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("page", page);
+
+		return dataMap;
+	}
+
+	@Override
+	public int getDebateReplyCount(int dboardNo) throws Exception {
+		return debateReplyDAO.countDebateReply(dboardNo);
+	}
+	
+	
+
+	@Override
+	public void registDebateReply(DebateReplyVO debateReply) throws Exception {
+
+	}
+
+	@Override
+	public void modifyDebateReply(DebateReplyVO debateReply) throws Exception {
+
+	}
+
+	@Override
+	public void removeDebateReplyAll(int dboardNo) throws Exception {
+		debateReplyDAO.deleteDebateReplyBydboardNo(dboardNo);
+	}
+	
+	public List<DebateReplyVO> replySortList(List<DebateReplyVO> debateReplyList){
+		List<DebateReplyVO> parentList = new ArrayList<DebateReplyVO>();
+		List<DebateReplyVO> childList = new ArrayList<DebateReplyVO>();
+		
+		for(DebateReplyVO debateReply : debateReplyList) {
+			if(debateReply.getDereplyPreantNo() != 0) {
+				childList.add(debateReply);
+			}else {
+				parentList.add(debateReply);
+			}
+		}
+		
+		List<DebateReplyVO> replySortList = new ArrayList<DebateReplyVO>();
+		
+		for(DebateReplyVO parenteReply : parentList) {
+			replySortList.add(parenteReply);
+			for(DebateReplyVO childReply : childList) {
+				if(parenteReply.getDereplyNo()==childReply.getDereplyPreantNo()) {
+					replySortList.add(childReply);
+				}
+			}
+		}
+		
+		return replySortList;
+	}
+
+
+}

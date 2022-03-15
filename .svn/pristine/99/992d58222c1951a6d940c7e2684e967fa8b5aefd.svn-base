@@ -1,0 +1,84 @@
+package com.one.dto.ClassVO;
+
+public class ClassRegistFormVO {
+
+	
+	private String codeName1;
+	private String commonCode;
+	private String studyDate;
+	private String clFormat;
+	private String clDivision;
+	private String dpId;
+	private String clCate;
+	
+	
+	
+
+	public String getStudyDate() {
+		return studyDate;
+	}
+
+	public void setStudyDate(String studyDate) {
+		this.studyDate = studyDate;
+	}
+
+	public String getClFormat() {
+		return clFormat;
+	}
+
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+
+	public String getClDivision() {
+		return clDivision;
+	}
+
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+
+	public String getDpId() {
+		return dpId;
+	}
+
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+
+	public String getClCate() {
+		return clCate;
+	}
+
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+
+	public String getCommonCode() {
+		return commonCode;
+	}
+
+	public void setCommonCode(String commonCode) {
+		this.commonCode = commonCode;
+	}
+
+	public String getCodeName1() {
+		return codeName1;
+	}
+
+	public void setCodeName1(String codeName1) {
+		this.codeName1 = codeName1;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassRegistFormVO [codeName1=" + codeName1 + ", commonCode=" + commonCode + ", studyDate=" + studyDate
+				+ ", clFormat=" + clFormat + ", clDivision=" + clDivision + ", dpId=" + dpId + ", clCate=" + clCate
+				+ ", getStudyDate()=" + getStudyDate() + ", getClFormat()=" + getClFormat() + ", getClDivision()="
+				+ getClDivision() + ", getDpId()=" + getDpId() + ", getClCate()=" + getClCate() + ", getCommonCode()="
+				+ getCommonCode() + ", getCodeName1()=" + getCodeName1() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	}
+	
+	
+}

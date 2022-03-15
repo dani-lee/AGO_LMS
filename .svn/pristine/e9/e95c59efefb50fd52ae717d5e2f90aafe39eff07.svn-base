@@ -1,0 +1,12 @@
+pds.upload=c:/pds/file/upload
+member.picture.upload=c:/member/picture/upload/
+certificate.picture.upload=D:/A_TeachingMaterial/7.LastProject/other/certificate
+error.log=c:/error_log/
+login.user.log=c:/log/loginUser
+excel.form=D:/A_TeachingMaterial/7.LastProject/other/excelForm/
+excel.temp=D:/A_TeachingMaterial/7.LastProject/other/excelTemp/
+class.picture.upload=D:/A_TeachingMaterial/7.LastProject/other/classPicture/
+summernote.img=D:/A_TeachingMaterial/7.LastProject/other/summernote/img/
+logo.img=D:/A_TeachingMaterial/7.LastProject/workspace/AGO2/src/main/webapp/resources/img/
+qrCode.img=D:/A_TeachingMaterial/7.LastProject/other/qrCode/
+extreport.certificate=D:/A_TeachingMaterial/7.LastProject/other/extreport/certificate

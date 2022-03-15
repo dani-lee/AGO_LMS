@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DebateBoard-Mapper">
+	
+	<sql id="sort">
+		<if test="sortType == 'r'.toString()">
+			and DE_REPORT_CNT > 0
+		</if>
+	</sql>
+	
+	<sql id="search">
+		<if test="searchType == 'a'.toString()">
+			AND (upper(DE_TITLE) LIKE '%'||upper(#{keyword})||'%'
+			OR upper(DE_CONTENT) LIKE '%'||upper(#{keyword})||'%'
+			OR upper(MEM_ID) LIKE '%'||upper(#{keyword})||'%')
+		</if>
+		<if test="searchType == 't'.toString()">
+			AND upper(DE_TITLE) LIKE '%'||upper(#{keyword})||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND upper(DE_CONTENT) LIKE '%'||upper(#{keyword})||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND upper(MEM_ID LIKE) '%'||upper(#{keyword})||'%'
+		</if>
+	</sql>
+	
+	<select id="selectDebateBoardList" parameterType="string" resultType="debateBoard">
+		SELECT DBOARD_NO
+			 , DE_TITLE
+			 , DE_CONTENT
+			 , DE_REGDATE
+			 , DE_VIEW_CNT
+			 , DE_REPORT_CNT
+			 , MEM_ID
+		  FROM
+			   DE_BOARD
+		 WHERE 
+			   DBOARD_NO is not null
+		<include refid="search" />
+		ORDER BY 
+			   DE_REGDATE DESC
+	</select>
+
+	<select id="selectDebateBoardSortList" parameterType="string" resultType="debateBoard">
+		SELECT DBOARD_NO
+			 , DE_TITLE
+			 , DE_CONTENT
+			 , DE_REGDATE
+			 , DE_VIEW_CNT
+			 , DE_REPORT_CNT
+			 , MEM_ID
+		  FROM
+			   DE_BOARD
+		 WHERE 
+			   DE_REPORT_CNT >= 1
+		<include refid="sort" />
+		ORDER BY 
+			   DE_REGDATE DESC
+	</select>
+	
+	<select id="selectDebateBoardByDboardNo" resultType="debateBoard">
+		SELECT DBOARD_NO
+			 , DE_TITLE
+			 , DE_CONTENT
+			 , DE_REGDATE
+			 , DE_VIEW_CNT
+			 , DE_REPORT_CNT
+			 , MEM_ID
+		  FROM
+			   DE_BOARD
+		 WHERE 
+			   DBOARD_NO = #{data}
+	</select>
+
+	<select id="selectDebateBoardListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM 
+			   DE_BOARD
+	</select>
+	
+	<update id="increaseViewCnt" parameterType="int">
+		UPDATE
+			   DE_BOARD
+		   SET
+			   DE_VIEW_CNT = DE_VIEW_CNT+1
+		 WHERE
+			   DBOARD_NO = #{data}
+	</update>
+
+	<update id="deleteDebateBoard">
+		DELETE
+		  FROM
+			   DE_BOARD
+		 WHERE
+			   DBOARD_NO = #{dboardNo}
+	</update>	
+
+	<select id="selectDebateBoardSeqNext" resultType="int">
+		select DE_BOARD_SEQ.nextval from dual
+	</select>
+	
+	<update id="insertDebate" parameterType="debateBoard">
+		INSERT INTO de_board (
+    		dboard_no
+		   ,de_title
+		   ,de_content
+		   ,de_regdate
+		   ,de_view_cnt
+		   ,de_report_cnt
+		   ,mem_id
+		) VALUES (
+		    #{dboardNo}
+		   ,#{deTitle}
+		   ,#{deContent}
+		   ,TRUNC(SYSDATE)
+		   ,0
+		   ,0
+		   ,#{memId}
+		)
+	</update>	
+	
+	<update id="increaseReportCnt" parameterType="int">
+		UPDATE
+			   DE_BOARD
+		   SET
+			   DE_REPORT_CNT = DE_REPORT_CNT+1
+		 WHERE
+			   DBOARD_NO = #{dboardNo}
+	</update>
+	
+	<update id="updateDebate">
+		UPDATE DE_BOARD
+		    SET
+		       DE_TITLE = #{deTitle}
+			 , DE_CONTENT = #{deContent}
+		WHERE
+		    DBOARD_NO = #{dboardNo}
+	</update>
+</mapper>

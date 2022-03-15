@@ -1,0 +1,38 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.ClassReviewCommand;
+import com.one.dto.MemberClVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDocumentVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassReviewVO;
+
+public interface JMSClassService {
+	public Map<String, Object> selectOpcl(int opcl) throws SQLException;
+
+	public ClassListVO selectClass(int opcl) throws SQLException;
+
+	public List<ClassChapterVO> selectChapter(int opcl, String memEmail) throws SQLException;
+
+	public List<ClassDocumentVO> selectDocument(int opcl) throws SQLException;
+
+	public List<ClassReviewCommand> selectReview(int opcl) throws Exception;
+
+	public MemberClVO getMemChap(MemberClVO memberCL) throws SQLException;
+
+	public void dropClass(int opcl, String memEmail)throws SQLException;
+	
+	public int getotallProgChap(int memClNo) throws SQLException;
+	
+	public int gettotalProgChapList(int memClNo, int clChap, int progChap) throws SQLException;
+	
+	public int gettotalProgChapList2(int memClNo, int clChap, int progChap) throws SQLException;
+	
+	public int getProgRateByOpcl(int opcl, String memEmail)throws SQLException;
+	
+	
+}

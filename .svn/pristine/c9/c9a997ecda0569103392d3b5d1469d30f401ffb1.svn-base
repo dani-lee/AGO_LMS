@@ -1,0 +1,72 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script>
+function regist(opcl, endDay) {
+	if($("input[name='sortType']").val() == 's'){
+		if($('input[name=positionId]').val() != 'PS101'){
+			alert("신입사원만 수강 가능합니다.");
+		}else{
+			registFunction(opcl, endDay);
+		}		
+	}else{
+		registFunction(opcl, endDay);
+	}
+	
+	
+	
+}
+
+function registFunction(opcl, endDay) {
+	// alert($('#'+opcl+'').attr('value'));
+	 if($('#'+opcl+'').attr('value') == '수강신청'){
+
+		 $.ajax({
+	         url         : 'regist',
+	         data        : {	'opcl' : opcl,
+	        					 'endDay' : endDay
+	         			   },   
+	         type        : 'post',
+	         success     : function(data){
+	        	 if($('#bookmark'+opcl+'').attr('class') != 'ml-1 far fa-bookmark'){
+	        		 markState = false;
+	        		 $.ajax({
+	        	         url         : 'bookmark',
+	        	         data        : {	'opcl' : opcl
+	        	        	 			   ,'markState' : markState
+	        	         			   },
+	        	         type        : 'post',
+	        	         success     : function(data){
+	        				// alert(result);
+	        	        	 $('#bookmark'+opcl+'').attr('class', 'ml-1 far fa-bookmark');
+	        	         },
+	        	         error         : function(error){
+	        	             //alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+	        	             AjaxErrorSecurityRedirectHandler(error.status);
+	        	             console.log(error.status);
+	        	         }
+	        	     })
+	        		 
+	        	 }
+	        	 $('#bookmark'+opcl+'').attr('onclick', '');
+				//alert(result);
+				// 수강취소는...? -> 수강내역에서 하기
+/* 		        	$('#'+opcl+'').attr("class","btn btn-block btn-secondary"); */
+	        	$('#'+opcl+'').attr('value','학습중');
+/* 		        	$('#'+opcl+'').attr('onclick',"location.href=''"); */
+	         },
+	         error         : function(error){
+	             //alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+	             AjaxErrorSecurityRedirectHandler(error.status);
+	             console.log(error.status);
+	         }
+	     })
+
+	 } 
+}
+
+function noregist() {
+	alert("타부서 강의는 수강할 수 없습니다.")
+}
+</script>

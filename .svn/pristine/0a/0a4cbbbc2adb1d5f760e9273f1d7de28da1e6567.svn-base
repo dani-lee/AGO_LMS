@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 'a'.toString()">
+			AND MEM_NAME LIKE '%'||#{keyword}||'%'
+			OR FREE_CONTENT LIKE '%'||#{keyword}||'%'
+			OR MEM_ID LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="searchType == 't'.toString()">
+			AND FREE_TITLE LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND FREE_CONTENT LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND MEM_ID LIKE '%'||#{keyword}||'%'
+		</if>
+	</sql>
+
+	<select id="selectMemberClassList" resultType="memberClassCommand">
+		SELECT MEM_CL_NO
+				, OPCL
+				, MEM_EMAIL
+				, TEST_CPL
+				, STUDY_CPL
+				, PROG_RATE
+				, MEMCL_STATE
+				, CTF_DATE
+				, STUDY_SDATE
+				, STUDY_EDATE
+		FROM MEM_CL
+		WHERE MEM_EMAIL = #{memEmail}
+
+	</select>
+
+
+	<select id="selectMemberClassName" resultType="classVo">
+		SELECT CL_NAME, CL_CODE FROM V_CLASS WHERE OPCL = #{opcl}
+	</select>
+
+	<select id="selectMemberDepartment" resultType="department">
+		SELECT *
+		from COMMON
+		where GROUP_CODE = 'DP1'
+	</select>
+
+	<select id="selectMemberPosition" resultType="department">
+		SELECT *
+		from COMMON
+		where GROUP_CODE = 'PS1'
+	</select>
+
+	<select id="selectMemberAuthority" resultType="department">
+		SELECT *
+		from COMMON
+		where GROUP_CODE = 'A1'
+		and COMMON_CODE != 'A103'
+		and COMMON_CODE != 'A104'
+	</select>
+
+	<update id="updateMemberAuthority" parameterType="member">
+		UPDATE  MEMBER
+        SET
+		AUTHORITY_ID = #{authorityId}
+		WHERE MEM_EMAIL = #{memEmail}
+	</update>
+
+	<select id="selectMemberByDpId" resultType="member">
+		SELECT
+		    MEM_EMAIL,
+		    MEM_NAME,
+		    MEM_BIR,
+		    MEM_PHONE,
+		    MEM_ID,
+		    MEM_PWD,
+		    MEM_CREDIT,
+		    POSITION_ID,
+		    DP_ID,
+		    AUTHORITY_ID,
+		    MEM_STATUS
+		FROM
+		    MEMBER
+		    WHERE MEM_ID IS NOT NULL
+		    AND DP_ID=#{dpId}
+
+	</select>
+
+	<select id="selectMemberByEmail" resultType="member">
+		SELECT
+		MEM_EMAIL
+		, MEM_NAME
+		, MEM_BIR
+		, MEM_PHONE
+		, MEM_ID
+		, MEM_PWD
+		, MEM_CREDIT
+		, POSITION_ID
+		, DP_ID
+		, AUTHORITY_ID
+		, MEM_STATUS
+		FROM MEMBER
+		WHERE MEM_EMAIL = #{email}
+	</select>
+
+	<update id="insertIdAndPwd" parameterType="member">
+		UPDATE  MEMBER
+        SET
+		MEM_ID = #{memId}
+		,MEM_PWD = #{memPwd}
+		WHERE MEM_EMAIL = #{memEmail}
+	</update>
+
+	<select id="selectMemberById" resultType="member">
+		SELECT
+			   MEM_EMAIL
+			 , MEM_NAME
+			 , MEM_BIR
+			 , MEM_PHONE
+			 , MEM_ID
+			 , MEM_PWD
+			 , MEM_CREDIT
+			 , POSITION_ID
+			 , DP_ID
+			 , AUTHORITY_ID
+			 , MEM_STATUS
+		FROM
+		MEMBER
+		WHERE MEM_ID = #{memId}
+	</select>
+
+	<update id="insertMembers" parameterType="member">
+		<foreach collection="excelContent" item="i" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
+		INTO MEMBER(
+			MEM_EMAIL
+		  , MEM_NAME
+		  , MEM_BIR
+		  , MEM_PHONE
+		  , POSITION_ID
+		  , DP_ID
+		  , AUTHORITY_ID
+		  , MEM_STATUS
+		 )
+		 	VALUES
+			 (
+			 	  #{i.A}
+			 	, #{i.B}
+			 	, TO_DATE(#{i.C},'yyyy-MM-dd')
+			 	, #{i.D}
+				, #{i.E}
+				, #{i.F}
+				, #{i.G}
+				, #{i.H}
+			 )
+		 </foreach>
+	</update>
+
+	<update id="insertMember" parameterType="member">
+		INSERT INTO MEMBER(
+			MEM_EMAIL
+		  , MEM_NAME
+		  , MEM_BIR
+		  , MEM_PHONE
+		  , POSITION_ID
+		  , DP_ID
+		  , AUTHORITY_ID
+		  , MEM_STATUS)
+		 VALUES
+			 (
+			 	  #{memEmail}
+			 	, #{memName}
+			 	, #{memBir}
+			 	, #{memPhone}
+				, #{positionId}
+				, #{dpId}
+				, #{authorityId}
+				, #{memStatus}
+			 )
+	</update>
+
+	<update id="updateMemberPwd" parameterType="member">
+		UPDATE
+		MEMBER SET
+		MEM_PWD = #{memPwd}
+		WHERE MEM_EMAIL = #{memEmail}
+	</update>
+
+	<select id="selectMemberByName" resultType="member">
+		SELECT
+		    MEM_EMAIL
+		   ,MEM_NAME
+		   ,MEM_BIR
+		   ,MEM_PHONE
+		   ,MEM_ID
+		   ,MEM_PWD
+		   ,MEM_CREDIT
+		   ,POSITION_ID
+		   ,DP_ID
+		   ,AUTHORITY_ID
+		   ,MEM_STATUS
+		FROM
+		    MEMBER
+		WHERE
+		    AND MEM_NAME LIKE '%'||#{keyword}||'%'
+	</select>
+
+	<select id="selectMemberClByOpcl" resultType="memberCl">
+		SELECT
+		    MEM_EMAIL
+		   ,MEM_NAME
+		   ,MEM_BIR
+		   ,MEM_PHONE
+		   ,MEM_ID
+		   ,MEM_PWD
+		   ,MEM_CREDIT
+		   ,POSITION_ID
+		   ,DP_ID
+		   ,AUTHORITY_ID
+		   ,MEM_STATUS
+		   ,MEM_CL_NO
+		   ,OPCL
+		   ,TEST_CPL
+		   ,STUDY_CPL
+		   ,PROG_RATE
+		   ,MEMCL_STATE
+		   ,CTF_DATE
+		   ,STUDY_SDATE
+		   ,STUDY_EDATE
+		   ,MIDTEST_SCORE
+		   ,FINTEST_SCORE
+		FROM
+		    V_MEM_CL
+	    WHERE OPCL=#{opcl}
+	</select>
+
+	<update id="updatePwdById" parameterType="member">
+		UPDATE MEMBER
+		    SET
+		        MEM_PWD = #{memPwd}
+		WHERE
+		    MEM_ID = #{memId}
+	</update>
+
+	<select id="memberStatusChk" resultType="str">
+		SELECT MEM_STATUS
+		FROM MEMBER
+		WHERE MEM_EMAIL = #{memEmail}
+	</select>
+	
+	<select id="selectMemberRemindSet" resultType="memberRemindSet">
+		SELECT MEM_EMAIL
+			 , INTR_CL_FLAG
+			 , REALTIME_CL_FLAG
+			 , REPORT_CHK_FLAG
+			 , REPORT_DL_FLAG
+		  FROM MEM_REMD_SET
+		 WHERE MEM_EMAIL = #{memEmail}
+	</select>
+	
+	<select id="selectMemberNotReadRemind" resultType="memberRemind">
+		SELECT REMD_NO
+		     , MEM_EMAIL
+		     , REMD_CONTENT
+		     , REMD_DATE
+		     , REMD_READ
+		     , MEM_CL_NO
+		     , REMD_TYPE
+		     , OPCL
+		  FROM MEMBER_REMD
+		 WHERE MEM_EMAIL = #{memEmail}
+		   AND REMD_READ = 0
+	</select>
+	
+	<select id="selectMemberIntrClass" resultType="newRemindCheck">
+		SELECT a.CL_NAME
+		     , a.opcl
+		     , a.POST_SDATE
+		     , a.POST_EDATE
+		  FROM V_CLASS a
+		     , MEM_INTR_CLASS b
+		 WHERE b.MEM_EMAIL = #{memEmail}
+		   AND a.opcl = b.opcl
+		   AND <![CDATA[TRUNC(a.POST_EDATE) <= TRUNC(SYSDATE)+3]]>
+	</select>
+	
+	<select id="selectMemberRealTimeClass" resultType="newRemindCheck">
+		select a.CL_NAME
+		     , a.opcl
+		     , a.LEC_DATE
+		     , b.mem_cl_no
+		  from V_CLASS a
+		     , mem_cl b
+		 where a.opcl=b.opcl
+		   and b.MEM_EMAIL = #{memEmail}
+		   and a.CL_FORMAT ='A603'
+		   and TRUNC(a.LEC_DATE) = TRUNC(SYSDATE)
+	</select>
+	
+	<select id="countExtReport" resultType="int">
+		select count(dp_id) as report_cnt
+		  from EXT_REPORT
+		 where DP_ID=#{dpId}
+		   and EXT_STATE='B102'
+	</select>
+	
+	<select id="countIntReport" resultType="int">
+		select count(dp_id) as report_cnt
+		  from INT_REPORT
+		 where DP_ID=#{dpId}
+		   and INT_STATE='B102'
+	</select>
+	
+	<update id="insertMemberRemd">
+		INSERT INTO MEMBER_REMD (REMD_NO
+							   , MEM_EMAIL
+							   , REMD_CONTENT
+							   , REMD_DATE
+							   , REMD_READ
+							   , MEM_CL_NO
+							   , REMD_TYPE
+							   , OPCL) 
+			 VALUES (MEMBER_REMD_SEQ.nextval
+			 	   , #{memEmail}
+			 	   , #{remdContent}
+			 	   , TRUNC(SYSDATE)
+			 	   , 0
+			 	   , #{memClNo}
+			 	   , #{remdType}
+			 	   , #{opcl})
+	</update>
+	
+	<select id="selectMemberIntCtfClass" resultType="finishedClass">
+		SELECT distinct 
+		       A.CL_CODE
+		     , A.OPCL
+		     , A.CL_NAME
+		     , B.MEM_CL_NO
+		     , B.STUDY_EDATE
+		     , B.CTF_DATE
+		     , B.PROG_RATE
+		     , B.TEST_CPL
+             , B.STUDY_CPL
+			 , E.TEST_STATUS
+			 , B.CTF_DATE + 7 as REPORT_Dead_Line
+		  FROM V_CLASS A
+		     , V_MEM_CL B
+		   	 , TEST E
+		 WHERE B.MEM_EMAIL = #{memEmail}
+		   AND A.OPCL = B.OPCL
+		   AND A.OPCL = E.OPCL
+           AND B.TEST_CPL = 1
+           AND B.STUDY_CPL = 1
+           AND <![CDATA[ TRUNC(B.CTF_DATE + 7) <= TRUNC(SYSDATE+3)]]>
+		 ORDER BY B.STUDY_EDATE desc
+	</select>	
+	
+	<select id="selectMemberExtCtfClass" resultType="finishedClass">
+		SELECT DISTINCT
+		       MEM_EMAIL
+		     , EXT_CL_NAME
+		     , COMMON_CODE
+		     , EXT_NO
+		     , STUDY_SDATE
+		     , STUDY_EDATE
+		     , EXT_CODE
+		     , CTF_DATE
+		  FROM EXT_CL
+		 WHERE MEM_EMAIL = #{memEmail}
+		   AND COMMON_CODE = 'C302'
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

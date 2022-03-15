@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Stastics-Mapper">
+
+	<select id="selectInfoStasticsClass" resultType="classStastics">
+		SELECT
+		*
+		FROM
+		(SELECT
+		A.OPCL
+		, A.CL_SCO_AVG
+		, B.CL_CODE
+		, B.CL_IMG
+		, B.CL_NAME
+		, B.CL_FORMAT
+		, B.CL_CATE
+		, B.CL_DIVISION
+		, B.MAIN_EXPOSURE
+		, B.ENR_PERS
+		, C.OPEN_ROUND
+		FROM STCS_CL A,
+		V_CLASS B,
+		OPEN_CLASS C
+		WHERE  B.OPCL = A.OPCL
+		AND A.OPCL = C.OPCL
+		ORDER BY CL_SCO_AVG DESC)
+		WHERE 6 > ROWNUM
+	</select>
+	
+	<select id="selectClassGraphInfoByAges" parameterType="int" resultType="classStastics">
+		SELECT
+		*
+		FROM
+		(SELECT
+		OPCL,
+        CL_NAME,
+        OPEN_ROUND,
+		COUNT(*) AS COUNT
+		FROM
+		(SELECT 
+		OPCL,
+		MEM_EMAIL,
+        CL_NAME,
+        OPEN_ROUND,
+		TRUNC((EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM MEM_BIR)),-1) AS AGE
+		FROM AGE_SPECIFIC_PREFERENCE)A
+		WHERE A.AGE = #{age}
+		GROUP BY OPCL, CL_NAME, OPEN_ROUND
+		HAVING COUNT(*) > 0
+		ORDER BY COUNT(*) DESC)
+		WHERE 4 > ROWNUM
+	</select>
+	
+	<select id="selectClassGraphInfoByDp" parameterType="str" resultType="classStastics">
+		SELECT
+		*
+		FROM
+		(SELECT
+		OPCL,
+        CL_NAME,
+        OPEN_ROUND,
+		COUNT(*) AS COUNT
+		FROM
+		(SELECT 
+		OPCL,
+		MEM_EMAIL,
+        CL_NAME,
+        OPEN_ROUND,
+		DP_ID
+		FROM AGE_SPECIFIC_PREFERENCE)A
+		WHERE DP_ID = #{dpId}
+		GROUP BY OPCL, CL_NAME, OPEN_ROUND
+		HAVING COUNT(*) > 0
+		ORDER BY COUNT(*) DESC)
+		WHERE 4 > ROWNUM
+	</select>
+	
+	<select id="selectResultValuesByAge" resultType="class" parameterType="int">
+		SELECT
+    CL_CODE,
+    CL_IMG,
+    CL_NAME,
+    CL_INTRO,
+    CL_POINT,
+    CL_CREDIT_TIME,
+    CL_FORMAT,
+    CL_CATE,
+    CL_DIVISION,
+    OPCL,
+    CL_ROOM_NO,
+    POST_SDATE,
+    POST_EDATE,
+    MAIN_EXPOSURE,
+    ENR_PERS,
+    STUDY_DATE,
+    CL_QR,
+    CUTLINE,
+    LEC_DATE,
+    CL_ROOM_NAME,
+    CL_ROOM_LOC
+FROM
+    V_CLASS
+WHERE OPCL IN(
+    SELECT OPCL
+    FROM STCS_CL
+    WHERE STCS_CLS_NO IN (
+        SELECT STCS_CLS_NO
+        FROM(
+            SELECT
+                ASTCS_STAD,
+                ASTCS_SECOND,
+                ASTCS_FIRST,
+                ASTCS_THIRD
+            FROM STCS_AGE
+            WHERE ASTCS_STAD=#{age})
+            UNPIVOT (
+                STCS_CLS_NO FOR AGE IN(ASTCS_FIRST, ASTCS_SECOND, ASTCS_THIRD)
+            )
+        )
+    )
+ORDER BY OPCL
+	</select>
+</mapper>

@@ -1,0 +1,271 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+<script type="text/x-handlebars-template" id="class-info-template">
+	<table class="table mt-3">
+		<tr>
+			<td class="font-weight-bold">수료기준안내</td>
+			<td colspan="3">
+				{{{cutLine}}}
+			</td>
+		</tr>
+		<tr>
+			<td class="font-weight-bold">정원</td>
+			<td>{{enrPers}}</td>
+			<td class="font-weight-bold">강의이수시간</td>
+			<td>{{clCreditTime}}</td>
+		</tr>
+		<tr>
+			<td class="font-weight-bold">신청기간</td>
+			<td>{{prettifyDate postSdate}} ~ {{prettifyDate postEdate}}</td>
+			<td class="font-weight-bold">교육기간</td>
+			<td>{{studyDate}}</td>
+		</tr>
+		<tr>
+			<td class="font-weight-bold">과정소개</td>
+			<td colspan="3">
+				{{{clIntro}}}
+			</td>
+		</tr>
+	</table>
+</script>
+
+<script type="text/x-handlebars-template" id="class-chap-template">
+	<table class="table table-hover">
+		<thead>
+			<tr class="text-center">
+				<th scope="col">회차</th>
+				<th scope="col">회차명</th>
+				<th scope="col">학습상태</th>
+				<th scope="col">강의보기</th>
+			</tr>
+		</thead>
+		<tbody>
+		{{#unless .}}
+			<tr class="text-center">
+				<td colspan="4">등록된 자료가 없습니다.</td>
+			</tr>
+		{{/unless}}
+		{{#each .}}
+			<tr class="text-center">
+				<td>{{clChapNum}}</td>
+				<td>{{clChapName}}</td>
+				<td>
+					<div class="progress">
+					{{#if memFinishChk}}
+						<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+					{{else}}
+						<div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+					{{/if}}
+					</div>
+				</td>
+				<td>
+					{{{onOffcheck clChapVideo}}}
+				</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</script>
+
+<script type="text/x-handlebars-template" id="class-doc-template">
+	<table class="table table-hover">
+		<thead>
+			<tr class="text-center">
+				<th scope="col">번호</th>
+				<th scope="col">제목</th>
+				<th scope="col">비고</th>
+			</tr>
+		</thead>
+		<tbody>
+		{{#unless .}}
+			<tr class="text-center">
+				<td colspan="4">등록된 자료가 없습니다.</td>
+			</tr>
+		{{/unless}}
+
+		{{#each .}}
+			<tr class="text-center">
+				<td>{{clDocNo}}</td>
+				<td>{{clDocName}}</td>
+				<td>
+					<span class="h5" style="cursor: pointer;">
+						<i class="fa fa-save"></i>
+					</span>
+				</td>
+			</tr>
+		{{/each}}
+
+		</tbody>
+	</table>
+</script>
+
+<script type="text/x-handlebars-template" id="class-review-template">
+	<div class="reviews-list">
+    	<ul class="list-group list-group-flush">
+		{{#unless .}}
+			<li class="list-group-item">
+    			<div class="reviews">
+    				<p class="text-center">등록된 수강 후기가 없습니다.</p>
+    			</div>
+    		</li>
+		{{/unless}}
+		{{#each .}}
+    		<li class="list-group-item">
+    			<div class="reviews">
+    				<div class="row">
+    					<div class="col-8">
+    						<span>{{memName}}</span>
+    						<span class="col">{{prettifyDate reviewRegdate}}</span>
+    					</div>
+    					<div class="ml-auto h6">
+    						<i class="text-warning fas fa-star"></i>
+    						<i class="text-warning fas fa-star"></i>
+    						<i class="text-warning fas fa-star"></i>
+    						<i class="text-warning fas fa-star"></i>
+    						<i class="text-warning fas fa-star-half"></i>
+    						<span class="text-warning">({{reviewScore}})</span>
+    					</div>
+    				</div>
+    				<p class="inline-block">
+    					<span class="font-weight-bold">{{reviewContent}}</span>
+    				</p>
+    			</div>
+    		</li>
+		{{/each}}
+		</ul>
+	</div>
+</script>
+
+<script>
+	Handlebars.registerHelper({
+		"prettifyDate" : function(timeValue) {
+			let dateObj = new Date(timeValue);
+			let year = dateObj.getFullYear();
+			let month = dateObj.getMonth() + 1;
+			month = (month).toString();
+			if (month.length < 2) {
+				month = "0" + month;
+			}
+
+			let date = dateObj.getDate();
+			date = (date).toString();
+			if (date.length < 2) {
+				date = "0" + date;
+			}
+			return year + "/" + month + "/" + date;
+		},
+		"VisibleByLoginCheck" : function(replyer) {
+			let result = "none";
+			if (replyer == "${loginUser.memId}")
+				result = "visible";
+			return result;
+		},
+		"onOffcheck" : function(urlValue){
+			let button = '<button class="btn btn-primary btn-xs"';
+			if(${ claz.clFormat eq '온라인' }){
+				button = button + ' onclick="';
+				button = button + "OpenWindow('clsPlay.do?clChapVideo=" + urlValue
+				button = button + "', 'title', 1000, 650);" + '");';
+				button = button + ">강의보기</button>";
+				return button;
+			} else {
+				button = button + ' onclick="';
+				button = button + "OpenWindow('QRCheck.do?opcl=" + urlValue
+				button = button + "', 'title', 375, 812);" + '");';
+				button = button + ">출석하기</button>";
+				return button;
+			}
+		}
+	});
+
+	function printData(data, target, templateObject) {
+		let template = Handlebars.compile(templateObject.html());
+		let html = template(data);
+		target.html("").html(html);
+	}
+</script>
+
+
+<script>
+	let opcl = '${ claz.opcl }';
+
+	window.onload = function() {
+		restChap();
+	};
+
+	function restInfo() {
+		$.ajax({
+			url : 'classInfo.do',
+			type : 'get',
+			data : {
+				"opcl" : opcl
+			},
+			dataType : 'json',
+			success : function(data) {
+				printData(data, $('#class-info'), $('#class-info-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+
+	function restChap() {
+		$.ajax({
+			url : 'classChap.do',
+			type : 'get',
+			data : {
+				"opcl" : opcl
+			},
+			dataType : 'json',
+			success : function(data) {
+				printData(data, $('#list-index'), $('#class-chap-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+
+	function restDoc() {
+		$.ajax({
+			url : 'classDoc.do',
+			type : 'get',
+			data : {
+				"opcl" : opcl
+			},
+			dataType : 'json',
+			success : function(data) {
+				printData(data, $('#list-reference'),$('#class-doc-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+
+	function restReview() {
+		$.ajax({
+			url : 'classReview.do',
+			type : 'get',
+			data : {
+				"opcl" : opcl
+			},
+			dataType : 'json',
+			success : function(data) {
+				printData(data, $('#list-review'), $('#class-review-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+</script>

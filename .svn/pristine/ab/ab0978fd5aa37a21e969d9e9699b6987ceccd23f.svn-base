@@ -1,0 +1,528 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head>
+
+</head>
+
+<title>강의 통계 </title>
+
+<body>
+    <div class="container-fluid col-9">
+        <div class="row navList">
+            <h4 class="col-9 m-0">강의 통계</h4>
+            <div class="col-3 ml-auto">
+                <span><i class="la la-home"></i></span>
+                <span> &nbsp;>&nbsp; </span>
+                <span>강의관리</span>
+                <span> &nbsp;>&nbsp; </span>
+                <span>강의통계</span>
+            </div>
+        </div>
+        <hr color="#494C4D" style="height:3px; border-radius:40px; margin-top:5px;" />
+
+        <div class="class-detail row " style="margin-left: 10px;">
+            <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 200px; height: 150px;">
+            <div class="col-8 column ui-sortable">
+                <span class="h6">개인 정보 보호 교육 </span>
+
+                <br>
+                <span class="">신입 의무 교육</span><br>
+                <i class="text-warning la la-star"></i>
+                <i class="text-warning la la-star"></i>
+                <i class="text-warning la la-star"></i>
+                <i class="text-warning la la-star"></i>
+                <i class="text-warning la la-star-half-empty"></i>
+                <span class="text-warning">(4.5)</span>
+            </div>
+
+        </div>
+        
+        
+        <table class="table mt-3">
+            <tr>
+                <td class="font-weight-bold">강의 구분</td>
+                <td>신입 의무 교육</td>
+                <td class="font-weight-bold">메인 노출</td>
+                <td><span class="badge badge-primary">인기</span></td>                
+
+            </tr>
+            <tr>
+                <td class="font-weight-bold">수강인원</td>
+                <td>30</td>
+                <td class="font-weight-bold">게시상태</td>
+                <td> <span class="badge badge-danger">게시 종료</span></td>
+            </tr>
+
+
+        </table><br>
+            
+        
+            <div class="col-12">
+                <div class="list-group d-flex flex-row" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="list-index-list" data-toggle="list" href="#list-index" role="tab" aria-controls="home">연령별</a>
+                    <a class="list-group-item list-group-item-action" id="list-reference-list" data-toggle="list" href="#list-reference" role="tab" aria-controls="profile">부서별</a>
+                    <a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review" role="tab" aria-controls="messages">연도별</a>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="col-12">
+                <div class="tab-content" id="nav-tabContent">
+
+                    <!-- 강의목차 -->
+				<div class="tab-pane fade show active" id="list-index" role="tabpanel" aria-labelledby="list-home-list">
+					<div class="col-md-12">
+						<div class="chart-responsive">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+							<canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 644px;" width="644" height="250" class="chartjs-render-monitor"></canvas>
+						</div>
+						<!-- ./chart-responsive -->
+					</div>
+				</div>
+				<!--/강의목차-->
+
+
+				<!-- 부서별 그래프 -->
+				<div class="tab-pane fade" id="list-reference" role="tabpanel" aria-labelledby="list-profile-list">
+				                        <div class="row list-title">
+                            <h6 class="col-9" style="margin: 0px;">부서별</h6>
+                        </div>
+					<table>
+						<tbody>
+							<tr>
+								<td style="width: 60px;"><svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" class="ct-chart-bar" style="width: 100%; height: 245px;">
+									<foreignObject style="overflow: hidden;" y="185.625" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="161.25" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">12.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="136.875" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">25</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="112.5" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">37.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="88.125" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">50</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="63.75" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">62.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="39.375" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">75</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="15" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">87.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="-15" x="10" height="30" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 30px; width: 30px;">100</span></foreignObject>
+								</svg></td>
+								<td>
+									<div style="width: 700px;">
+										<div id="salesChart" class="chart" style="width: 800px; white-space: nowrap; overflow: auto;">
+											<div class="chartist-tooltip" style="top: 7.71875px; left: 543.016px;">
+												<span class="chartist-tooltip-value">8</span>
+											</div>
+											<svg width="1300px" height="245px">
+											<g class="ct-series ct-series-g">
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="30.0143229166667" x2="30.0143229166667" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="89.95703125" x2="89.95703125" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="149.89973958333334" x2="149.89973958333334" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="209.84244791666669" x2="209.84244791666669" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="269.78515625" x2="269.78515625" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="329.7278645833333" x2="329.7278645833333" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 JAVA 기초 : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="389.6705729166667" x2="389.6705729166667" y1="210" y2="80" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 Python 기초 : 71" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="449.61328125" x2="449.61328125" y1="210" y2="28" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="블루투스 모듈을 위한 IOT : 95" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="509.5559895833333" x2="509.5559895833333" y1="210" y2="90" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="블록체인 기술을 활용한 SW개발 : 66" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="569.4986979166666" x2="569.4986979166666" y1="210" y2="68" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정복! 전기(산업)기사 : 78" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="629.4414062499999" x2="629.4414062499999" y1="210" y2="42" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="전기기능사 필기 : 84.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="689.3841145833332" x2="689.3841145833332" y1="210" y2="118" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제1과목 소프트웨어 설계 : 57.6" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="749.3268229166665" x2="749.3268229166665" y1="210" y2="114" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제2과목 소프트웨어 개발 : 58" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="809.2695312499998" x2="809.2695312499998" y1="210" y2="125" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제3과목 데이터베이스 구축 : 45" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="869.2122395833331" x2="869.2122395833331" y1="210" y2="86" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제4과목 프로그래밍 언어 활용 : 63" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="929.1549479166664" x2="929.1549479166664" y1="210" y2="20" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제5과목 정보시스템 구축 관리 : 97" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="989.0976562499997" x2="989.0976562499997" y1="210" y2="140" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 2급 필기 : 46" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1049.040364583333" x2="1049.040364583333" y1="210" y2="70" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 2급 실기 : 72.3" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1108.983072916666" x2="1108.983072916666" y1="210" y2="95" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 1급 필기 : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1168.92578125" x2="1168.92578125" y1="210" y2="118" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 1급 실기 : 100" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1228.868489583333" x2="1228.868489583333" y1="210" y2="42" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무경영관리  : 100" />
+												</a>
+											</g>
+											<g class="ct-grids">
+												<line y1="210" y2="210" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="185.625" y2="185.625" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="161.25" y2="161.25" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="136.875" y2="136.875" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="112.5" y2="112.5" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="88.125" y2="88.125" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="63.75" y2="63.75" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="39.375" y2="39.375" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="15" y2="15" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+											</g>
+											
+											<foreignObject style="overflow: hidden;" x="16.02864583333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">핀테크</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="74.97135416666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">W-UP</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="134.9140625" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">프로그램 입문</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="194.85677083333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 C언어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="254.7994791666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차-자동화</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="314.7421875" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 JAVA</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="374.68489583333337" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 Python</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="434.6276042" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">블루투스 모듈 IOT</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="494.5703125" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">블록체인 SW</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="554.5130208" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정복!전기(산업)기사</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="614.4557291" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">전기기능사 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="674.3984374" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-소프트웨어 설계</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="734.3411457" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-소프트웨어 개발</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="794.283854" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-데이터베이스 구축</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="854.2265623" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-프로그래밍 언어 활용</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="914.1692706" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-정보시스템 구축 관리</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="974.1119789" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 2급 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1034.054687" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 2급 실기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1093.997395" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 1급 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1153.940103" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 1급 실기</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="1213.882811" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차 산업기사 - 사무경영관리 </span>
+											</foreignObject>
+										</svg>
+										</div>
+									</div> <!-- table-responsive -->
+								</td>
+							</tr>
+						</tbody>
+					</table>
+                    
+                    </div>
+                    
+                    <!-- 연도별 그래프 -->
+                    <div class="tab-pane fade" id="list-review" role="tabpanel" aria-labelledby="list-messages-list">
+                                            <div class="row list-title">
+                            <h6 class="col-9" style="margin: 0px;">연도별</h6>
+                        </div>	
+					<table>
+						<tbody>
+							<tr>
+								<td style="width: 60px;"><svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" class="ct-chart-bar" style="width: 100%; height: 245px;">
+									<foreignObject style="overflow: hidden;" y="185.625" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">0</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="161.25" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">12.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="136.875" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">25</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="112.5" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">37.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="88.125" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">50</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="63.75" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">62.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="39.375" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">75</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="15" x="10" height="24.375" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 24px; width: 30px;">87.5</span></foreignObject>
+									<foreignObject style="overflow: hidden;" y="-15" x="10" height="30" width="30">
+										<span class="ct-label ct-vertical ct-start" xmlns="http://www.w3.org/2000/xmlns/" style="height: 30px; width: 30px;">100</span></foreignObject>
+								</svg></td>
+								<td>
+									<div style="width: 700px;">
+										<div id="salesChart" class="chart" style="width: 800px; white-space: nowrap; overflow: auto;">
+											<div class="chartist-tooltip" style="top: 7.71875px; left: 543.016px;">
+												<span class="chartist-tooltip-value">8</span>
+											</div>
+											<svg width="1300px" height="245px">
+											<g class="ct-series ct-series-g">
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="30.0143229166667" x2="30.0143229166667" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="핀테크 아카데미 Pre-Course : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="89.95703125" x2="89.95703125" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="W-UP_해외로 나가는 마케팅 : 38" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="149.89973958333334" x2="149.89973958333334" y1="210" y2="73.5" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보 프로그램 입문 : 70.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="209.84244791666669" x2="209.84244791666669" y1="210" y2="100" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 C언어 : 55" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="269.78515625" x2="269.78515625" y1="210" y2="132" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무자동화 : 38" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="329.7278645833333" x2="329.7278645833333" y1="210" y2="13" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 JAVA 기초 : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="389.6705729166667" x2="389.6705729166667" y1="210" y2="80" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="왕초보를 위한 Python 기초 : 71" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="449.61328125" x2="449.61328125" y1="210" y2="28" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="블루투스 모듈을 위한 IOT : 95" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="509.5559895833333" x2="509.5559895833333" y1="210" y2="90" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="블록체인 기술을 활용한 SW개발 : 66" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="569.4986979166666" x2="569.4986979166666" y1="210" y2="68" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정복! 전기(산업)기사 : 78" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="629.4414062499999" x2="629.4414062499999" y1="210" y2="42" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="전기기능사 필기 : 84.5" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="689.3841145833332" x2="689.3841145833332" y1="210" y2="118" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제1과목 소프트웨어 설계 : 57.6" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="749.3268229166665" x2="749.3268229166665" y1="210" y2="114" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제2과목 소프트웨어 개발 : 58" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="809.2695312499998" x2="809.2695312499998" y1="210" y2="125" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제3과목 데이터베이스 구축 : 45" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="869.2122395833331" x2="869.2122395833331" y1="210" y2="86" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제4과목 프로그래밍 언어 활용 : 63" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="929.1549479166664" x2="929.1549479166664" y1="210" y2="20" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="정보처리기사 필기-제5과목 정보시스템 구축 관리 : 97" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="989.0976562499997" x2="989.0976562499997" y1="210" y2="140" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 2급 필기 : 46" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1049.040364583333" x2="1049.040364583333" y1="210" y2="70" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 2급 실기 : 72.3" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1108.983072916666" x2="1108.983072916666" y1="210" y2="95" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 1급 필기 : 100" />
+												</a>
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1168.92578125" x2="1168.92578125" y1="210" y2="118" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="컴퓨터 활용 능력 1급 실기 : 100" />
+												</a>
+												
+												<a class="page-link" href="http://www.naver.com">
+													<line x1="1228.868489583333" x2="1228.868489583333" y1="210" y2="42" class="ct-bar" data-toggle="tooltip" data-placement="top" data-original-title="사무자동차 산업기사 - 사무경영관리  : 100" />
+												</a>
+											</g>
+											<g class="ct-grids">
+												<line y1="210" y2="210" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="185.625" y2="185.625" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="161.25" y2="161.25" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="136.875" y2="136.875" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="112.5" y2="112.5" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="88.125" y2="88.125" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="63.75" y2="63.75" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="39.375" y2="39.375" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+												<line y1="15" y2="15" x1="10" x2="100000" class="ct-grid ct-vertical"></line>
+											</g>
+											
+											<foreignObject style="overflow: hidden;" x="16.02864583333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 25px;">핀테크</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="74.97135416666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">W-UP</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="134.9140625" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">프로그램 입문</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="194.85677083333334" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 C언어</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="254.7994791666667" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차-자동화</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="314.7421875" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 JAVA</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="374.68489583333337" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">왕초보 Python</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="434.6276042" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">블루투스 모듈 IOT</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="494.5703125" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">블록체인 SW</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="554.5130208" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정복!전기(산업)기사</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="614.4557291" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">전기기능사 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="674.3984374" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-소프트웨어 설계</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="734.3411457" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-소프트웨어 개발</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="794.283854" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-데이터베이스 구축</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="854.2265623" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-프로그래밍 언어 활용</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="914.1692706" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">정보처리기사 필기-정보시스템 구축 관리</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="974.1119789" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 2급 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1034.054687" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 2급 실기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1093.997395" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 1급 필기</span>
+											</foreignObject>
+											<foreignObject style="overflow: hidden;" x="1153.940103" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">컴퓨터 활용 능력 1급 실기</span>
+											</foreignObject>
+											
+											<foreignObject style="overflow: hidden;" x="1213.882811" y="215" width="40" height="20">
+												<span class="ct-label ct-horizontal ct-end" xmlns="http://www.w3.org/2000/xmlns/" style="width: 30px; height: 20px;">사무자동차 산업기사 - 사무경영관리 </span>
+											</foreignObject>
+										</svg>
+										</div>
+									</div> <!-- table-responsive -->
+								</td>
+							</tr>
+						</tbody>
+					</table>                    
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-default float-right" onclick="location.href='statistics.do?mCode=M010203'"><i class="la la-angle-double-left">목록</i></button>
+    </div>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+ <script>
+const data = {
+         labels : [ '20대', '30대', '40대', '50대' ],
+         datasets : [ {
+            label : 'Dataset 1',
+            data : [ 29,  36, 25, 20 ], //x축 label에 대응되는 데이터 값
+
+            backgroundColor : [
+            //색상
+            'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
+                  ],
+            borderColor : [
+            //경계선 색상
+            'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
+                  ],
+            borderWidth : 1
+         } ]
+      };
+
+      var context1 = document.getElementById('pieChart').getContext('2d');
+      var pieChart = new Chart(context1, {
+         type : 'pie',
+         data : data,
+         options : {
+            responsive : true,
+            plugins : {
+               legend : {
+                  position : 'left',
+               },
+               title : {
+                  display : true,
+                  text : '연령별 선호도 그래프'
+               }
+            }
+         },
+      });
+</script>      
+    
+</body>
+   
+      
+      

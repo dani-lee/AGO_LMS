@@ -1,0 +1,411 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!-- 시험 통계 -->
+<c:set var="mPreList" value="${dataMap.mPreList}" />
+<c:set var="fPreList" value="${dataMap.fPreList}" />
+<c:set var="examMap" value="${dataMap.examMap}" />
+
+<!-- 강의목록 -->
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${pageMaker.cri }" />
+<c:set var="classList" value="${dataMap.classList }" />
+
+<head></head>
+<title>시험 통계화면</title>
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">시험 통계</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">시험 대시보드</a>
+						</li>
+						<li class="breadcrumb-item active">시험 통계</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<section class="content">
+		<div class="container-fluid">
+			<div class="list-group d-flex flex-row" id="list-tab" role="tablist">
+				<a class="list-group-item list-group-item-action <c:if test="${dataMap.isStastisTab}">show active</c:if>" id="ExamStatis-page" data-toggle="list" href="#ExamStatis" role="tab" aria-controls="ExamStatis" aria-selected="${dataMap.isStastisTab}">시험 통계 그래프</a>
+				<a class="list-group-item list-group-item-action <c:if test="${!dataMap.isStastisTab}">show active</c:if>" id="ClassList-page" data-toggle="list" href="#ClassList" role="tab" aria-controls="ClassList" aria-selected="${!dataMap.isStastisTab}">강의 목록</a>
+			</div>
+																												
+			<div class="col-md-12">
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade <c:if test="${dataMap.isStastisTab}">show active</c:if> mt-3" id="ExamStatis" role="tabpanel" aria-labelledby="ExamStatis-page">
+						<!-- AREA CHART -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">과목별 기말 평균 점수</h3>
+							</div>
+							<div class="card-body">
+								<div id="demo" class="carousel slide" data-ride="carousel">
+									<ul class="carousel-indicators" style="z-index: 1">
+										<c:forEach var="examList" items="${examMap}" varStatus="status">
+											<li data-target="#demo" data-slide-to="${status.index}" class="${status.index eq '0' ? 'active': '' }"></li>
+										</c:forEach>
+									</ul>
+
+									<div class="carousel-inner">
+										<c:forEach var="examList" items="${examMap}" varStatus="status">
+											<div class="carousel-item ${status.index eq '0' ? 'active': '' } card col-md-12">
+												<div class="chart">
+													<div class="chartjs-size-monitor">
+														<div class="chartjs-size-monitor-expand">
+															<div class=""></div>
+														</div>
+														<div class="chartjs-size-monitor-shrink">
+															<div class=""></div>
+														</div>
+													</div>
+													<canvas id="areaChart${status.index}" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;" width="764" height="250" class="chartjs-render-monitor"></canvas>
+												</div>
+											</div>
+											<!-- carousel-item card col-md-12 -->
+										</c:forEach>
+
+									</div>
+									<!-- carousel-inner -->
+								</div>
+								<!-- carousel slide -->
+							</div>
+							<!-- /.card-body -->
+							<div class="card-footer">
+								<a class="carousel-control-prev" href="#demo" data-slide="prev">
+									<i class="la la-chevron-circle-left" style="font-size: 30px; color: black; position: relative; top: -150px; left: -45px;"></i>
+								</a>
+								<a class="carousel-control-next" href="#demo" data-slide="next">
+									<i class="la la-chevron-circle-right" style="font-size: 30px; color: black; position: relative; top: -150px; left: 40px;"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.card -->
+						<div class="row">
+							<div class="col-lg-6 col-6">
+								<!-- small box -->
+								<div class="small-box bg-light">
+									<div class="inner">
+										<div class="col-md-12">
+											<p class="text-center">
+												<strong>중간평가 평균점수 하위 3</strong>
+											</p>
+
+											<c:forEach var="mPre" items="${mPreList}">
+												<div class="progress-group">
+													${mPre.clName}<span class="float-right"><b>${mPre.mtestAvgSco}</b>/100</span>
+													<div class="progress progress-sm">
+														<div class="progress-bar bg-lightblue" style="width: ${mPre.mtestAvgSco}%"></div>
+													</div>
+												</div>
+												<!-- /.progress-group -->
+											</c:forEach>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- ./col -->
+
+							<div class="col-lg-6 col-6">
+								<!-- small box -->
+								<div class="small-box bg-light">
+									<div class="inner">
+										<div class="col-md-12">
+											<p class="text-center">
+												<strong>기말 평가 평균점수 하위 3</strong>
+											</p>
+
+											<c:forEach var="fPre" items="${fPreList}">
+												<div class="progress-group">
+													${fPre.clName}<span class="float-right"><b>${fPre.ftestAvgSco}</b>/100</span>
+													<div class="progress progress-sm">
+														<div class="progress-bar bg-maroon" style="width: ${fPre.ftestAvgSco}%"></div>
+													</div>
+												</div>
+												<!-- /.progress-group -->
+											</c:forEach>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- ./col -->
+						</div>
+					</div>
+
+					<!-- 강의 목록 -->
+					<div class="tab-pane fade <c:if test="${!dataMap.isStastisTab}">show active</c:if>" id="ClassList" role="tabpanel" aria-labelledby="ClassList-page">
+						<div class="container-fluid">
+							<table class="table mt-3">
+								<thead>
+									<tr class="text-center">
+										<th>강의코드</th>
+										<th>강의명</th>
+										<th>시험 평균 점수</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="classItem" items="${classList}">
+										<tr>
+											<td class="text-center align-middle">${classItem.clCode}</td>
+											<td class="align-middle" style="cursor: pointer" onclick="OpenWindow('scDetail.pop?clCode=${classItem.clCode}','시험관리', 900, 600);">${classItem.clName}</td>
+											<td class="col-4">
+												<table>
+													<tbody>
+														<tr>
+															<td style="border: none; height: 40px;" class="p-0">
+																<div class="progress-group">
+																	중간 평균 점수 <span class="float-right"><b>${classItem.mtestAvgSco }</b>/100</span>
+																	<div class="progress progress-sm active" style="width: 385px;">
+																		<div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="${classItem.mtestAvgSco }" aria-valuemin="0" aria-valuemax="100" style="width: ${classItem.mtestAvgSco }%"></div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td style="border: none; height: 40px;" class="p-0">
+																<div class="progress-group">
+																	기말 평균 점수<span class="float-right"><b>${classItem.ftestAvgSco }</b>/100</span>
+																	<div class="progress progress-sm active" style="width: 385px;">
+																		<div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="${classItem.ftestAvgSco }" aria-valuemin="0" aria-valuemax="100" style="width: ${classItem.ftestAvgSco }%"></div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+
+							<div class="card-body text-center pt-0 pb-0">
+								<%@include file="/WEB-INF/views/common/examStasticsPagination.jsp"%>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<script>
+		$(function() {
+			/* ChartJS
+			 * -------
+			 * Here we will create a few charts using ChartJS
+			 */
+
+			//--------------
+			//- AREA CHART -
+			//--------------
+			// Get context with jQuery - using jQuery's .get() method.
+
+			<c:forEach var="examList" items="${examMap}" varStatus="status">
+				var areaChartCanvas${status.index} = $('#areaChart${status.index}').get(0).getContext('2d');
+				var areaChartData${status.index} = {
+					labels : [ 
+						<c:forEach var="classExam" items="${examList.value}">
+							'${classExam.clName}',
+						</c:forEach> 
+							],
+					datasets : [ {
+						label : 'Digital Goods',
+						backgroundColor : 'rgba(60,141,188,0.9)',
+						borderColor : 'rgba(60,141,188,0.8)',
+						pointRadius : false,
+						pointColor : '#3b8bba',
+						pointStrokeColor : 'rgba(60,141,188,1)',
+						pointHighlightFill : '#fff',
+						pointHighlightStroke : 'rgba(60,141,188,1)',
+						data : [ 
+							<c:forEach var="classExam" items="${examList.value}">
+								'${classExam.mtestAvgSco}',
+							</c:forEach> 
+							]
+					}, {
+						label : 'Electronics',
+						backgroundColor : 'rgba(210, 214, 222, 1)',
+						borderColor : 'rgba(210, 214, 222, 1)',
+						pointRadius : false,
+						pointColor : 'rgba(210, 214, 222, 1)',
+						pointStrokeColor : '#c1c7d1',
+						pointHighlightFill : '#fff',
+						pointHighlightStroke : 'rgba(220,220,220,1)',
+						data : [ 
+							<c:forEach var="classExam" items="${examList.value}">
+								'${classExam.ftestAvgSco}',
+							</c:forEach>  
+						]
+					}, ]
+				}
+			</c:forEach>
+
+			var areaChartOptions = {
+				maintainAspectRatio : false,
+				responsive : true,
+				legend : {
+					display : false
+				},
+				scales : {
+					xAxes : [ {
+						gridLines : {
+							display : false,
+						}
+					} ],
+					yAxes : [ {
+						gridLines : {
+							display : false,
+						}
+					} ]
+				}
+			}
+
+			// This will get the first returned node in the jQuery collection.
+			<c:forEach var="examList" items="${examMap}" varStatus="status">
+				new Chart(areaChartCanvas${status.index}, {
+					type : 'line',
+					data : areaChartData${status.index},
+					options : areaChartOptions
+				})
+			</c:forEach>
+
+			//-------------
+			//- LINE CHART -
+			//--------------
+			var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+			var lineChartOptions = $.extend(true, {}, areaChartOptions)
+			var lineChartData = $.extend(true, {}, areaChartData)
+			lineChartData.datasets[0].fill = false;
+			lineChartData.datasets[1].fill = false;
+			lineChartOptions.datasetFill = false
+
+			var lineChart = new Chart(lineChartCanvas, {
+				type : 'line',
+				data : lineChartData,
+				options : lineChartOptions
+			})
+
+			//-------------
+			//- DONUT CHART -
+			//-------------
+			// Get context with jQuery - using jQuery's .get() method.
+			var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+			var donutData = {
+				labels : [ 'Chrome', 'IE', 'FireFox', 'Safari', 'Opera',
+						'Navigator', ],
+				datasets : [ {
+					data : [ 700, 500, 400, 600, 300, 100 ],
+					backgroundColor : [ '#f56954', '#00a65a', '#f39c12',
+							'#00c0ef', '#3c8dbc', '#d2d6de' ],
+				} ]
+			}
+			var donutOptions = {
+				maintainAspectRatio : false,
+				responsive : true,
+			}
+			//Create pie or douhnut chart
+			// You can switch between pie and douhnut using the method below.
+			new Chart(donutChartCanvas, {
+				type : 'doughnut',
+				data : donutData,
+				options : donutOptions
+			})
+
+			//-------------
+			//- PIE CHART -
+			//-------------
+			// Get context with jQuery - using jQuery's .get() method.
+			var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+			var pieData = donutData;
+			var pieOptions = {
+				maintainAspectRatio : false,
+				responsive : true,
+			}
+			//Create pie or douhnut chart
+			// You can switch between pie and douhnut using the method below.
+			new Chart(pieChartCanvas, {
+				type : 'pie',
+				data : pieData,
+				options : pieOptions
+			})
+
+			//-------------
+			//- BAR CHART -
+			//-------------
+			var barChartCanvas = $('#barChart').get(0).getContext('2d')
+			var barChartData = $.extend(true, {}, areaChartData)
+			var temp0 = areaChartData.datasets[0]
+			var temp1 = areaChartData.datasets[1]
+			barChartData.datasets[0] = temp1
+			barChartData.datasets[1] = temp0
+
+			var barChartOptions = {
+				responsive : true,
+				maintainAspectRatio : false,
+				datasetFill : false
+			}
+
+			new Chart(barChartCanvas, {
+				type : 'bar',
+				data : barChartData,
+				options : barChartOptions
+			})
+
+			//---------------------
+			//- STACKED BAR CHART -
+			//---------------------
+			var stackedBarChartCanvas = $('#stackedBarChart').get(0)
+					.getContext('2d')
+			var stackedBarChartData = $.extend(true, {}, barChartData)
+
+			var stackedBarChartOptions = {
+				responsive : true,
+				maintainAspectRatio : false,
+				scales : {
+					xAxes : [ {
+						stacked : true,
+					} ],
+					yAxes : [ {
+						stacked : true
+					} ]
+				}
+			}
+
+			new Chart(stackedBarChartCanvas, {
+				type : 'bar',
+				data : stackedBarChartData,
+				options : stackedBarChartOptions
+			})
+		})
+	</script>
+</body>
+
+
+
+
+
+
+
+

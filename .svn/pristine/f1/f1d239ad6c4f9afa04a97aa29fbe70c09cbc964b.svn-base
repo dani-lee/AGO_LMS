@@ -1,0 +1,181 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head></head>
+
+<title>로고관리</title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header" style="width: 1100px; margin: 0 auto;">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">로고관리</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">사이트관리</a>
+						</li>
+						<li class="breadcrumb-item active">로고관리</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content" style="width: 1100px; margin: 0 auto;">
+		<div class="container-fluid">
+
+		<div class="row row-card-no-pd">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<p class="fw-bold mt-1">로고</p>
+						<div class="picturePreView img-thumbnail mx-auto d-block" id="pictureView" style="border: 1px solid black; height: 60px; width: 200px;"></div>
+						<p class="text-muted text-center">png파일로 200 x 60 사이즈로 등록하세요(5MB미만)</p>
+					</div>
+					<br>
+					<div class="card-footer">
+							<div class="row" role="LogoLoc">
+								<label for="attachFileLogo" class="col-3 btn btn-default btn-sm">파일선택</label>
+								<input id="attachFileLogoName" class="col-9 form-control form-control-sm" type="text" disabled/>
+						<form role="logoForm" action="registLogo.do" class="form-control" method="post" enctype="multipart/form-data" style="display:none;">
+							<input type="file" id="attachFileLogo" name="attachFileLogo"  class="form-control" onchange="imageView('LogoLoc','attachFileLogo','attachFileLogoName','pictureView')" style="display:none;"/>	
+						</form>
+							</div>
+							<br>
+							<div class="buttons float-right">
+								<button type="button" class="btn btn-secondary btn-sm" onclick="changeLogo('logoForm','attachFileLogo','registLogo.do');">업로드</button>											
+								<button  class="btn btn-default btn-sm">삭제</button>
+							</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<p class="fw-bold mt-1">파비콘</p>
+						<div class="picturePreView img-thumbnail mx-auto d-block" id="paviconView" style="border: 1px solid black; height: 80px; width: 80px;"></div>
+						<p class="text-muted text-center">png파일로 80 x 80 사이즈로 등록하세요(5MB미만)</p>
+					</div>
+					<div class="card-footer">
+							<div class="row" role="paviconLoc">
+								<label for="attachFilePavicon" class="col-3 btn btn-default btn-sm">파일선택</label>
+								<input id="attachFilePaviconName" class="col-9 form-control form-control-sm" type="text" name="attach_file_pavicon" disabled/>
+						<form role="paviconForm" action="registPavicon.do" class="form-control" method="post" enctype="multipart/form-data" style="display:none;">
+								<input type="file" id="attachFilePavicon" name="attachFilePavicon"  class="form-control" onchange="imageView('paviconLoc','attachFilePavicon','attachFilePaviconName','paviconView')" style="display:none;"/>
+						</form>
+							</div>
+							<br>
+							<div class="buttons float-right">
+								<button type="button" class="btn btn-secondary btn-sm" onclick="changeLogo('paviconForm','attachFilePavicon','registPavicon.do');">업로드</button>											
+								<button  class="btn btn-default btn-sm">삭제</button>
+							</div>
+					</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</section>
+
+
+	
+	
+	
+<script>
+
+function imageView (loc, file,filename, view){
+	
+	let location = $('div[role="'+loc+'"]');
+	
+	let picture = location.find('[name='+file+']')[0];
+	
+	
+		//이미지 파일 용량 체크
+		if(picture.files[0].size > 1024*1024*5){
+			alert("사진 용량은 5MB 이하만 가능합니다.");
+			picture.value = "";
+			return;
+		}	
+		//이미지 확장자 jpg 확인
+		let fileFormat = picture.value.substr(picture.value.lastIndexOf('.')+1).toUpperCase();
+ 		
+		if(!(fileFormat == "PNG")){
+ 			alert("이미지는 PNG 형식만 가능합니다.");
+ 			picture.value="";
+ 			return;
+ 		}		
+		
+	
+	document.getElementById(filename).value = picture.files[0].name;
+
+		let reader = new FileReader();
+		reader.onload = function(e){
+			$('div#'+view+'')
+				.css({'background-image' 	: 'url('+e.target.result+')',
+					  'background-position' : 'center',
+					  'background-size' 	: 'cover',
+					  'background-repeat' 	: 'no-repeat'});
+		}
+		reader.readAsDataURL(picture.files[0]);
+	}
+
+
+function changeLogo(role, name, url){
+	form = $('form[role="'+role+'"]')[0];
+	formData = new FormData(form);
+	
+		if(!$('input[name="'+name+'"]').val()){
+			alert("사진을 선택하세요");
+			$('input[name="'+name+'"]').click();
+			return;
+		}
+	
+	
+	
+		$.ajax({
+				url 		: url,
+				data 		: formData,
+				type 		: 'post',
+				processData : false,
+				contentType : false,
+				success 	: function(data){
+					console.log(data);
+					alert(data);
+					location.reload();
+// 					//업로드 확인 변수 세팅
+// 					$('input[name="checkUpload"]').val(1);
+					
+// 					//저장된 파일명 저장
+// 					$('input#oldFile').val(data);	//변경시 삭제될 파일명
+// 					$('form[role="classForm"] input[name="clImg"]').val(data);
+// 					alert("사진이 업로드 되었습니다.");
+				},
+				error 		: function(error){
+					//alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+					AjaxErrorSecurityRedirectHandler(error.status);
+					console.log(error.status);
+				}
+			})		
+}
+
+
+</script>	
+
+	
+</body>

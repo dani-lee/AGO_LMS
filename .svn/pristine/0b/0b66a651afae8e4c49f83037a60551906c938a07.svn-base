@@ -1,0 +1,41 @@
+package com.one.scheduler;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.command.DstcsCommand;
+import com.one.dao.ManagementMemberDAO;
+import com.one.dto.DepartmentVO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.scheduler.ScheduledStasticsService;
+
+public class StasticsUpdateScheduler {
+
+	private ScheduledStasticsService scheduledStasticsService;
+	public void setScheduledStasticsService(ScheduledStasticsService scheduledStasticsService) {
+		this.scheduledStasticsService = scheduledStasticsService;
+	}
+	private ManagementMemberDAO managementMemberDAO;
+	public void setManagementMemberDAO(ManagementMemberDAO managementMemberDAO) {
+		this.managementMemberDAO = managementMemberDAO;
+	}
+
+	public void updateStasticsInfo()throws SQLException{
+		scheduledStasticsService.updateStcsClInfo();
+	}
+	
+	public void updateDstcsData()throws SQLException{
+		DstcsCommand dstcsCMD = new DstcsCommand();
+		
+		List<DepartmentVO> depList = managementMemberDAO.selectDepartment();
+		//System.out.println(depList);
+		for(DepartmentVO department : depList) {
+			List<ClassStasticsVO> blankList = scheduledStasticsService.getClassInfoByDpId(department.getCommonCode());
+			dstcsCMD.setDpId(department.getCommonCode());
+			dstcsCMD.setDstcsFirst(blankList.get(0).getStcsClsNo());
+			dstcsCMD.setDstcsSecond(blankList.get(1).getStcsClsNo());
+			dstcsCMD.setDstcsThird(blankList.get(2).getStcsClsNo());
+			scheduledStasticsService.updateStcsDp(dstcsCMD);
+		}
+	}
+}

@@ -1,0 +1,177 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="likeClassList" value="${likeClassList }" />
+
+<head></head>
+
+<title></title>
+
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1 class="m-0">관심강의</h1>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<a href="#">내강의실</a>
+						</li>
+						<li class="breadcrumb-item active">관심강의</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+
+		<div class="container-fluid">
+		<div class="row">
+		<section class="card col-8">
+		
+				<table class="table mt-3">
+				<caption align="top">
+				<button class="btn btn-primary">선택 신청</button>
+				<button class="btn btn-primary">선택 삭제</button>
+				</caption>
+			<thead>
+				<tr class="text-center">
+					<th class="col-1 align-middle text-center">선택</th>
+					<th class="col-2">강의구분</th>
+					<th class="col-4">강의명</th>
+					<th class="col-1 align-middle">이수점수</th>
+					<th class="col-1">상세보기</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:forEach items="${likeClassList }" var="likeClassList">
+				<tr>
+					<td class="text-center align-middle"><label for="customCheckbox4" class="custom-control-label ml-4"></label></td>
+					
+					<td class="text-center">
+						<c:if test="${likeClassList.clCate eq 'A201' }">
+							신입사원교육
+						</c:if>
+						<c:if test="${likeClassList.clCate eq 'A202' }">
+							일반교육
+						</c:if>
+						<c:if test="${likeClassList.clCate eq 'A203' }">
+							자기개발/취미
+						</c:if>
+					</td>
+					
+					<td class="row" style="cursor: pointer;" onclick="location.href='detail.do?mCode=M000202'">
+						<div class="column ui-sortable">
+							<span class="h6">
+								[${likeClassList.openRound }차시]${likeClassList.clName }
+							 </span>
+							<br>
+							<span class="text-primary">
+							<fmt:formatDate value="${likeClassList.postSdate }" pattern="yyyy.MM.dd"/>
+							~<fmt:formatDate value="${likeClassList.postEdate }" pattern="yyyy.MM.dd"/></span>
+							
+							<c:if test="${likeClassList.clFormat eq 'A601' }">
+								<span class="badge badge-info ml-3">오프라인</span>
+							</c:if>
+							<c:if test="${likeClassList.clFormat eq 'A602' }">
+								<span class="badge badge-primary ml-3">온라인</span>
+							</c:if>
+							<c:if test="${likeClassList.clFormat eq 'A603' }">
+								<span class="badge badge-success ml-3">실시간</span>
+							</c:if>
+							
+							<c:if test="${likeClassList.clDivision eq 'A501' }">
+								<span class="badge badge-warning">필수</span>
+							</c:if>
+							<c:if test="${likeClassList.clDivision eq 'A502' }">
+								<span class="badge badge-danger">선택</span>
+							</c:if>
+						</div>
+					</td>
+					
+					<td class="text-center">${likeClassList.clPoint }</td>
+					
+					<td>
+						<button class="btn btn-primary">상세보기</button>
+					</td>
+
+				</tr>
+			</c:forEach>
+				
+
+			</tbody>
+		</table>
+		
+		</section>
+		<section class="card col-3 ml-3">
+
+                        <div class="card-header ui-sortable-handle" style="cursor: move;">
+                            <h3 class="card-title">현황</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">관심 점수</h5>
+                                        <span class="description-text">10</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-6">
+                                    <div class="description-block">
+                                        <h5 class="description-header">내 이수점수</h5>
+                                        <span class="description-text">21</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                
+                                <div class="col-sm-12">
+                                	<table class="table mt-3">
+                                		<tr>                                	
+                                			<td>일반 교육</td>
+                                			<td>30</td>
+                                		</tr>
+                                		<tr>                                	
+                                			<td>사내 교육</td>
+                                			<td>30</td>
+                                		</tr>
+                                		<tr>                                	
+                                			<td>자기개발 및 취미</td>
+                                			<td>30</td>
+                                		</tr>                                		                                	
+                                		<tr>                                	
+                                			<td>HRD</td>
+                                			<td>30</td>
+                                		</tr>
+                                	</table>
+                                	
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+			
+		</section>
+		</div>
+
+	</div>
+
+</body>

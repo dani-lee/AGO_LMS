@@ -1,0 +1,83 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.command.Criteria;
+import com.one.command.ExtReportCommand;
+import com.one.command.ExtReportCommand2;
+import com.one.command.MemberClassCommand;
+import com.one.command.MemberCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.ReportCommand;
+import com.one.dto.DepartmentVO;
+import com.one.dto.ExtReportVO;
+import com.one.dto.FinishedClassVO;
+import com.one.dto.MemberClVO;
+import com.one.dto.ClassVO.ClassIntr;
+
+public interface MyClassDAO {
+	public List<MemberStudyClassCommand> selectStudyClassList(String memEmail) throws SQLException;
+	
+	public List<ReportCommand> selectFinishClass(String memEmail) throws SQLException;
+	
+	public List<FinishedClassVO> selectExtFinishedClassList(String memEmail) throws SQLException;
+	
+	public ReportCommand selectReportClass (int opcl) throws SQLException;
+	
+	public int selectStudyClassCount(String memEmail)throws SQLException;
+	
+	public int selectFinishClassCount(String memEmail) throws SQLException;
+	
+	public List<ClassIntr> selectIntrClass(String memEmail) throws SQLException;
+	
+	public List<DepartmentVO> selectDepartmentClassList() throws SQLException;
+	
+	public List<MemberStudyClassCommand> selectListStudyingClass(MemberCriteria cri) throws SQLException;
+	
+	public int selectListStudyingClassCount(Criteria cri) throws SQLException;
+	
+	public void updateMemCLByQrScan(MemberClVO memberCL) throws SQLException;
+	
+	public void insertMemChap(MemberClVO memberCL) throws SQLException;
+	
+	public void updateMemChap(MemberClVO memberCL) throws SQLException;
+	
+	public List<MemberClassCommand> selectMemClListByYear(MemberCriteria cri) throws SQLException;
+	
+	public int selectMemClListByYearCnt(String memId) throws SQLException;
+	
+	public MemberClassCommand getIntReport(MemberClassCommand emailOpcl) throws SQLException;
+	
+	public int getmemClNoByOpcl(MemberClassCommand emailOpcl) throws SQLException;
+	
+	public List<FinishedClassVO> getExtList(MemberCriteria cri) throws SQLException;
+	
+	public List<ExtReportVO> getExtReportList(MemberCriteria cri) throws SQLException;
+	
+	public String getExtPoint() throws SQLException;
+	
+	public int countExtReport(String email) throws SQLException;
+	
+	public List<MemberStudyClassCommand> selectMemEssentialList(String memEmail) throws SQLException;
+	
+	public void updateMemCLProgRate(MemberClVO memberCL) throws SQLException;
+	
+	public int selectClChapterCount(String clCode) throws SQLException;
+
+	public void updateMidTestSco(MemberClVO memberCL) throws SQLException;
+	
+	public void updateFinTestSco(MemberClVO memberCL) throws SQLException;
+	
+	public MemberClVO selectMemCLByOpclAndEmail(MemberClVO memberCL) throws SQLException;
+
+	public void updateTestCpl(MemberClVO memberCL) throws SQLException;
+	
+	public void updateStudyCpl(MemberClVO memberCL) throws SQLException;
+	
+	public void updateStudyCplWithoutCtfDate(MemberClVO memberCL) throws SQLException;
+	
+	public ExtReportCommand2 getExtReportListByExtNo(String extNo) throws SQLException;
+	
+	public void updateMemClState(MemberClVO memberCL) throws SQLException;
+}

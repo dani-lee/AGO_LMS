@@ -1,0 +1,90 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="classList" value="${dataMap.classList }" />
+<c:set var="size" value="${dataMap.size }" />
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+
+			<div class="col-12 col-lg-12">
+				<div class="card card-primary card-tabs">
+					<div class="card-header p-0 pt-1">
+						<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">신입 의무 교육</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">일반교육</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">자기개발 및 취미</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">HRD</a>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body justify-content-around" style="display: inline-block;">
+						<div class="tab-content" id="custom-tabs-one-tabContent">
+							<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+								<c:if test="${not empty classList }" >
+									<c:forEach var="item" items="${classList}" varStatus="vs" >
+										<c:if test="${not empty item}">
+											<c:if test="${vs.index eq 0}">
+												<div class="d-flex justify-content-between">
+											</c:if>
+												<div class="card col-lg-2">
+													<img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" alt="..." style="width: 190px; height: 190px;">
+													<div class="caption">
+														<h5 class="mt-3">${item.clName}</h5>
+														<p>${item.clCate }</p>
+														<p>
+															<c:if test="${item.scope ne 0.0}">
+																<c:forEach var="i" begin="1" end="${item.frontScope}" >
+																	<i class="fas fa-star text-warning"></i>
+																</c:forEach>
+																<c:if test="${item.backScope eq 5}">
+																	<i class="fas fa-star-half-alt text-warning"></i>
+																</c:if>
+																<c:forEach var="i" begin="1" end="${item.restScope}" >
+																	<i class="far fa-star text-warning"></i>
+																</c:forEach>
+																<span class="text-warning">${item.scope}</span>
+															</c:if>
+														</p>
+														<a href="#" style="width: 100%;" class="btn btn-primary" role="button">수강신청</a>
+													</div>
+												</div>
+											<c:if test="${vs.index eq 3}">
+												</div>
+												<div class="d-flex justify-content-between">
+											</c:if>
+											<c:if test="${vs.index eq 7}">
+												</div>
+											</c:if>
+										</c:if>
+									</c:forEach>
+										
+ 								</c:if>
+							</div>
+
+						</div>
+					</div>
+					<%@include file="/WEB-INF/views/common/pagination.jsp" %>
+					<!-- /.card -->
+				</div>
+			</div>
+
+	
+
+
+		</div>
+	</div>
+</body>

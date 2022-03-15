@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Admin-Mapper">
+
+	<select id="selectAdminById" resultType="admin">
+		SELECT
+		    ADMIN_ID,
+		    ADMIN_PWD,
+		    ADMIN_EMAIL,
+		    AUTHORITY_ID
+		FROM ADMIN
+		WHERE ADMIN_ID = #{loginId}
+	</select>
+	
+	<sql id="searchMember">
+
+		<if test="searchType == 'n'.toString()">
+			AND MEM_NAME like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'e'.toString()">
+			AND MEM_EMAIL like '%'||#{keyword}||'%'
+		</if>
+
+	</sql>
+
+	<select id="selectEmployeeList" resultType="member">
+		SELECT MEM_EMAIL
+				, MEM_NAME
+				, MEM_ID
+		FROM MEMBER
+		WHERE AUTHORITY_ID = 'A102'
+		  OR AUTHORITY_ID = 'A101'
+		  <include refid="searchMember" />
+
+	</select>
+	
+	<select id="selectManagerList" resultType="member">
+		SELECT MEM_EMAIL
+				, MEM_NAME
+				, MEM_ID
+		FROM MEMBER
+		WHERE AUTHORITY_ID = 'A103'
+		  AND MEM_ID IS NOT NULL
+	</select>
+	
+	<select id="selectAdminEmailCheck" resultType="int">
+		select count(*) cnt 
+		  FROM admin 
+		 where ADMIN_EMAIL = #{adminEmail}
+	</select>
+	
+	<update id="updateAdminPwd">
+		UPDATE admin
+		   SET ADMIN_PWD = #{adminPwd}
+		 WHERE ADMIN_EMAIL = #{adminEmail}
+
+	</update>
+	
+	<update id="updateMemberAuthority">
+		UPDATE MEMBER
+		   SET AUTHORITY_ID = 'A101'
+		 WHERE MEM_ID IS NOT NULL
+		 	and MEM_ID = #{item}
+
+	</update>
+	
+	<update id="updateManagerAuthority">
+		UPDATE MEMBER
+		   SET AUTHORITY_ID = 'A103'
+		 WHERE MEM_ID IS NOT NULL
+		 	and MEM_ID = #{item}
+	</update>
+</mapper>

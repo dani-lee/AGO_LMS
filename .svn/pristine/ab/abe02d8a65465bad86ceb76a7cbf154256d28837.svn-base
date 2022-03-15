@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ClassReview-Mapper">
+
+	<sql id="searchClass">
+		<if test="searchType == 'a'.toString()">
+			AND c.CL_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'n'.toString()">
+			AND c.CL_CATE = 'A201'
+			AND c.CL_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'd'.toString()">
+			AND c.CL_CATE = 'A202'
+			AND c.CL_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'm'.toString()">
+			AND c.CL_CATE = 'A203'
+			AND c.CL_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<sql id="countSQL">
+		<if test="countType == 1">
+			<![CDATA[and a.REVIEW_SCORE < 2]]>
+		</if>
+		<if test="countType == 2">
+			<![CDATA[
+				and 2<= a.REVIEW_SCORE
+	   			and a.REVIEW_SCORE < 3
+			]]>
+		</if>
+		<if test="countType == 3">
+			<![CDATA[
+				and 3<= a.REVIEW_SCORE
+   				and a.REVIEW_SCORE < 4
+			]]>
+		</if>
+		<if test="countType == 4">
+			<![CDATA[
+				and 4<= a.REVIEW_SCORE
+   				and a.REVIEW_SCORE < 5
+			]]>
+		</if>
+		<if test="countType == 5">
+			<![CDATA[and 5<= a.REVIEW_SCORE]]>
+		</if>
+	</sql>
+	
+	<select id="selectClassReviewList" resultType="classReviewCommand">
+		SELECT a.REVIEW_NO
+			 , a.OPCL
+			 , a.REVIEW_SCORE
+			 , a.REVIEW_CONTENT
+			 , a.REVIEW_REGDATE
+			 , a.MEM_ID
+			 , c.CL_CODE
+			 , c.CL_NAME
+			 , d.MEM_NAME
+		  FROM CL_REVIEW a
+		  	 , OPEN_CLASS b
+		  	 , CLASS c
+		  	 , MEMBER d
+		 WHERE a.OPCL = b.OPCL 	 
+		   AND b.CL_CODE = c.CL_CODE
+		   AND a.MEM_ID = d.MEM_ID
+		   <include refid="searchClass" />
+  <![CDATA[AND ROWNUM <= 30]]>
+		 ORDER BY a.REVIEW_REGDATE desc
+	</select>
+	
+	<select id="selectClassListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM v_class
+		 WHERE CL_CODE IS NOT NULL
+			   <include refid="searchClass" />
+		 ORDER BY POST_SDATE DESC
+	</select>
+	
+	<!-- 후기 클릭시 강의 상세 -->
+	<select id="selectClassDetail" resultType="classVo">
+		select a.cl_img
+		     , a.cl_name
+		     , a.cl_cate
+		     , a.cl_format
+		     , a.cl_division
+		  from class a
+		     , open_class b
+		 where a.cl_code = b.cl_code
+		   and b.opcl = #{opcl}
+	</select>
+	
+	<!-- 강의 평점 평균 -->
+	<select id="selectReviewAVG" resultType="double">
+		SELECT AVG(REVIEW_SCORE)
+		  FROM CL_REVIEW
+		 WHERE OPCL=#{opcl}		
+	</select>
+	
+	<!-- 점수대별 인원수 -->
+	<select id="countReviewScore" resultType="int">
+		select count(a.REVIEW_SCORE)
+		  from cl_review a
+		 where opcl=#{opcl}
+		 <include refid="countSQL" />
+	</select>
+	
+	<!-- 수강 마감기간 -->
+	<select id="selectPostEndDate">
+		select b.opcl
+		     , b.POST_EDATE
+		  from class a
+		     , open_class b
+		 where a.cl_code = b.cl_code
+	</select>
+	
+	<!-- 상세 리뷰 리스트 -->
+	<select id="selectDetailReviewList" resultType="classReviewCommand">
+		select REVIEW_NO
+		     , OPCL
+		     , REVIEW_SCORE
+		     , REVIEW_CONTENT
+		     , REVIEW_REGDATE
+		     , MEM_ID
+		  from cl_review
+		 where OPCL=#{opcl}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

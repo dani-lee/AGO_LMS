@@ -1,0 +1,287 @@
+package com.one.service.impl;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.MemberClassCommand;
+import com.one.command.MemberCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.ReportCommand;
+import com.one.dao.ClassDAO;
+import com.one.dao.CommonDAO;
+import com.one.dao.ManagerDAO;
+import com.one.dao.MemberDAO;
+import com.one.dao.MyClassDAO;
+import com.one.dao.NoticeDAO;
+import com.one.dto.DepartmentVO;
+import com.one.dto.ExcelDTO;
+import com.one.dto.ManagerVO;
+import com.one.dto.MemberClVO;
+import com.one.dto.MemberVO;
+import com.one.dto.NoticeVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassVO;
+import com.one.service.MemberService;
+import com.one.utils.ExcelUtil;
+import com.one.utils.JsTreeJsonConversion;
+
+public class MemberServiceImpl implements MemberService {
+
+	private MemberDAO memberDAO;
+	private ManagerDAO managerDAO;
+	private CommonDAO commonDAO;
+	private MyClassDAO myClassDAO;
+	private ClassDAO classDAO;
+	private NoticeDAO noticeDAO;
+	
+	public void setMemberDAO(MemberDAO memberDAO) {
+		this.memberDAO = memberDAO;
+	}
+	public void setManagerDAO(ManagerDAO managerDAO) {
+		this.managerDAO = managerDAO;
+	}
+	public void setCommonDAO(CommonDAO commonDAO) {
+		this.commonDAO = commonDAO;
+	}
+	public void setMyClassDAO(MyClassDAO myClassDAO) {
+		this.myClassDAO = myClassDAO;
+	}
+	public void setClassDAO(ClassDAO classDAO) {
+		this.classDAO = classDAO;
+	}
+	public void setNoticeDAO(NoticeDAO noticeDAO) {
+		this.noticeDAO = noticeDAO;
+	}
+
+	@Override
+	public MemberVO getMember(String memId) throws SQLException {
+		MemberVO member = memberDAO.selectMemberById(memId);
+		return member;
+	}
+
+	@Override
+	public MemberVO getMemberByEmail(String memEmail) throws SQLException {
+		MemberVO member = memberDAO.selectMemberByEmail(memEmail);
+		return member;
+	}
+
+	@Override
+	public List<Map<String, String>> getMemberByDpId(String dpId) throws Exception {
+		List<Map<String, String>> jsonData = null;
+		List<MemberVO> memberList = memberDAO.selectMemberByDpId(dpId);
+
+		jsonData = JsTreeJsonConversion.conversion(memberList);
+
+		return jsonData;
+	}
+
+	@Override
+	public List<Map<String, String>> getMemberByDpIdNoIcon(String dpId) throws Exception {
+		List<Map<String, String>> jsonData = null;
+		List<MemberVO> memberList = memberDAO.selectMemberByDpId(dpId);
+
+		jsonData = JsTreeJsonConversion.NoIconConversion(memberList);
+
+		return jsonData;
+	}
+	
+	@Override
+	public List<Map<String, String>> getMemberClByOpcl(int opcl) throws Exception {
+		List<Map<String, String>> jsonData = null;
+		List<MemberClVO> memberClList = memberDAO.selectMemberClByOpcl(opcl);
+		for(MemberClVO memberCl : memberClList) {
+			memberCl.changeId();
+		}
+		jsonData = JsTreeJsonConversion.NoIconConversion(memberClList);
+
+		return jsonData;
+	}
+	
+	@Override
+	public void insertIdAndPwd(MemberVO member) throws SQLException {
+		memberDAO.insertIdAndPwd(member);
+
+	}
+
+	@Override
+	public Map<String, Object> getManagerByEmail(String memEmail) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+
+		MemberVO member = memberDAO.selectMemberByEmail(memEmail);
+		ManagerVO manager = managerDAO.selectManager();
+
+		dataMap.put("member", member);
+		dataMap.put("manager", manager);
+
+		return dataMap;
+	}
+
+	@Override
+	public void registMember(MemberVO member) throws SQLException {
+		memberDAO.insertMember(member);
+	}
+
+	@Override
+	public void registMembersFromExcel(File uploadFile) throws IOException, SQLException {
+
+		ExcelDTO excelDTO = new ExcelDTO();
+
+		// 파일경로 추가
+		excelDTO.setFilePath(uploadFile.getAbsolutePath());
+		// 컬럼명 추가
+		excelDTO.setOutputColumns("A", "B", "C", "D", "E", "F", "G", "H");
+		// 시작행
+		excelDTO.setStartRow(2);
+
+		List<Map<String, String>> excelContent = ExcelUtil.read(excelDTO);
+		System.out.println("List                     : " + excelContent);
+
+		for (Map<String, String> map : excelContent) {
+			for (String key : map.keySet()) {
+				if (key.equals("E")) {
+					String ps = commonDAO.selectPositionByKeyword(map.get("E"));
+					map.put("E", ps);
+				}
+
+				if (key.equals("F")) {
+					String dp = commonDAO.selectPositionByKeyword(map.get("F"));
+					map.put("F", dp);
+				}
+
+				if (key.equals("G")) {
+					String auth = commonDAO.selectPositionByKeyword(map.get("G"));
+					map.put("G", auth);
+				}
+
+				if (key.equals("H")) {
+					String status = commonDAO.selectPositionByKeyword(map.get("H"));
+					map.put("H", status);
+				}
+			}
+		}
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("excelContent", excelContent);
+
+		System.out.println(paramMap);
+
+		try {
+			memberDAO.insertMembers(paramMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public Map<String, Object> getMemberDetail(String memEmail) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+
+		// 해당 회원에 대한 회원 정보
+		MemberVO member = memberDAO.selectMemberByEmail(memEmail);
+
+		// 해당 회원의 수강내역에 대한 정보
+		List<MemberClassCommand> classList = memberDAO.selectMemberClassList(memEmail);
+		for (int i = 0; i < classList.size(); i++) {
+			int opcl = classList.get(i).getOpcl();
+			ClassVO memClass = memberDAO.selectMemberClassName(opcl);
+			classList.get(i).setClName(memClass.getClName());
+			classList.get(i).setClCode(memClass.getClCode());
+
+		}
+		List<DepartmentVO> departmentList = memberDAO.selectMemberDepartment();
+		List<DepartmentVO> positionList = memberDAO.selectMemberPosition();
+		List<DepartmentVO> authorityList = memberDAO.selectMemberAuthority();
+		/* System.out.println("----------------------"+classList.get(0).getClCode()); */
+		dataMap.put("member", member);
+		dataMap.put("classList", classList);
+		dataMap.put("departmentList", departmentList);
+		dataMap.put("positionList", positionList);
+		dataMap.put("authorityList", authorityList);
+		return dataMap;
+	}
+
+	@Override
+	public void updateMemberAuthority(MemberVO member) throws SQLException {
+		memberDAO.updateMemberAuthority(member);
+
+	}
+
+	@Override
+	public void modifyMemberPwd(MemberVO member) throws SQLException {
+		memberDAO.updateMemberPwd(member);
+		
+	}
+
+	@Override
+	public List<DepartmentVO> selectMemberDepartment() throws SQLException {
+		List<DepartmentVO> department = memberDAO.selectMemberDepartment();
+		return department;
+	}
+
+	@Override
+	public void modifyPwdById(MemberVO member) throws SQLException {
+		memberDAO.updatePwdById(member);
+	}
+
+	@Override
+	public Map<String, Object> getMemberMainInfo(MemberCriteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<>();
+		
+		//학습중인 강의
+		List<MemberStudyClassCommand> myClassList = myClassDAO.selectListStudyingClass(cri);
+		int myClassListCount = myClassDAO.selectListStudyingClassCount(cri);
+		
+		//필수강의
+		List<MemberStudyClassCommand> essentialList = myClassDAO.selectMemEssentialList(cri.getMemEmail());
+		
+		//종료된강의
+		List<ReportCommand> finishClassList = myClassDAO.selectFinishClass(cri.getMemEmail());
+		for(int i=0;i<finishClassList.size();i++) {
+			ReportCommand report = myClassDAO.selectReportClass(finishClassList.get(i).getOpcl());
+			
+			if(report != null) {
+				finishClassList.get(i).setIntNo(report.getIntNo());
+				finishClassList.get(i).setMemClNo(report.getMemClNo());
+				finishClassList.get(i).setOpcl(report.getOpcl());
+				finishClassList.get(i).setEduContent(report.getEduContent());
+				finishClassList.get(i).setEduReview(report.getEduReview());
+				finishClassList.get(i).setIntState(report.getIntState());
+				finishClassList.get(i).setIntDate(report.getIntDate());
+			}
+			
+			if(finishClassList.get(i).getdDate() != null) {
+				Date endDate = new Date(finishClassList.get(i).getdDate().getTime());
+				Date today = new Date(System.currentTimeMillis());
+				long calculate = endDate.getTime() - today.getTime();
+				int dDays = (int) (calculate / ( 24*60*60*1000));
+				finishClassList.get(i).setdDays(dDays);
+			}
+		}
+		
+		//공지사항
+		List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList(cri);
+		List<NoticeVO> noticeList = noticeDAO.selectNomalNoticeList(cri);
+		
+		//메인 노출 강의
+		List<ClassListVO> mainEPList = classDAO.selectMainEPList();
+		
+		dataMap.put("myClassList", myClassList);
+		dataMap.put("myClassListCount", myClassListCount);
+		dataMap.put("essentialList", essentialList);
+		dataMap.put("finishClassList", finishClassList);
+		dataMap.put("importantNoticeList", importantNoticeList);
+		dataMap.put("noticeList", noticeList);
+		dataMap.put("mainEPList", mainEPList);
+		
+		return dataMap;
+	}
+
+	
+}

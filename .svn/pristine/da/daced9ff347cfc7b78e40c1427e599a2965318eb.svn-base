@@ -1,0 +1,29 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.ExamCommand;
+import com.one.dto.ExamStastisDetailVO;
+import com.one.dto.ExamStatisVO;
+
+public interface ExamStatisDAO {
+
+	public List<ExamStatisVO> selectMiddlePrecedence(ExamCommand examCmd) throws SQLException;
+
+	public List<ExamStatisVO> selectFinalPrecedence(ExamCommand examCmd) throws SQLException;
+	
+	public List<ExamStatisVO> selectClassExamAVG() throws SQLException;
+	
+	public List<ExamStatisVO> selectClassList(Criteria cri) throws SQLException;
+	
+	public int selectClassExamCount() throws SQLException;
+
+	public ExamStastisDetailVO selectExamStastisDetail(String clCode) throws SQLException;
+	
+	public int[] selectExamStastisMiddleCount(String clCode) throws SQLException;
+	
+	public int[] selectExamStastisFinalCount(String clCode) throws SQLException;
+}

@@ -1,0 +1,37 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.dao.LikeClassDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public class LikeClassDAOImpl implements LikeClassDAO{
+
+	private SqlSession session;
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectLikeClassList(String memEmail) throws SQLException {
+		List<ClassStasticsVO> likeClassList = session.selectList("LikeClass-Mapper.selectLikeClassList", memEmail);
+		
+		return likeClassList;
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectLikeClassCntAttendees() throws SQLException {
+		List<ClassStasticsVO> attendeesCnt = session.selectList("LikeClass-Mapper.selectLikeClassCntAttendees");
+		
+		return attendeesCnt;
+	}
+
+	@Override
+	public int selectLikeClPoint(String memEmail) throws SQLException {
+		return session.selectOne("LikeClass-Mapper.selectLikeClPoint", memEmail);
+	}
+
+}

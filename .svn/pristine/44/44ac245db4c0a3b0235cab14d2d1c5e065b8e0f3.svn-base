@@ -1,0 +1,44 @@
+package com.one.dto;
+
+public class MemberRemindSetVO {
+
+	private String memEmail;
+	private int intrClFlag;     // 관심 강의 마감 
+	private int realtimeClFlag; // 실시간 강의 알림
+	private int reportChkFlag;	// 부서장 보고서 결재 알림
+	private int reportDlFlag;	// 보고서 마감 알림
+	
+	
+	public int getReportDlFlag() {
+		return reportDlFlag;
+	}
+	public void setReportDlFlag(int reportDlFlag) {
+		this.reportDlFlag = reportDlFlag;
+	}
+	public String getMemEmail() {
+		return memEmail;
+	}
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+	public int getIntrClFlag() {
+		return intrClFlag;
+	}
+	public void setIntrClFlag(int intrClFlag) {
+		this.intrClFlag = intrClFlag;
+	}
+	public int getRealtimeClFlag() {
+		return realtimeClFlag;
+	}
+	public void setRealtimeClFlag(int realtimeClFlag) {
+		this.realtimeClFlag = realtimeClFlag;
+	}
+	public int getReportChkFlag() {
+		return reportChkFlag;
+	}
+	public void setReportChkFlag(int reportChkFlag) {
+		this.reportChkFlag = reportChkFlag;
+	}
+		
+	
+}

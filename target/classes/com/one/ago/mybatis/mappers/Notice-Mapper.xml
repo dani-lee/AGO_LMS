@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Notice-Mapper">
+
+	<sql id="searchNotice">
+		<if test="sortType == 'i'.toString()">
+			AND NOTICE_IMPT = 0
+		</if>
+		<if test="searchType == 't'.toString()">
+			AND NOTICE_TITLE LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND NOTICE_CONTENT LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			AND (
+					NOTICE_CONTENT LIKE '%'||#{keyword}||'%'
+					or
+					NOTICE_TITLE LIKE '%'||#{keyword}||'%'
+				)
+		</if>
+	</sql>
+	
+	<sql id="searchTime">
+		<if test="sortType == ''.toString()">
+			ORDER BY NOTICE_REGDATE DESC
+		</if>
+		<if test="sortType == 'l'.toString()">
+			ORDER BY NOTICE_REGDATE
+		</if>
+	
+	</sql>
+
+	<select id="selectNoticeList" resultType="notice">
+		SELECT NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+		FROM NOTICE
+		WHERE NOTICE_TITLE LIKE '%'||#{keyword}||'%'
+		ORDER BY NOTICE_REGDATE DESC
+	</select>
+	
+	<select id="selectImportantNoticeList" resultType="notice">
+		SELECT NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+		FROM NOTICE
+		WHERE NOTICE_IMPT = 0
+		ORDER BY NOTICE_REGDATE DESC
+	</select>
+	
+	<select id="selectNomalNoticeList" resultType="notice">
+		SELECT NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+		FROM NOTICE
+		WHERE NOTICE_IMPT = 1
+		<include refid="searchTime" />
+	</select>
+		
+	
+	<select id="selectNoticeListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE NOTICE_NO IS NOT NULL
+		<include refid="searchNotice" />
+		ORDER BY NOTICE_NO DESC
+	</select>	
+	
+	<select id="selectImportantNoticeListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE NOTICE_IMPT = 0
+		ORDER BY NOTICE_REGDATE DESC
+	</select>	
+	
+	<select id="selectNomalNoticeListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE NOTICE_IMPT = 1
+		<include refid="searchTime" />
+	</select>	
+	
+	<select id="selectUserNoticeList" resultType="notice">
+		SELECT NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+		FROM NOTICE
+		WHERE NOTICE_NO IS NOT NULL
+		<if test='no1 != null'>
+		  and NOTICE_NO != #{ no1 }
+		 </if>
+		<if test='no2 != null'>
+		  and NOTICE_NO != #{ no2 }
+		 </if>
+		<if test='no3 != null'>
+		  and NOTICE_NO != #{ no3 }
+		 </if>
+		<include refid="searchNotice" />
+		ORDER BY NOTICE_NO DESC
+	</select>	
+
+	<select id="selectUserNoticeListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE NOTICE_NO IS NOT NULL
+		<if test='no1 != null'>
+		  and NOTICE_NO != #{ no1 }
+		 </if>
+		<if test='no2 != null'>
+		  and NOTICE_NO != #{ no2 }
+		 </if>
+		<if test='no3 != null'>
+		  and NOTICE_NO != #{ no3 }
+		 </if>
+		<include refid="searchNotice" />
+		ORDER BY NOTICE_NO DESC
+	</select>
+
+	<select id="selectNoticeByNoticeNo" parameterType="int" resultType="notice">
+		SELECT NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+		FROM NOTICE
+		WHERE NOTICE_NO = #{ noticeNo }
+	</select>
+
+
+	<update id="updateNotice">
+		UPDATE NOTICE
+			SET
+			NOTICE_TITLE = #{ noticeTitle },
+			NOTICE_CONTENT = #{ noticeContent },
+			NOTICE_IMPT = #{ noticeImpt }
+			WHERE
+		NOTICE_NO = #{ noticeNo }
+	</update>
+
+	<update id="deleteNotice" parameterType="map">
+		DELETE FROM NOTICE
+		WHERE
+			NOTICE_NO IS NULL
+		<foreach collection="array" item="item"> 
+			or NOTICE_NO = #{ item } 
+		</foreach>
+
+		
+	</update>
+
+	<update id="insertNotice">
+		INSERT INTO NOTICE 
+			(	NOTICE_NO
+				,NOTICE_TITLE
+				,NOTICE_CONTENT
+				,NOTICE_REGDATE
+				,NOTICE_IMPT
+				,NOTICE_VIEW_CNT
+			)
+		VALUES 
+			(	#{noticeNo}
+				,#{ noticeTitle }
+				,#{ noticeContent }
+				, TRUNC(SYSDATE)
+				,#{ noticeImpt }
+				,#{ noticeViewCnt }
+			)
+	</update>
+	
+	<update id="increaseViewCnt" parameterType="int">
+		update 
+		NOTICE 
+		set 
+		NOTICE_VIEW_CNT=NOTICE_VIEW_CNT+1 
+		where NOTICE_NO=#{noticeNo}
+	</update>
+	
+	<select id="selectNoticeSeqNextValue" resultType="int">
+		SELECT SEQ_NOTICE.NEXTVAL FROM DUAL
+	</select>
+</mapper>

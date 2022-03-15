@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean
+		id="loginLog"
+		class="java.lang.String">
+		<constructor-arg value="${login.log}" />
+	</bean>
+
+	<bean
+		id="actionLog"
+		class="java.lang.String">
+		<constructor-arg value="${action.log}" />
+	</bean>
+
+	<bean
+		id="errorLog"
+		class="java.lang.String">
+		<constructor-arg value="${error.log}" />
+	</bean>
+
+
+	<bean
+		id="userLoginFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.user.login}" />
+	</bean>
+
+	<bean
+		id="managerLoginFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.manager.login}" />
+	</bean>
+	<bean
+		id="adminLoginFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.admin.login}" />
+	</bean>
+
+	<bean
+		id="userClassActionFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.user.class.action}" />
+	</bean>
+	
+	<bean
+		id="managerActionFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.manager.action}" />
+	</bean>
+
+	<bean
+		id="adminActionFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.admin.action}" />
+	</bean>
+
+	<bean
+		id="errorFileName"
+		class="java.lang.String">
+		<constructor-arg value="${log.error}" />
+	</bean>
+
+</beans>

@@ -1,0 +1,11 @@
+package com.one.service;
+
+import java.sql.SQLException;
+
+import com.one.dto.AdminVO;
+
+public interface AdminService {
+
+	AdminVO getAdmin(String login_id) throws SQLException;
+
+}

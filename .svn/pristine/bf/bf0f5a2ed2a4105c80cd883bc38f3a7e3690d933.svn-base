@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MyClass-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 'y'.toString()">
+			AND STUDY_SDATE between TO_DATE('#{keyword}-01-01', 'YYYY-MM-DD') and TO_DATE('#{keyword}-12-31', 'YYYY-MM-DD');
+		</if>
+	</sql>
+	
+	<select id="selectReportClass" resultType="reportCommand">
+		SELECT INT_NO
+				,MEM_CL_NO
+				,OPCL
+				,EDU_CONTENT
+				,EDU_REVIEW
+				,INT_STATE
+				,INT_DATE
+		FROM INT_REPORT
+		WHERE opcl = #{opcl}
+	</select>
+
+	<select id="selectStudyClassList" resultType="memberStudyClass">
+		SELECT MEM_CL_NO
+				, a.OPCL as OPCL
+				, MEM_EMAIL
+				, TEST_CPL
+				, STUDY_CPL
+				, PROG_RATE
+				, MEMCL_STATE
+				, CTF_DATE
+				, STUDY_SDATE
+				, STUDY_EDATE
+				, MIDTEST_SCORE
+				, FINTEST_SCORE
+				, CL_DIVISION
+				, CL_FORMAT
+				, CL_NAME
+		FROM mem_cl a, v_class b
+		WHERE a.OPCL = b.OPCL
+		AND MEM_EMAIL = #{memEmail}
+		ORDER BY STUDY_SDATE DESC
+	</select>
+
+	<select id="selectIntrClassList" resultType="classIntr">
+		select MEM_EMAIL
+				, a.OPCL as opcl
+				, POST_SDATE
+				, POST_EDATE
+				, CL_NAME
+				, STUDY_DATE
+		  from MEM_INTR_CLASS a, v_class b
+		 where a.opcl=b.opcl
+		   and mem_email = #{memEmail}
+	</select>
+
+	<select id="selectStudyClassCount" resultType="int">
+		SELECT count(*)
+		FROM MEM_CL
+		WHERE MEM_EMAIL = #{memEmail}
+	</select>
+
+	<select id="selectFinishClassList" resultType="reportCommand">
+		SELECT MEM_CL_NO
+				, a.OPCL as OPCL
+				, MEM_EMAIL
+				, TEST_CPL
+				, STUDY_CPL
+				, PROG_RATE
+				, MEMCL_STATE
+				, CTF_DATE
+				, STUDY_SDATE
+				, STUDY_EDATE
+				, MIDTEST_SCORE
+				, FINTEST_SCORE
+				, CL_DIVISION
+				, CL_FORMAT
+				, CL_NAME
+		FROM mem_cl a, v_class b
+		WHERE a.OPCL = b.OPCL
+		and  <![CDATA[STUDY_EDATE < sysdate]]>
+		and mem_email = #{memEmail}
+	</select>
+
+	<select id="selectFinishClassCount" resultType="int">
+		SELECT count(*)
+		FROM mem_cl
+		WHERE <![CDATA[STUDY_EDATE < sysdate]]>
+		and mem_email = #{memEmail}
+	</select>
+
+
+	<!--  학습중인강의 목록 -->
+	<select id="selectListStudyingClass" resultType="memberStudyClass">
+		SELECT
+	        A.MEM_EMAIL
+	        , C.CL_CODE
+	        , A.MEM_CL_NO
+	        , B.CL_NAME
+	        , A.OPCL
+	        , A.PROG_RATE
+	        , A.MEMCL_STATE
+	        , A.STUDY_SDATE
+	        , A.STUDY_EDATE
+	        , B.CL_IMG
+	        , B.CL_CATE
+	        , B.CL_FORMAT
+	        , B.CL_DIVISION
+	        , C.OPEN_ROUND
+        FROM V_MEM_CL A, CLASS B, OPEN_CLASS C
+        WHERE A.OPCL = C.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND A.MEM_EMAIL = #{keyword}
+        AND SYSDATE BETWEEN  A.STUDY_SDATE AND A.STUDY_EDATE+1
+        AND A.PROG_RATE NOT IN 100
+        ORDER BY A.STUDY_SDATE ASC
+	</select>
+
+	<select id="selectListStudyingClassCount"  resultType="int">
+		SELECT
+		COUNT(*)
+		FROM V_MEM_CL A, CLASS B, OPEN_CLASS C
+        WHERE A.OPCL = C.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND A.MEM_EMAIL = #{keyword}
+        AND A.STUDY_EDATE > SYSDATE
+        AND A.PROG_RATE NOT IN 100
+        ORDER BY A.STUDY_SDATE ASC
+	</select>
+
+
+	<update id="updateMemCLByQrScan">
+		UPDATE MEM_CL
+		    SET
+		        TEST_CPL = 1,
+		        STUDY_CPL = 1,
+		        PROG_RATE = 100,
+		        MEMCL_STATE = 'C102',
+		        CTF_DATE = SYSDATE
+		WHERE
+		    OPCL = #{opcl}
+		    AND   MEM_EMAIL = #{memEmail}
+	</update>
+
+	<update id="insertMemChap" parameterType="memberCl">
+		INSERT INTO MEM_CHAP (
+		    MEM_CL_NO
+		   ,OPCL
+		   ,CL_CHAP
+		) VALUES (
+		    #{memClNo}
+		   ,#{opcl}
+		   ,#{clChap}
+		)
+	</update>
+	
+	<select id="selectMemClListByYear" resultType="memberCl">
+		SELECT
+		    MEM_EMAIL
+		   ,MEM_NAME
+		   ,MEM_CL_NO
+		   ,OPCL
+		   ,TEST_CPL
+		   ,STUDY_CPL
+		   ,PROG_RATE
+		   ,MEMCL_STATE
+		   ,CTF_DATE
+		   ,STUDY_SDATE
+		   ,STUDY_EDATE
+		   ,MIDTEST_SCORE
+		   ,FINTEST_SCORE
+		FROM
+		    V_MEM_CL
+		where
+		    MEM_ID = #{memId}
+	</select>
+	
+	<select id="selectMemClListByYearCnt" resultType="int">
+		SELECT
+		   COUNT(*)
+		FROM
+		    V_MEM_CL
+		where
+		    MEM_ID = #{memId}
+	</select>
+</mapper>

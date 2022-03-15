@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Class-Mapper">
+
+	<sql id="searchClass">
+		<if test="sortType == 's'.toString()">
+			AND CL_CATE = 'A201'
+		</if>
+		<if test="sortType == 'n'.toString()">
+			AND CL_CATE = 'A202'
+		</if>
+		<if test="sortType == 'h'.toString()">
+			AND CL_CATE = 'A203'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND MEM_ID LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'm'.toString()">
+			AND CL_DIVISION = 'A501'
+
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND CL_DIVISION = 'A502'
+
+		</if>
+		<if test="searchType == 'nm'.toString()">
+			AND CL_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+	</sql>
+
+	<select id="selectExtClassList" resultType="classEXT">
+		SELECT *
+		FROM EXT_CL
+		WHERE MEM_EMAIL = #{memEmail}
+	</select>
+
+	<select id="selectDepartmentClassList" resultType="classDepartment">
+		SELECT *
+		FROM CLASS_ORDER
+	</select>
+
+	<select id="selectMemberInterestClassList" resultType="int">
+		SELECT OPCL
+		FROM MEM_INTR_CLASS
+		where MEM_EMAIL = #{memEmail}
+	</select>
+
+	<select id="selectClassList" resultType="classCommand">
+		SELECT *
+		FROM v_class
+		WHERE CL_CODE IS NOT NULL
+		AND CL_NAME LIKE '%'||#{keyword}||'%'
+		and <![CDATA[ POST_EDATE >= sysdate-1]]>
+		<include refid="searchClass" />
+		ORDER BY POST_SDATE DESC
+	</select>
+	<select id="selectClassAllList" resultType="classCommand">
+		SELECT
+		    CL_CODE,
+		    CL_IMG,
+		    CL_NAME,
+		    CL_INTRO,
+		    CL_POINT,
+		    CL_CREDIT_TIME,
+		    CL_FORMAT,
+		    CL_CATE,
+		    CL_DIVISION,
+		    OPCL,
+		    CL_ROOM_NO,
+		    POST_SDATE,
+		    POST_EDATE,
+		    MAIN_EXPOSURE,
+		    ENR_PERS,
+		    STUDY_DATE,
+		    CL_QR,
+		    CUTLINE,
+		    CL_ROOM_NAME,
+		    CL_ROOM_LOC
+		FROM
+		    V_CLASS
+		    ORDER BY CL_NAME
+	</select>
+
+	<select id="selectMemberClassList" resultType="memberClassCommand">
+		SELECT *
+		FROM MEM_CL
+		WHERE MEM_EMAIL = #{memEmail}
+
+	</select>
+
+	<select id="selectClass" resultType="classCommand">
+		SELECT *
+		FROM v_class
+		WHERE opcl = #{clCode}
+
+	</select>
+
+	<select id="selectClassAvg" resultType="double">
+		select avg(REVIEW_SCORE)
+		from CL_REVIEW
+		where OPCL=#{opcl}
+
+	</select>
+
+	<select id="selectClassListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM v_class
+		WHERE CL_CODE IS NOT NULL
+		AND CL_NAME LIKE '%'||#{keyword}||'%'
+		and <![CDATA[ POST_EDATE >= sysdate]]>
+		<include refid="searchClass" />
+	</select>
+
+	<update id="insertMemberClass">
+		INSERT INTO MEM_CL
+			(	MEM_CL_NO
+				, OPCL
+				, MEM_EMAIL
+				, TEST_CPL
+				, STUDY_CPL
+				, PROG_RATE
+				, MEMCL_STATE
+				, STUDY_SDATE
+				, STUDY_EDATE
+			)
+		VALUES
+			(	SEQ_NOTICE.NEXTVAL
+				,#{opcl}
+				,#{memEmail}
+				,#{testCpl}
+				,0
+				,0
+				,#{memclState}
+				,sysdate
+				,sysdate+#{endDay}
+			)
+	</update>
+
+	<update id="insertExtClass">
+		INSERT INTO EXT_CL
+			(	MEM_EMAIL
+				,EXT_CL_NAME
+				,COMMON_CODE
+				,EXT_NO
+				,STUDY_SDATE
+				,STUDY_EDATE
+				,EXT_CODE
+			)
+		VALUES
+			(	#{memEmail}
+				,#{extClName}
+				,'C301'
+				, 0
+				,#{studySdate}
+				,#{studyEdate}
+				,#{extCode}
+			)
+	</update>
+
+	<select id="selectClassReview" resultType="classReviewCommand">
+		select * from cl_review where opcl = #{opcl} order by REVIEW_REGDATE
+	</select>
+
+	<select id="insertBookmark">
+		insert into MEM_INTR_CLASS(MEM_EMAIL, OPCL) values (#{memEmail},#{opcl})
+	</select>
+
+	<select id="deleteBookmark" >
+		delete from MEM_INTR_CLASS where MEM_EMAIL = #{memEmail} and OPCL = #{opcl}
+	</select>
+
+
+	<select id="getClassTotalCount" resultType="int">
+
+        select count(*)
+        from class
+        where cl_code is not null
+        <include refid="searchClass" />
+	</select>
+
+
+	<select id="getClassList" resultType="class">
+		select *
+		from class
+		where cl_code is not null
+		<include refid="searchClass" />
+	order by  TO_NUMBER(cl_code) desc
+	</select>
+
+
+	<select id="selectClassTestState" resultType="int">
+		select TEST_STATUS from TEST where opcl=#{opcl} and TEST_STATUS=1
+	</select>
+
+	<select id="getClassByclCode" resultType="class">
+		select * from class where cl_code=#{clCode}
+	</select>
+
+	<select id="getClassChapter" resultType="classChapter">
+		select * from cl_chapter where cl_code = #{clCode}
+	</select>
+
+	<select id="getClassDocument" resultType="classDocument">
+		select * from cl_doc where cl_code = #{clCode}
+	</select>
+
+	<select id="getClassReview" resultType="classReview">
+		select * from cl_review where opcl = #{clCode}
+	</select>
+
+	<select id="getClCateList" resultType="classRegist">
+		select code_name1, common_code
+		from common
+		where common_code like 'A20'||'%'
+		and group_code='A2'
+	</select>
+
+	<select id="getDpIdList" resultType="classRegist">
+	select code_name1
+	from common
+	where common_code like 'DP'||'%'
+	</select>
+
+	<select id="RegistClassWithoutSubInfo">
+		INSERT INTO class (
+    cl_code
+   ,cl_img
+   ,cl_name
+   ,cl_intro
+   ,cl_point
+   ,cl_credit_time
+   ,cl_format
+   ,cl_cate
+   ,cl_division
+) VALUES (
+    #{clCode}
+   ,#{clImg}
+   ,#{clName}
+   ,#{clIntro}
+   ,#{clPoint}
+   ,#{clCreditTime}
+   ,#{clFormat}
+   ,#{clCate}
+   ,#{clDivision}
+)
+
+	</select>
+
+	<select id="getclCode" resultType="str">
+		SELECT SEQ_CLASS.NEXTVAL
+		FROM DUAL
+	</select>
+
+	<select id="getTestNo" resultType="int">
+		select SEQ_TEST.NEXTVAL FROM DUAL
+	</select>
+
+	<select id="getClassRoom" resultType="class">
+		select cl_room_name, cl_room_no
+		from cl_room
+	</select>
+
+	<update id="RegistOpcl">
+    INSERT INTO open_class (
+    opcl
+   ,cl_code
+   ,cl_room_no
+   ,post_sdate
+   ,post_edate
+   ,enr_pers
+   ,study_date
+   ,cutline
+   ,open_round
+   ,lec_date
+) VALUES (
+    #{opcl}
+   ,#{clCode}
+   ,#{clRoomNo}
+   ,#{postSdate}
+   ,#{postEdate}
+   ,#{enrPers}
+   ,#{studyDate}
+   ,#{cutline}
+   ,#{openRound}
+   ,#{lecDate,jdbcType=VARCHAR}
+)
+	</update>
+
+	<select id="getOpcl" resultType="int">
+		select SEQ_OPEN_CLASS.NEXTVAL FROM DUAL
+	</select>
+
+
+	<update id="insertClChapter" parameterType="classChapter">
+		<foreach collection="list" item="i" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
+		INTO cl_chapter (
+    			cl_code
+   			,cl_chap_num
+   			,cl_chap_name
+   			,cl_chap_time
+   			,cl_chap_video
+		) VALUES (
+   			 #{i.clCode}
+  			,#{i.clChapNum}
+   			,#{i.clChapName}
+   			,#{i.clChapTime}
+   			,#{i.clChapVideo}
+		)
+
+		</foreach>
+
+	</update>
+
+
+
+	<update id="modifyClass">
+	UPDATE class
+    SET
+         cl_img =#{clImg}
+        ,cl_name =#{clName}
+        ,cl_intro =#{clIntro}
+        ,cl_credit_time =#{clCreditTime}
+        ,cl_format = #{clFormat}
+        ,cl_cate =#{clCate}
+        ,cl_division =#{clDivision}
+	WHERE
+    	cl_code =#{clCode}
+	</update>
+
+	<update id="ModifyClChapter" parameterType="str">
+		Delete from cl_chapter
+		where cl_code=#{clCode}
+	</update>
+
+	<select id="getTest" resultType="test">
+		select * from test
+		where opcl = #{opcl}
+	</select>
+
+	<update id="InsertTestNull" parameterType="classModifyCommand">
+		INSERT INTO test (
+    		test_no
+   			,cl_code
+		) VALUES (
+  			 TO_NUMBER(#{testNo})
+   			,#{clCode}
+		)
+
+	</update>
+
+	<delete id="deleteOpenClass" parameterType="opcl">
+		delete from open_class
+		where cl_code=#{clCode}
+		and open_round=#{openRound}
+	</delete>
+
+	<select id="getOpclByclCode" resultType="opcl">
+		select * from open_class
+		where cl_Code = #{clCode}
+		order by open_round desc
+	</select>
+
+	<select id="getRoundNo" resultType="int">
+		select max(open_round)+1
+		from open_class
+		where cl_Code = #{clCode}
+	</select>
+
+	<select id="getOpclByopenRound" parameterType="opcl" resultType="opcl">
+		select * from open_class
+		where cl_code = #{clCode}
+		and open_round = #{openRound}
+	</select>
+
+	<select id="selectCountAllClass" resultType="int">
+		select count(*)
+		from class
+	</select>
+
+	<select id="selectCountIntern" resultType="int">
+		select count(*)
+		from class
+		where cl_cate = 'A201'
+	</select>
+
+	<select id="selectCountNormal" resultType="int">
+		select count(*)
+		from class
+		where cl_cate = 'A202'
+	</select>
+
+	<select id="selectCountHobby" resultType="int">
+		select count(*)
+		from class
+		where cl_cate = 'A203'
+	</select>
+
+	<update id="updateClQR" parameterType="opcl">
+		UPDATE OPEN_CLASS
+		    SET
+		        CL_QR = #{clQr}
+		WHERE
+		    OPCL = #{opcl}
+	</update>
+
+	<select id="selectClassInfo" resultType="class">
+		SELECT
+		    CL_CODE
+		   ,CL_IMG
+		   ,CL_NAME
+		   ,CL_INTRO
+		   ,CL_POINT
+		   ,CL_CREDIT_TIME
+		   ,CL_FORMAT
+		   ,CL_CATE
+		   ,CL_DIVISION
+		   ,OPCL
+		   ,CL_ROOM_NO
+		   ,POST_SDATE
+		   ,POST_EDATE
+		   ,MAIN_EXPOSURE
+		   ,ENR_PERS
+		   ,STUDY_DATE
+		   ,CL_QR
+		   ,CUTLINE
+		   ,CL_ROOM_NAME
+		   ,CL_ROOM_LOC
+		   ,LEC_DATE
+		FROM
+		    V_CLASS
+		WHERE
+		    OPCL = #{opcl}
+	</select>
+
+	<select id="getCompletedAvgByOpenClass" resultType="completedAvg">
+select A.*
+from
+(select B.cl_code,c.cl_name, A.opcl ,B.open_round, sum(NVL2(a.ctf_date,1,0)) as complete, sum(NVL2(a.ctf_date,1,0)+NVL2(a.ctf_date,0,1)) as person, round(AVG(NVL2(a.ctf_date,1,0))*100,0) as ctfavg
+from mem_cl A, open_class B, class c
+where A.opcl = B.opcl
+and B.cl_code = c.cl_code
+group by A.opcl, b.cl_code, b.open_round,c.cl_name
+order by ctfavg desc)A
+<![CDATA[where rownum<= 10]]>
+
+	</select>
+
+	<!--수강생목록 -->
+	<!--더 필요한 데이터 있으면 그냥 이 쿼리에 추가해서 받아도 될듯 -->
+	<select id="selectClassMemListByOpcl" resultType="class">
+		SELECT
+		    A.CL_CODE
+		   ,A.CL_NAME
+		   ,A.OPCL
+		   ,A.CL_ROOM_NO
+		   ,A.ENR_PERS
+		   ,A.STUDY_DATE
+		   ,A.LEC_DATE
+		   ,A.CL_ROOM_NAME
+		   ,B.MEM_EMAIL
+		   ,B.MEM_NAME
+		   ,B.MEM_BIR
+		   ,B.MEM_ID
+
+		FROM
+		    V_CLASS A, V_MEM_CL B
+		WHERE
+		    A.OPCL = B.OPCL
+		AND
+		    A.OPCL = #{opcl}
+	</select>
+
+	<update id="modifyOpenClass" parameterType="opcl">
+		UPDATE open_class
+		    SET
+		        enr_pers =#{enrPers}
+		        ,post_sdate =#{postSdate}
+		        ,post_edate=#{postEdate}
+		        ,study_date=#{studyDate,jdbcType=VARCHAR}
+		        ,cutline=#{cutline}
+		        ,cl_room_no=#{clRoomNo}
+		        ,lec_date=#{lecDate,jdbcType=VARCHAR}
+		WHERE
+		    opcl =#{opcl}
+	</update>
+
+	<select id="countOpenClassByclCode" resultType="int">
+    select count(*)
+    from open_class
+    where cl_code = #{clCode}
+	</select>
+
+	<delete id="deleteClass">
+		delete
+		from class
+		where cl_code = #{clCode}
+	</delete>
+
+
+	<select id="getOnlyUseDetailMemListByOpcl" resultType="classStastics">
+		select *
+		from age_specific_preference
+		where opcl=#{opclNum}
+		order by dp_id, position_id desc
+	</select>
+	
+	<select id="selectMainEPList" resultType="class">
+		SELECT
+		    CL_CODE
+		   ,CL_IMG
+		   ,CL_NAME
+		   ,CL_INTRO
+		   ,CL_POINT
+		   ,CL_CREDIT_TIME
+		   ,CL_FORMAT
+		   ,CL_CATE
+		   ,CL_DIVISION
+		   ,OPCL
+		   ,CL_ROOM_NO
+		   ,POST_SDATE
+		   ,POST_EDATE
+		   ,MAIN_EXPOSURE
+		   ,ENR_PERS
+		   ,STUDY_DATE
+		   ,CL_QR
+		   ,CUTLINE
+		   ,LEC_DATE
+		   ,OPEN_ROUND
+		   ,CL_ROOM_NAME
+		   ,CL_ROOM_LOC
+		FROM
+		    V_CLASS
+		WHERE
+			MAIN_EXPOSURE IS NOT NULL
+	</select>
+
+</mapper>

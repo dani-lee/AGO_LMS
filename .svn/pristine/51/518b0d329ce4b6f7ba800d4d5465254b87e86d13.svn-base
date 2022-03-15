@@ -1,0 +1,136 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.ExamCommand;
+import com.one.command.PageMaker;
+import com.one.dao.ExamStatisDAO;
+import com.one.dto.ExamStastisDetailVO;
+import com.one.dto.ExamStatisVO;
+import com.one.service.ExamStatisService;
+
+public class ExamStatisServiceImpl implements ExamStatisService {
+
+	private ExamStatisDAO examStatisDAO;
+
+	public void setExamStatisDAO(ExamStatisDAO examStatisDAO) {
+		this.examStatisDAO = examStatisDAO;
+	}
+
+	@Override
+	public List<ExamStatisVO> getMiddlePrecedence(int row) throws Exception {
+		List<ExamStatisVO> mPreList = null;
+		ExamCommand examCmd = new ExamCommand();
+		examCmd.setRow(row);
+		mPreList = examStatisDAO.selectMiddlePrecedence(examCmd);
+		return mPreList;
+	}
+
+	@Override
+	public List<ExamStatisVO> getFinalPrecedence(int row) throws Exception {
+		List<ExamStatisVO> fPreList = null;
+		ExamCommand examCmd = new ExamCommand();
+		examCmd.setRow(row);
+		fPreList = examStatisDAO.selectFinalPrecedence(examCmd);
+		return fPreList;
+	}
+
+	@Override
+	public Map<String, List<ExamStatisVO>> getClassExamAVG() throws Exception {
+		Map<String, List<ExamStatisVO>> examMap = new HashMap<>();
+		List<ExamStatisVO> classExamList = null;
+
+		int totalCount = examStatisDAO.selectClassExamCount();
+
+		classExamList = examStatisDAO.selectClassExamAVG();
+
+		int cnt = 0;
+		List<ExamStatisVO> examList = new ArrayList<ExamStatisVO>();
+		for (ExamStatisVO exam : classExamList) {
+
+			examList.add(exam);
+			cnt++;
+
+			if (cnt % 10 == 0 || cnt == totalCount) {
+				examMap.put("classExamList" + cnt, examList);
+				examList = new ArrayList<ExamStatisVO>();
+			}
+		}
+
+		return examMap;
+	}
+
+	@Override
+	public Map<String, Object> getClassList(Criteria cri) throws Exception {
+		
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<ExamStatisVO> classList = examStatisDAO.selectClassList(cri);
+
+		int totalCount = examStatisDAO.selectClassExamCount();
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		dataMap.put("classList", classList);
+		dataMap.put("pageMaker", pageMaker);
+
+		return dataMap;
+	}
+
+	@Override
+	public ExamStastisDetailVO getExamStastisDetail(String clCode) throws SQLException {
+		ExamStastisDetailVO result1 = new ExamStastisDetailVO();
+		
+		result1 = examStatisDAO.selectExamStastisDetail(clCode);
+		int[] result2 = examStatisDAO.selectExamStastisMiddleCount(clCode);
+		int[] result3 = examStatisDAO.selectExamStastisFinalCount(clCode);
+		
+		ExamStastisDetailVO examStastisDetail = new ExamStastisDetailVO();
+		examStastisDetail.setClCode(clCode);
+		examStastisDetail.setClName(result1.getClName());
+		examStastisDetail.setPostSdate(result1.getPostSdate());
+		examStastisDetail.setPostEdate(result1.getPostEdate());
+		examStastisDetail.setJoinStudent(result1.getJoinStudent());
+		examStastisDetail.setMiddleScoreArray(result2);
+		examStastisDetail.setFinalScoreArray(result3);
+		
+		return examStastisDetail;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

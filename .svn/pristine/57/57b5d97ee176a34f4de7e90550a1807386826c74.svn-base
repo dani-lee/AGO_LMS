@@ -1,0 +1,306 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+
+<c:set var="classList" value="${dataMap.classList }" />
+<c:set var="agesGraphInfo" value="${dataMap.agesGraphInfo }" />
+<c:set var="graphInfoByDpId" value="${dataMap.graphInfoByDpId }" />
+<c:set var="totalList" value="${dataMap.totalOpenClassListMap }" />
+<c:set var="pageMaker" value="${dataMap.totalOpenClassListMap.pageMaker }" />
+
+
+
+<head></head>
+<title>Insert title here</title>
+
+<body>
+	<div class="container-fluid col-9">
+
+		<div id="demo" class="carousel slide" data-ride="carousel">
+			<ul class="carousel-indicators" style="z-index: 1">
+				<li data-target="#demo" data-slide-to="0" class=""></li>
+				<li data-target="#demo" data-slide-to="1" class=""></li>
+				<li data-target="#demo" data-slide-to="2" class=""></li>
+				<li data-target="#demo" data-slide-to="3" class="active"></li>
+			</ul>
+			<div class="carousel-inner">
+				<div class="carousel-item card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title"><strong>강의별 평점순 </strong></h4>
+						<p class="card-category">&nbsp;&nbsp;[강의별 평점 순 상위 10개 강의]</p>
+					</div>
+					<div class="card-body">
+
+
+						<div class="chart">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+<!-- ----------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-----------------여깁니다 캔버스-------------------------------!!!!!!!!!!!! -->							
+							<canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 809px;" width="1618" height="500" class="chartjs-render-monitor"></canvas>
+						</div>
+
+
+					</div>
+				</div>
+				<div class="carousel-item card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title"><strong>부서별 강의순위(수강생 수 기준)</strong></h4>
+						<p class="card-category">&nbsp;&nbsp;[부서별 선호 강의 상위 3개]</p>
+					</div>
+					<div class="card-body">
+						
+						<div class="chart">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+<!-- 	******************************************************** 부서별 강의순 ***************************************************8 -->
+						<canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 809px;" width="1618" height="500" class="chartjs-render-monitor"></canvas>
+						</div>
+						
+					</div>
+				</div>
+				<div class="carousel-item active card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title"><strong>연령별 선호도</strong></h4>
+						<p class="card-category">&nbsp;&nbsp;[20대부터 50대까지 선호하는 강의를 나타내는 그래프]</p>
+					</div>
+
+						<div class="card-body row">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+							
+		<!--  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 파이 차트 여깁니다 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ -->
+							<div class="row center">
+							<div>
+							<p class="text-center">20대</p>
+							<canvas id="pieChart20" style="min-height: 203.6px; min-width: 250px; height: 203.6px; max-height: 203.6px; max-width: 100%; display: inline; width: 250px;" width=250" height="500" class="chartjs-render-monitor"></canvas>
+							</div>
+							<div>
+							<p class="text-center">30대</p>
+							<canvas id="pieChart30" style="min-height: 203.6px; min-width: 250px; height: 203.6px; max-height: 203.6px; max-width: 100%; display: inline; width: 250px;" width=250" height="500" class="chartjs-render-monitor"></canvas>
+							</div>
+							<div>
+							<p class="text-center">40대</p>
+							<canvas id="pieChart40" style="min-height: 203.6px; min-width: 250px; height: 203.6px; max-height: 203.6px; max-width: 100%; display: inline; width: 250px;" width=250" height="500" class="chartjs-render-monitor"></canvas>
+							</div>
+							</div>
+							
+							
+						</div>
+
+
+
+				</div>
+	<!--  여기여기여기여기 여기에 넣어야 슈루루룩 넘어간다 -->
+	
+				<div class="carousel-item card col-md-12">
+					<div class="card-header">
+						<h4 class="card-title"><strong>연령별 선호도</strong></h4>
+						<p class="card-category">&nbsp;&nbsp;[20대부터 50대까지 선호하는 강의를 나타내는 그래프]</p>
+					</div>
+					<div class="card-body">
+						
+						<div class="chart">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+<!-- 	******************************************************** 부서별 강의순 ***************************************************8 -->
+						
+							<div class="row">
+							<div>
+							<p class="text-center">50대</p>
+							<canvas id="pieChart50" style="min-height: 203.6px; min-width: 250px; height: 203.6px; max-height: 203.6px; max-width: 100%; display: inline; width: 250px;" width=250" height="500" class="chartjs-render-monitor"></canvas>
+							</div>
+							<div>
+							<p class="text-center">60대</p>
+							<canvas id="pieChart60" style="min-height: 203.6px; min-width: 250px; height: 203.6px; max-height: 203.6px; max-width: 100%; display: inline; width: 250px;" width="250" height="500" class="chartjs-render-monitor"></canvas>
+							</div>
+							</div>
+							
+
+						</div>
+						
+					</div>
+				</div>				
+				
+				
+				
+				
+		</div>
+		<a class="carousel-control-prev" href="#demo" data-slide="prev"> 
+		<i class="la la-chevron-circle-left" style="font-size:30px; color : black; height : 270px;"></i>
+		</a>
+		<a class="carousel-control-next" href="#demo" data-slide="next">
+			<i class="la la-chevron-circle-right" style="font-size:30px; color : black;height : 270px;"></i>
+		</a>
+	</div>
+	
+	
+
+
+		<div class="card col-md-12">
+			<div class="card-header">
+				<h4 class="card-title">강의 통계</h4>
+				<p class="card-category">강의 목록</p>
+			</div>
+			<div class="column ui-sortable" style="width: 100%;">
+				<table class="col-md-12 column" style="border: none;">
+					<tr>
+						<div class="col-12 p-3" style="background-color: #EDEDED;">
+							<div class="input-group justify-content-center">
+								<select class="col-md-2 form-control" style="height: 39px;" name="searchType">
+									<option value="" ${cri.searchType eq '' ? 'selected':'' }>전체</option>
+									<option value="" ${cri.searchType eq 'g' ? 'selected':'' }>일반교육</option>
+									<option value="" ${cri.searchType eq 'n' ? 'selected':'' }>신입의무교육</option>
+									<option value="" ${cri.searchType eq 's' ? 'selected':'' }>자기개발/취미</option>
+								</select>
+								<input type="text" placeholder="강의명을 입력해주세요." class="form-control col-md-4" value="${cri.keyword }">
+								<button class="col-md-1 btn btn-primary" onclick="list_go(1);">검색</button>
+							</div>
+						</div>
+					</tr>
+				</table>
+				<div class="col-md-12 column ui-sortable"></div>
+				<table class="table mt-3">
+					<thead>
+						<tr>
+							<th class="col-md-1 column ui-sortable" style="font-size:9pt;">강의코드</th>
+							<th class="col-md-5 column ui-sortable text-center">강의명</th>
+							<th class="col-md-2 column ui-sortable text-center">수강 인원</th>
+							<th class="col-md-2 column ui-sortable text-center">게시 상태</th>
+							<th class="col-md-2 column ui-sortable text-center">메인 노출</th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:if test="${empty totalList.totalOpenClList }">
+						<tr>
+							<td>강의가 없습니다.</td>
+						</tr>
+					</c:if>
+					<c:forEach items = "${totalList.totalOpenClList }" var="totalList">
+						<tr>
+							<td class="text-center">${totalList.clCode }</td>
+							<td>
+								<div class="column ui-sortable">
+									<span class="h6" style="cursor:poiner;" onclick="location.href='statisticsDetail.do?opcl=${totalList.opcl}'">
+									[${totalList.openRound}차시]${totalList.clName }&nbsp;&nbsp;
+									<c:if test="${totalList.clFormat eq 'A601'}">
+										<span class=" badge badge-info">오프라인</span>
+									</c:if>
+									<c:if test="${totalList.clFormat eq 'A602'}">
+										<span class=" badge badge-primary">온라인</span>
+									</c:if>
+									<c:if test="${totalList.clFormat eq 'A603'}">
+										<span class=" badge badge-success">실시간</span>
+									</c:if>
+									
+									
+									<c:if test="${totalList.clDivision eq 'A501'}">
+										<span class=" badge badge-danger">필수</span>
+									</c:if>
+									<c:if test="${totalList.clDivision eq 'A502'}">
+										<span class=" badge badge-warning">선택</span>
+									</c:if>
+									</span> <br>
+																		
+									<span class="h6 text-warning">
+									<c:if test="${totalList.reviewScore ne '0.0' }">
+										<c:forEach var="i" begin="1" end="${totalList.reScrIntPart }">
+											<i class="text-warning fas fa-star"></i>
+										</c:forEach>
+										<c:if test="${totalList.reScrDecimal gt 4 }">
+											<i class="text-warning fas fa-star-half"></i>
+										</c:if>
+									</c:if>
+									(${totalList.reviewScore })
+									</span>
+
+								</div>
+							</td>
+							<td class="text-center">${totalList.enrPers }</td>
+							<td class="text-center">
+							<c:if test="${totalList.postStatus eq '게시 중' }">
+							<span class=" badge badge-primary">${totalList.postStatus }</span>
+							</c:if>
+							<c:if test="${totalList.postStatus eq '게시 종료' }">
+							<span class=" badge badge-danger">${totalList.postStatus }</span>
+							</c:if>
+							<c:if test="${totalList.postStatus eq '게시 전' }">
+							<span class=" badge badge-warning">${totalList.postStatus }</span>
+							</c:if>
+							</td>
+							<td class="text-center">
+								<div class="dropdown">
+									<c:if test="${empty totalList.mainExposure }">
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">설정</button>
+									</c:if>
+									<c:if test="${totalList.mainExposure eq 'M101' }">
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">신규</button>
+									</c:if>
+									<c:if test="${totalList.mainExposure eq 'M102' }">
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">인기</button>
+									</c:if>
+									<c:if test="${totalList.mainExposure eq 'M103' }">
+									<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">추천</button>
+									</c:if>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" >
+										
+										<a class="dropdown-item" href="#" onclick="fn_onclick('M102');" >인기</a>
+										<a class="dropdown-item" href="#" onclick="fn_onclick('M103');" >추천</a>
+										<a class="dropdown-item" href="#" onclick="fn_onclick('M101');" >신규</a>
+
+									</ul>
+
+								</div>
+							</td>
+						</tr>
+						</c:forEach>
+						
+						
+			
+					</tbody>
+				</table>
+				
+				<div class="card-body text-center">
+				<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+				</div>
+
+			</div>
+		</div>
+		
+	</div>
+
+<%@include file="/WEB-INF/views/manager/classManagement/stastics/chartScript_js.jsp"%>
+
+<script>
+ function fn_onclick(val){
+	console.log(val);
+	var check = confirm("메인 노출 상태를 변경하시겠습니까?");
+	 
+ }
+</script>
+</body>

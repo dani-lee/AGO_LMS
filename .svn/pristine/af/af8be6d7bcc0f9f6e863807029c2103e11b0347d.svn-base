@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DebateReply-Mapper">
+	
+	<select id="selectDebateReplyList" resultType="debateReply">
+		SELECT DEREPLY_NO
+			 , DBOARD_NO
+			 , DEREPLY_REGDATE
+			 , DEREPLY_CONTENT
+			 , MEM_ID
+			 , DEREPLY_PREANT_NO
+		  FROM
+			   DE_REPLY
+		 WHERE
+			   DBOARD_NO = #{dboardNo}
+		ORDER BY DEREPLY_NO ASC
+	</select>
+	
+	<select id="countDebateReply" parameterType="int" resultType="int">
+		SELECT 
+			   COUNT(*)
+		FROM
+			   DE_REPLY
+		WHERE
+			   DBOARD_NO = #{dboardNo}
+	</select>
+	
+	<update id="deleteDebateReplyBydboardNo">
+		DELETE 
+		  FROM DE_REPLY
+		 WHERE DEREPLY_NO = #{dboardNo}
+		 or DEREPLY_PREANT_NO = #{dboardNo}
+	</update>
+	
+	
+	<update id="registDebateReply" parameterType="debateReply">
+	INSERT INTO de_reply (
+    dereply_no,
+    dboard_no,
+    dereply_regdate,
+    dereply_content,
+    mem_id
+    ,DEREPLY_PREANT_NO
+
+) VALUES (
+    #{dereplyNo}
+    ,#{dboardNo}
+    ,sysdate
+    ,#{dereplyContent}
+    ,#{memId}
+    ,#{dereplyPreantNo, jdbcType=VARCHAR}
+)
+	</update>
+	
+	<select id="getNextdereplyNo" resultType="int">
+		select de_reply_seq.nextval from dual
+	</select>
+</mapper>

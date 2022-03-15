@@ -1,0 +1,115 @@
+package com.one.service;
+
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSessionException;
+
+import com.one.command.ClassCommand;
+import com.one.command.ClassModifyCommand;
+import com.one.command.Criteria;
+import com.one.command.RegistClassCommand;
+import com.one.command.RegistClassOrderCommand;
+import com.one.dto.AttachVO;
+import com.one.dto.CommonVO;
+import com.one.dto.OpclVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDocumentVO;
+import com.one.dto.ClassVO.ClassFileVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.dto.ClassVO.ClassVO;
+import com.one.dto.ClassVO.TestVO;
+
+public interface ClassService {
+	public Map<String, Object> getClassList(Criteria cri) throws SQLException;
+
+	public List<Map<String, String>> getClassAllList(String dpId) throws Exception;
+
+	public List<Map<String, String>> getClassAllListNoIcon() throws Exception;
+
+	public Map<String,Object> getClassByclCode(String clCode,String opcl) throws SQLException;
+
+	public Map<String, Object> getClassRegistForm() throws SQLException;
+
+	public String RegistClassWithoutSubInfo(ClassVO cls) throws SQLException;
+	
+	public void insertClassFileclChapNameAttach(List<AttachVO> clChapNameList) throws Exception;
+
+	public void insertClassFileclDocAttach(List<AttachVO> clDocNameList, String clCode, int opcl) throws Exception;
+	
+	public void insertClassFileMiddleTestAttach(List<AttachVO> MiddleList, int opcl, int testNo, String testStatus) throws Exception;
+	
+	public void insertClassFileFinalTestAttach(List<AttachVO> FinalList, int opcl, int testNo, String testStatus) throws Exception;
+	
+	public int getTestNo() throws SQLException;
+	
+	public void RegistOpcl(OpclVO opcl) throws SQLException;
+	
+	public int getOpcl() throws SQLException;
+	
+	public void RegistChapter(File uploadFile, String clCode) throws IOException, SQLException;
+
+	public void modifyClass(ClassVO clModify) throws Exception;
+	
+	public void ModifyChapter(File uploadFile, String clCode) throws IOException, SQLException;
+	
+	
+	
+	public void ModifyClassFileMiddleTestAttach(List<AttachVO> MiddleList, String opcl, int testNo) throws Exception;
+	
+	public void ModifyClassFileFinalTestAttach(List<AttachVO> FinalList, String opcl, int testNo) throws Exception;
+	
+	public TestVO getTest(String opcl) throws Exception;
+	
+	public void InsertTestNull(ClassModifyCommand cmc) throws Exception;
+	
+	public void deleteClass(OpclVO opcl) throws SQLException;
+	
+	public Map<String,Object> getOpenClassRegistForm() throws SQLException;
+	
+	public String getClCode() throws SQLException;
+	
+	public List<OpclVO> getOpclByclCode(String clCode) throws SQLException;
+	
+	public int getNextRound(String clCode) throws SQLException;
+	
+	public OpclVO getOpclByopenRound(OpclVO opclDetail) throws SQLException;
+	
+	public int selectCountAllClass() throws SQLException;
+	
+	public Map<String,Object> selectAllCateCount() throws SQLException;
+	
+	
+	//오프라인 강의 QR코드생성
+	public void registQR(OpclVO opcl) throws SQLException;
+	
+	public ClassListVO getClassInfo(int opcl) throws SQLException;
+	
+	//------------------------------------------------------------------------
+	
+	public Map<String,Object> getCompletedAvgByOpenClass() throws SQLException;
+	
+	public List<ClassListVO> getClassMemListByOpcl(int opcl) throws SQLException;
+	
+	public List<ClassChapterVO> getClassChapter(String clCode) throws SQLException;
+	
+	public void modifyOpenClass(OpclVO opcl) throws SQLException;
+	
+	public Map<String,Object> getOnlyUseDetailMemListByOpcl(int opclNum, Criteria cri) throws SQLException;
+	
+	public ClassCommand getReviewAVG(int opcl) throws SQLException;
+	
+	public void RegistClassOrderByDpid(RegistClassCommand rcc, int opcl) throws SQLException;
+	
+	public List<RegistClassOrderCommand> getClassOrderByOpcl(int opcl) throws SQLException;
+	
+	public List<ClassDocumentVO> getclDocListByOpcl(int opcl) throws SQLException;
+	
+	
+	
+}

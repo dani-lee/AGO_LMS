@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FAQ-Mapper">
+
+	<sql id="searchFAQ">
+
+		<if test="sortType == 'c'.toString()">
+			AND ASK_SORT = 'c'
+		</if>
+		<if test="sortType == 'e'.toString()">
+			AND ASK_SORT = 'e'
+		</if>		
+		<if test="sortType == 'l'.toString()">
+			AND ASK_SORT = 'l'
+		</if>						
+		<if test="searchType == 't'.toString()">
+			AND FAQ_QUESTION LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND FAQ_ANSWER LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			AND (FAQ_QUESTION LIKE '%'||#{keyword}||'%'
+			OR FAQ_ANSWER LIKE '%'||#{keyword}||'%')
+		</if>
+
+
+	</sql>
+
+	<select id="selectFAQList" resultType="faq">
+		SELECT FAQ_NO,
+    		FAQ_QUESTION,
+    		FAQ_ANSWER,
+   			ASK_SORT
+		FROM FAQ
+		WHERE FAQ_NO IS NOT NULL
+		<include refid="searchFAQ" />
+		ORDER BY FAQ_NO DESC
+	</select>
+	
+<!-- 	<select id="selectFAQCList" resultType="faq">
+		SELECT FAQ_NO,
+    		FAQ_QUESTION,
+    		FAQ_ANSWER,
+   			ASK_SORT
+		FROM FAQ
+		WHERE FAQ_NO IS NOT NULL
+		AND ASK_SORT = 'c'
+		ORDER BY FAQ_NO DESC
+	</select>
+	
+	<select id="selectFAQEList" resultType="faq">
+		SELECT FAQ_NO,
+    		FAQ_QUESTION,
+    		FAQ_ANSWER,
+   			ASK_SORT
+		FROM FAQ
+		WHERE FAQ_NO IS NOT NULL
+		AND ASK_SORT = 'e'
+		ORDER BY FAQ_NO DESC
+	</select>
+	
+	<select id="selectFAQLList" resultType="faq">
+		SELECT FAQ_NO,
+    		FAQ_QUESTION,
+    		FAQ_ANSWER,
+   			ASK_SORT
+		FROM FAQ
+		WHERE FAQ_NO IS NOT NULL
+		AND ASK_SORT = 'l'
+		ORDER BY FAQ_NO DESC
+	</select> -->
+
+
+	<select id="selectFAQListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM FAQ
+		WHERE FAQ_NO IS NOT NULL
+		<include refid="searchFAQ" />
+		ORDER BY FAQ_NO DESC
+	</select>
+
+	<select id="selectFAQByFaqNo" parameterType="int" resultType="faq">
+		SELECT FAQ_NO, FAQ_QUESTION, FAQ_ANSWER, ASK_SORT FROM FAQ WHERE FAQ_NO = #{ faqNo }
+	</select>
+
+
+	<update id="updateFAQ">
+		UPDATE
+		FAQ
+		SET
+		FAQ_QUESTION = #{ faqQuestion },
+		FAQ_ANSWER = #{ faqAnswer },
+		ASK_SORT = #{ askSort }
+		WHERE
+		FAQ_NO = #{ faqNo }
+	</update>
+
+	<update id="deleteFAQ">
+		DELETE FROM faq
+		WHERE
+		FAQ_NO = #{ faqNo }
+	</update>
+
+	<update id="insertFAQ">
+		INSERT INTO FAQ (FAQ_NO, FAQ_QUESTION, FAQ_ANSWER, ASK_SORT)
+		VALUES (#{ faqNo }, #{ faqQuestion }, #{ faqAnswer }, #{ askSort })
+	</update>
+
+	<select id="selectFQASeqNextValue" resultType="int">
+		SELECT FAQ_SEQ.NEXTVAL FROM DUAL
+	</select>
+</mapper>

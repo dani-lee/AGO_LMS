@@ -1,0 +1,222 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="reportList" value="${dataMap.reportList }" />
+<c:set var="finishReportList" value="${dataMap.finishReportList }" />
+<c:set var="returnReportList" value="${dataMap.returnReportList }" />
+<c:set var="newBaseDate" value="${dataMap.newBaseDate }" />
+
+
+
+<head></head>
+<title>수료 결재</title>
+
+<body>
+		<!-- 메인 헤더 -->
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-6">
+						<h4 class="m-0">보고서결재</h4>
+					</div>
+					<!-- /.col -->
+					<div class="col-sm-6">
+						<ol class="breadcrumb float-sm-right">
+							<li class="breadcrumb-item">
+								<i class="fas fa-home"></i>
+							</li>
+							<li class="breadcrumb-item">
+								<a href="<%=request.getContextPath()%>/user/departmentHead/main.do">메인보드</a>
+							</li>
+							<li class="breadcrumb-item">보고서결재</li>
+						</ol>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.content-header -->
+	
+	<div class="container-fluid ">
+
+			<div class="row m-0">
+				<div class="col-7">
+					<div class="row mb-3">
+						<select class=" form-control form-control-sm" name="searchType" style="width: 100px; height: 38px;">
+							<option value="c" ${cri.searchType eq 'c' ? 'selected':'' }>강의명</option>
+							<option value="m" ${cri.searchType eq 'm' ? 'selected':'' }>부서원명</option>
+						</select>
+						<input type="text" placeholder="검색할 내용을 입력해 주세요..." name="keyword" class="form-control" value="${ param.keyword }" style="width: 400px;">
+						<button class="col-md-1 btn btn-secondary float-right mr-3" onclick="list_go(1);">검색</button>
+						<button style="height: 38px; width: 110px;" type="button" class="ml-5 btn btn-block btn-outline-danger " onclick="autograph_go()">직인설정&nbsp;<i class="fas fa-cog"></i></button>
+						
+					</div>	
+					<div class="card row">
+						<div class="card-header" style="height: 50px;">
+							<div class="row align-middle" >
+								<h3 class="font-weight-bold pt-1 card-title" style="width: 650px; height: 25px;">결재목록</h3>
+								<button type="button" style="height: 25px;" class="col-1 btn btn-block btn-outline-primary btn-xs" onclick="list_go(1)">전체보기</button>
+							</div>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body p-0"  style="height: 573px;">
+							<div style="height: 530px;">
+								<table class="table table-sm">
+									<thead>
+										<tr class="text-center" style="background-color:#E6EFFC;">
+											
+											<th class="col-8" style="width: 491px;">강의명</th>
+											<th class="col-2">보고자</th>
+											<th class="col-2">보고날짜</th>
+										</tr>
+									</thead>
+									<tbody id="list">
+										<c:if test="${not empty reportList }">
+											<c:forEach items="${reportList }" var="report">
+												<tr onclick="report_go('${report.reType}',${report.no },'${report.memName }')" style="cursor: pointer;">
+													<td style="overflow:hidden; white-space : nowrap; text-overflow: ellipsis; vertical-align: middle; cursor: pointer;">
+														${report.clName }
+													</td>
+													<td class="text-center">
+														${report.memName }
+													</td>
+													<td class="text-center">
+														${report.reportDate }
+													</td>
+												</tr>
+											</c:forEach>
+										</c:if>
+										<c:if test="${empty reportList }">
+											<tr class="text-center">
+												<td colspan="3">
+													등록된 보고서가 없습니다.
+												</td>
+											</tr>
+										</c:if>
+										
+									</tbody>
+								</table>
+								
+							</div>
+							<%@include file="/WEB-INF/views/common/pagination.jsp" %>
+						</div>
+						<!-- /.card-body -->
+					</div>
+				</div>
+				<div class="col-5">
+					<div class="card" style="height: 330px;">
+						<div class="card-header row ml-1" style="width: 510px;">
+							<h4 class="card-title font-weight-bold">최근 결재완료</h4>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body p-0">
+							<table class="table table-sm" id="test" style="table-layout: fixed;">
+								<thead>
+									<tr style="background-color:#E6EFFC;">
+										<th style="width: 400px;">강의명</th>
+										<th class="text-center">보고자</th>
+		
+									</tr>
+								</thead>
+								<tbody class="recent">
+									<c:if test="${not empty finishReportList }">
+										<c:forEach items="${finishReportList }" var="report">
+											<tr>
+												<td style="overflow:hidden; white-space : nowrap; text-overflow: ellipsis;">
+													<c:if test="${report.regdate >= newBaseDate }">
+														<span class="badge badge-warning my-auto mr-1" >NEW</span>
+													</c:if>
+													${report.clName }
+												</td>
+												<td class="text-center">
+													${report.memName }
+												</td>
+											</tr>
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty finishReportList }">
+										<tr class="text-center">
+											<td colspan="2">
+												등록된 보고서가 없습니다.
+											</td>
+										</tr>
+									</c:if>
+				 					<!-- <tr>
+				 						<td class="row">
+				 							<span class="badge badge-warning my-auto mr-1 ml-2" >NEW</span>멀티미디어의 이해
+				 						</td>
+				 						<td class="text-center">
+				 							조세나
+				 						</td>
+				 					</tr> -->
+								</tbody>
+							</table>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					
+					<div class="card " style="height: 330px;" >
+						<div class="card-header">
+							<h4 class="card-title font-weight-bold">최근 보류</h4>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color:#E6EFFC;">
+										<th style="width: 400px;">강의명</th>
+										<th class="text-center">보고자</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:if test="${not empty returnReportList }">
+										<c:forEach items="${returnReportList }" var="report">
+											<tr>
+												<td style="cursor: pointer; max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+													${report.clName }
+												</td>
+												<td class="text-center">
+													${report.memName }
+												</td>
+											</tr>
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty returnReportList }">
+										<tr class="text-center">
+											<td colspan="2">
+												등록된 보고서가 없습니다.
+											</td>
+										</tr>
+									</c:if>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.card-body -->
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	<script type="text/javascript">
+		
+		function autograph_go(reType, no, memName){
+			OpenWindow("<%=request.getContextPath()%>/user/departmentHead/autographForm.pop?", '', 600, 400);
+		}
+		function report_go(reType, no, memName){
+			OpenWindow("<%=request.getContextPath()%>/user/departmentHead/reportForm.pop?reType="+reType+"&no="+no+"&memName="+memName, '', 1200, 800);
+		}
+
+	</script>
+		
+
+</body>
+										

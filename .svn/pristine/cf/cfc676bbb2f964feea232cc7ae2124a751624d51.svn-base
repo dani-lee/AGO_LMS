@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.9.11.201912160804-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[true]]></enableImports>
+	<configs>
+		<config>src/main/resources/com/one/ago/context/root-context.xml</config>
+		<config>src/main/resources/com/one/ago/context/servlet-context.xml</config>
+		<config>src/main/resources/com/one/ago/context/security-context.xml</config>
+		<config>src/main/resources/com/one/ago/context/dataSource-context.xml</config>
+		<config>src/main/resources/com/one/ago/context/application-context_jhu.xml</config>
+		<config>src/main/resources/com/one/ago/context/mail-context.xml</config>
+		<config>src/main/resources/com/one/ago/context/application-context_JMS.xml</config>
+	</configs>
+	<autoconfigs>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

@@ -1,0 +1,369 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script>
+  $(function () {
+    /* ChartJS
+     * -------
+     * Here we will create a few charts using ChartJS
+     */
+
+    //--------------
+    //- AREA CHART -
+    //--------------
+
+    // Get context with jQuery - using jQuery's .get() method.
+   
+
+    var areaChartData = {
+      labels  : [
+      <c:forEach var="classInfo" items="${classList}" >
+	  	'[${classInfo.openRound}차시]${classInfo.clName}',
+  	  </c:forEach>
+	  	], // 강의명 박고 10개
+      datasets: [
+        {
+          label               : '강의 평점',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [
+        	  <c:forEach var="classInfo" items="${classList}">
+      	  		'${classInfo.clScoAvg}',
+      	  	  </c:forEach>
+        	  ]
+        },
+        {
+          label               : '',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [
+        	  <c:forEach var="i" begin="1" end="${fn:length(classList)}" >
+				0,
+			  </c:forEach>
+			  
+        	  
+          ]
+        },
+      ]
+    }
+    
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    //-bar chart data-
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    var chartData = {
+      labels  : [
+      <c:forEach var="firstInfo" items="${graphInfoByDpId.firstClInfo}" >
+	  	'${firstInfo.dpId}',
+  	  </c:forEach>
+	  	], // 강의명 박고 10개
+      datasets: [
+        {
+          label               : '1',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [
+        	  <c:forEach var="firstInfo" items="${graphInfoByDpId.firstClInfo}">
+      	  		'${firstInfo.cnt}',
+      	  	  </c:forEach>
+        	  ]
+        },
+        {
+          label               : '2',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [
+        	  <c:forEach var="secondInfo" items="${graphInfoByDpId.secondClInfo}" >
+				'${secondInfo.cnt}',
+			  </c:forEach>
+			  
+        	  
+          ]
+        },
+        {
+            label               : '3',
+            backgroundColor     : 'rgba(100,255,71,0.9)',
+            borderColor         : 'rgba(100,255,71,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(100,255,71,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(100,255,71,1)',
+            data                : [
+          	  	<c:forEach var="thirdInfo" items="${graphInfoByDpId.thirdClInfo}">
+        	  		'${thirdInfo.cnt}',
+        	  	</c:forEach>
+          	  ]
+          },
+      ]
+    }
+    
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, chartData)
+    var temp0 = chartData.datasets[0]
+    var temp1 = chartData.datasets[1]
+    var temp2 = chartData.datasets[2]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+    barChartData.datasets[2] = temp2
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+		type : 'bar',
+		data : barChartData,
+		options : barChartOptions
+	})
+    
+
+    //---------------------
+    //- STACKED BAR CHART -
+    //---------------------
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, areaChartData)
+
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
+    })
+  
+  
+    //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    pieChartCanvas = $('#pieChart20').get(0).getContext('2d')
+    var pieData        = {
+    	      labels: [
+    	          <c:forEach items="${agesGraphInfo.graph20sInfo}" var="graph20s" >
+    				<c:choose>
+    				<c:when test="${fn:length(graph20s.clName) gt 15}">
+    					'<c:out value="${fn:substring(graph20s.clName,0,15) }..." ></c:out>',
+    				</c:when>
+    				<c:otherwise>
+    				'${graph20s.clName}',
+    				</c:otherwise>
+    			</c:choose>		
+    	          </c:forEach>
+    	      ],
+    	      datasets: [
+    	        {
+    	          data: [
+    	        	  <c:forEach items="${agesGraphInfo.graph20sInfo}" var="graph20s">
+    	        	  	'${graph20s.count}',
+    	        	  </c:forEach>
+    	        	  
+    	          ],
+    	          backgroundColor : ['#f56954', '#00a65a', '#f39c12', ],
+    	        }
+    	      ]
+    	    }
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+    
+    
+    pieChartCanvas = $('#pieChart30').get(0).getContext('2d')
+    var pieData        = {
+    	      labels: [
+    	    	  <c:forEach items="${agesGraphInfo.graph30sInfo}" var="graph30s" >
+  				<c:choose>
+				<c:when test="${fn:length(graph30s.clName) gt 15}">
+					'<c:out value="${fn:substring(graph30s.clName,0,15) }..." ></c:out>',
+				</c:when>
+				<c:otherwise>
+				'${graph30s.clName}',
+				</c:otherwise>
+			</c:choose>		  
+  	          	  </c:forEach>
+    	          
+    	      ],
+    	      datasets: [
+    	        {
+    	          data: [
+    	        	  <c:forEach items="${agesGraphInfo.graph30sInfo}" var="graph30s">
+	        	  		'${graph30s.count}',
+  	        	  	 </c:forEach>
+	        	  		],
+    	          backgroundColor : ['#f56954', '#00a65a', '#f39c12', ],
+    	        }
+    	      ]
+    	    }
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+    
+    
+    pieChartCanvas = $('#pieChart40').get(0).getContext('2d')
+    var pieData        = {
+    	      labels: [
+    	    	  <c:forEach items="${agesGraphInfo.graph40sInfo}" var="graph40s" >
+    				<c:choose>
+    				<c:when test="${fn:length(graph40s.clName) gt 15}">
+    					'<c:out value="${fn:substring(graph40s.clName,0,15) }..." ></c:out>',
+    				</c:when>
+    				<c:otherwise>
+    				'${graph40s.clName}',
+    				</c:otherwise>
+    			</c:choose>		
+    	          </c:forEach>
+    	          
+    	      ],
+    	      datasets: [
+    	        {
+    	          data: [
+    	        	  <c:forEach items="${agesGraphInfo.graph40sInfo}" var="graph40s">
+	        	  		'${graph40s.count}',
+	        	  	 </c:forEach>
+    	        	  ],
+    	          backgroundColor : ['#f56954', '#00a65a', '#f39c12', ],
+    	        }
+    	      ]
+    	    }
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+    pieChartCanvas = $('#pieChart50').get(0).getContext('2d')
+    var pieData        = {
+    	      labels: [
+    	    	  <c:forEach items="${agesGraphInfo.graph50sInfo}" var="graph50s" >
+    				<c:choose>
+    				<c:when test="${fn:length(graph50s.clName) gt 15}">
+    					'<c:out value="${fn:substring(graph50s.clName,0,15) }..." ></c:out>',
+    				</c:when>
+    				<c:otherwise>
+    				'${graph50s.clName}',
+    				</c:otherwise>
+    			</c:choose>		
+    	          </c:forEach>
+    	          
+    	      ],
+    	      datasets: [
+    	        {
+    	          data: [
+    	        	  <c:forEach items="${agesGraphInfo.graph50sInfo}" var="graph50s">
+	        	  		'${graph50s.count}',
+	        	  	 </c:forEach>
+    	        	  ],
+    	          backgroundColor : ['#f56954', '#00a65a', '#f39c12', ],
+    	        }
+    	      ]
+    	    }
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+    pieChartCanvas = $('#pieChart60').get(0).getContext('2d')
+    var pieData        = {
+    	      labels: [
+    	    	  <c:forEach items="${agesGraphInfo.graph60sInfo}" var="graph60s" >
+    				<c:choose>
+    				<c:when test="${fn:length(graph60s.clName) gt 15}">
+    					'<c:out value="${fn:substring(graph60s.clName,0,15) }..." ></c:out>',
+    				</c:when>
+    				<c:otherwise>
+    				'${graph60s.clName}',
+    				</c:otherwise>
+    			</c:choose>		
+    	          </c:forEach>
+    	          
+    	      ],
+    	      datasets: [
+    	        {
+    	          data: [
+    	        	  <c:forEach items="${agesGraphInfo.graph60sInfo}" var="graph60s">
+	        	  		'${graph60s.count}',
+	        	  	 </c:forEach>
+    	        	  ],
+    	          backgroundColor : ['#f56954', '#00a65a', '#f39c12', ],
+    	        }
+    	      ]
+    	    }
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+  
+  })  
+</script>

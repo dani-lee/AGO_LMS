@@ -1,0 +1,81 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.OrderCommand;
+import com.one.dao.DpOrderDAO;
+import com.one.dto.DpHeadVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassVO;
+import com.one.service.DpOrderService;
+import com.one.utils.JsTreeJsonConversion;
+
+public class DpOrderServiceImpl implements DpOrderService {
+
+	private DpOrderDAO dpOrderDAO;
+
+	public void setDpOrderDAO(DpOrderDAO dpOrderDAO) {
+		this.dpOrderDAO = dpOrderDAO;
+	}
+
+
+	@Override
+	public List<Map<String, String>> selectFav(String dpId) throws Exception {
+		List<Map<String, String>> jsonData = null;
+		List<ClassListVO> classList = dpOrderDAO.selectDpHeadFav(dpId);
+
+		jsonData = JsTreeJsonConversion.conversion(classList);
+
+		return jsonData;
+	}
+
+	@Override
+	public void registFav(DpHeadVO fav) throws SQLException {
+		dpOrderDAO.insertDpHeadFav(fav);
+	}
+
+	@Override
+	public void removeFav(DpHeadVO fav) throws SQLException {
+		dpOrderDAO.deleteDpHeadFav(fav);
+	}
+
+	@Override
+	public void DepartmentOrderOpcl(OrderCommand orderCmd, String dpId) throws SQLException {
+		int odId = dpOrderDAO.getOdId();
+		DpHeadVO order = null;
+
+		order = new DpHeadVO();
+		order.setDpId(dpId);
+		order.setOdId(odId);
+		order.setOdMsg(orderCmd.getOdMsg());
+
+		dpOrderDAO.insertDpHeadOd(order);
+
+		String[] className = orderCmd.getClassName();
+		for (String opclStr : className) {
+			int opcl = Integer.parseInt(opclStr);
+			order.setOpcl(opcl);
+			dpOrderDAO.insertDpOdOpcl(order);
+		}
+
+		String[] memberName = orderCmd.getMemberName();
+		for (String memEmail : memberName) {
+			order.setMemEmail(memEmail);
+			dpOrderDAO.insertDpOdMem(order);
+		}
+	}
+
+
+	@Override
+	public Boolean favCheck(DpHeadVO fav) throws SQLException {
+		int chk = dpOrderDAO.favCheck(fav);
+
+		Boolean bool = false;
+		if(chk > 0) {
+			bool = true;
+		}
+		return bool;
+	}
+}

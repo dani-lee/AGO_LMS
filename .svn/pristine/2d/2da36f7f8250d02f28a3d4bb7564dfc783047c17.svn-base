@@ -1,0 +1,418 @@
+package com.one.service.impl;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.one.command.MemberClassCommand;
+import com.one.command.MemberCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.PageMaker;
+import com.one.command.ReportCommand;
+import com.one.command.TestCommand;
+import com.one.dao.ClassDAO;
+import com.one.dao.ClassReviewDAO;
+import com.one.dao.FinishedClassDAO;
+import com.one.dao.MyClassDAO;
+import com.one.dto.ExamExcelVO;
+import com.one.dto.ExcelDTO;
+import com.one.dto.ExtReportVO;
+import com.one.dto.FinishedClassVO;
+import com.one.dto.MemberClVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.service.MyClassService;
+import com.one.utils.ExcelUtil;
+
+public class MyClassServiceImpl implements MyClassService {
+
+	private MyClassDAO myClassDAO;
+	private ClassReviewDAO classReviewDAO;
+	private ClassDAO classDAO;
+	private FinishedClassDAO finishedClassDAO;
+	
+	
+	
+	
+	public void setFinishedClassDAO(FinishedClassDAO finishedClassDAO) {
+		this.finishedClassDAO = finishedClassDAO;
+	}
+	public void setMyClassDAO(MyClassDAO myClassDAO) {
+		this.myClassDAO = myClassDAO;
+	}
+	public void setClassReviewDAO(ClassReviewDAO classReviewDAO) {
+		this.classReviewDAO = classReviewDAO;
+	}
+	public void setClassDAO(ClassDAO classDAO) {
+		this.classDAO = classDAO;
+	}
+
+	private String classUploadPath;
+
+	public void setPicturePath(String classUploadPath) {
+		this.classUploadPath = classUploadPath;
+	}
+	
+	private String excelTempPath;
+	public void setExcelTempPath(String excelTempPath) {
+		this.excelTempPath = excelTempPath;
+	}
+	
+	@Override
+	public List<MemberStudyClassCommand> selectStudyClassList(String memEmail) throws SQLException {
+		List<MemberStudyClassCommand> memberClassList = myClassDAO.selectStudyClassList(memEmail);
+		return memberClassList;
+	}
+
+	@Override
+	public List<ReportCommand> selectFinishClassList(String memEmail) throws SQLException {
+		List<ReportCommand> finishClassList = myClassDAO.selectFinishClass(memEmail);
+		for(int i=0;i<finishClassList.size();i++) {
+			ReportCommand report = myClassDAO.selectReportClass(finishClassList.get(i).getOpcl());
+			if(report != null) {
+				finishClassList.get(i).setIntNo(report.getIntNo());
+				finishClassList.get(i).setMemClNo(report.getMemClNo());
+				finishClassList.get(i).setOpcl(report.getOpcl());
+				finishClassList.get(i).setEduContent(report.getEduContent());
+				finishClassList.get(i).setEduReview(report.getEduReview());
+				finishClassList.get(i).setIntState(report.getIntState());
+				finishClassList.get(i).setIntDate(report.getIntDate());
+			}
+		}
+		
+		// HRD 강 의
+//		List<FinishedClassVO> finishedExtClassList = myClassDAO.selectExtFinishedClassList(memEmail);
+//		for(FinishedClassVO extClass : finishedExtClassList) {
+//			ReportCommand reportCommand = new ReportCommand();
+//			reportCommand.setClCode(extClass.getExtCode());
+//			reportCommand.setClName(extClass.getExtClName());
+//			reportCommand.setIntNo(extClass.getExtNo());
+//			
+//			String cDate = "";
+//			reportCommand.setCdate(cDate);
+//			reportCommand.setClassType("ext");
+//			
+//			finishClassList.add(reportCommand);
+//		}
+
+		return finishClassList;
+	}
+
+	@Override
+	public Map<String, Object> selectMyClassMain(String memEmail) throws SQLException {
+		Date date = new Date();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("studyClassList", selectStudyClassList(memEmail));
+		dataMap.put("studyClassCount", myClassDAO.selectStudyClassCount(memEmail));
+		dataMap.put("finishClassList", selectFinishClassList(memEmail));
+		dataMap.put("finishClassCount", myClassDAO.selectFinishClassCount(memEmail));
+		dataMap.put("intrClassList", myClassDAO.selectIntrClass(memEmail));
+		dataMap.put("departmentClassList", myClassDAO.selectDepartmentClassList());
+		dataMap.put("sysdate", date);
+		return dataMap;
+	}
+
+	@Override
+	public Map<String, Object> selectListMyStudyingClass(MemberCriteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<MemberStudyClassCommand> myClassList = myClassDAO.selectListStudyingClass(cri);
+		for(MemberStudyClassCommand classCMD : myClassList) {
+			double reviewAvg;
+			try {
+				
+				reviewAvg = classReviewDAO.selectReviewAVG(classCMD.getOpcl());
+				
+				double reviewScore =  Math.round(reviewAvg * 10)/ 10.0;
+				int reScrIntPart = (int)(Math.floor(reviewAvg));
+				int reScrDecimal = (int) (reviewScore * 10 % (reScrIntPart*10));
+
+				classCMD.setReviewScore(reviewScore);
+				classCMD.setReScrIntPart(reScrIntPart);
+				classCMD.setReScrDecimal(reScrDecimal);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		int totalCount = myClassDAO.selectListStudyingClassCount(cri);
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		dataMap.put("myClassList", myClassList);
+		dataMap.put("pageMaker", pageMaker);
+
+		return dataMap;
+	}
+
+	@Override
+	public String getClassUploadPath() throws IOException {
+		return classUploadPath;
+	}
+
+	@Override
+	public void modifyMemCLByQrScan(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateMemCLByQrScan(memberCL);
+	}
+
+	@Override
+	public void regisetMemChap(MemberClVO memberCL) throws SQLException {
+		myClassDAO.insertMemChap(memberCL);
+	}
+
+	@Override
+	public Map<String, Object> getMemberClList(MemberCriteria cri,String email) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+			cri.setMemEmail(email);
+			String date = cri.getKeyword();
+			String subdate = cri.getKeyword();
+			date +="0101";
+			cri.setKeyword(date);
+			subdate +="1231";
+			cri.setSubKeyword(subdate);
+		
+		List<MemberClassCommand> memberClassList = myClassDAO.selectMemClListByYear(cri);
+
+		for(MemberClassCommand memberClass : memberClassList) {
+			
+			MemberClassCommand emailOpcl = new MemberClassCommand();
+			emailOpcl.setMemEmail(email);
+			emailOpcl.setOpcl(memberClass.getOpcl());
+			ClassListVO classInfo = classDAO.selectClassInfo(memberClass.getOpcl());
+			int memClNo = myClassDAO.getmemClNoByOpcl(emailOpcl);
+			memberClass.setClCode(classInfo.getClCode());
+			memberClass.setClName(classInfo.getClName());
+			memberClass.setClImg(classInfo.getClImg());
+			memberClass.setClPoint(classInfo.getClPoint());
+			memberClass.setClFormat(classInfo.getClFormat());
+			memberClass.setClCate(classInfo.getClCate());
+			memberClass.setClDivision(classInfo.getClDivision());
+			memberClass.setLecDate(classInfo.getLecDate());
+
+			System.out.println("@@@@@@@@@@@@@@@                    " + memClNo + "           @@@@@@@@@@@@@@");
+			
+			emailOpcl.setMemClNo(memClNo);
+
+			MemberClassCommand reportDate = myClassDAO.getIntReport(emailOpcl);
+			if(reportDate != null) {
+				memberClass.setIntState(reportDate.getIntState());
+				memberClass.setIntDate(reportDate.getIntDate());
+			}else {
+				memberClass.setIntState("B101");
+			}
+				
+		}
+		
+		
+		
+
+		int totalCount = myClassDAO.selectMemClListByYearCnt(cri.getMemId());
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		dataMap.put("memberClassList", memberClassList);
+		dataMap.put("pageMaker", pageMaker);
+
+		return dataMap;
+
+	}
+	@Override
+	public Map<String,Object> getExtList(MemberCriteria cri,String email) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		cri.setMemEmail(email);
+		String date = cri.getKeyword();
+		String subdate = cri.getKeyword();
+		date +="0101";
+		cri.setKeyword(date);
+		subdate +="1231";
+		cri.setSubKeyword(subdate);
+		
+		List<FinishedClassVO> extList = myClassDAO.getExtList(cri);
+		String extPoint = myClassDAO.getExtPoint();
+		System.out.println("@@@@@@@@@@@@        extpoint[" + extPoint);
+		for(int i = 0; i < extList.size(); i++) {
+			extList.get(i).setCodeName1(extPoint);
+		}
+		int totalCount = finishedClassDAO.countExtClass(email);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("extList", extList);
+		
+		return dataMap;
+	}
+	@Override
+	public Map<String,Object> getExtReportList(MemberCriteria cri,String email) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		cri.setMemEmail(email);
+
+		String date = cri.getKeyword();
+		String subdate = cri.getKeyword();
+		date +="0101";
+		cri.setKeyword(date);
+		subdate +="1231";
+		cri.setSubKeyword(subdate);
+		List<ExtReportVO> extReportList = myClassDAO.getExtReportList(cri);
+		
+		int totalCount = myClassDAO.countExtReport(email);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("extReportList", extReportList);
+		
+		return dataMap;
+	}
+	
+	public int getmemClNoByOpcl(MemberClassCommand memClassCMD) throws SQLException {
+		int memClNo = myClassDAO.getmemClNoByOpcl(memClassCMD);
+		return memClNo;
+	}
+	@Override
+	public void modifyMemChap(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateMemChap(memberCL);
+	}
+	@Override
+	public void modifyMemCLProgRate(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateMemCLProgRate(memberCL);
+	}
+	@Override
+	public int getClChapterCnt(String clCode) throws SQLException {
+		int chapterCnt = myClassDAO.selectClChapterCount(clCode);
+		return chapterCnt;
+	}
+
+	@Override
+	public Map<String, Object> readExam(String fileName) throws Exception {
+
+		ExcelDTO excelDTO = new ExcelDTO();
+		
+		// 파일경로 추가
+		excelDTO.setFilePath(excelTempPath + fileName);
+		// 컬럼명 추가
+		excelDTO.setOutputColumns("A", "B", "C", "E", "F", "G","H");
+		// 시작행
+		excelDTO.setStartRow(2);
+
+		List<Map<String, String>> excelContent = ExcelUtil.read(excelDTO);
+		List<ExamExcelVO> examList = new ArrayList<ExamExcelVO>();
+		for (Map<String, String> test : excelContent) {
+			ExamExcelVO examExcel = new ExamExcelVO();
+
+			examExcel.setTestNum((int) Float.parseFloat(test.get("A")));
+			examExcel.setExamQuestions(test.get("B"));
+			
+			examExcel.setTestAnswer((int) Double.parseDouble(test.get("C").toString()));
+			
+			examExcel.setTestNumber1(test.get("E"));
+			examExcel.setTestNumber2(test.get("F"));
+			examExcel.setTestNumber3(test.get("G"));
+			examExcel.setTestNumber4(test.get("H"));
+			
+			examList.add(examExcel);
+		}
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("examList", examList);
+
+		return paramMap;
+
+	}
+	
+	@Override
+	public int checkExam(TestCommand testCMD) throws Exception {
+		int score = 0;
+		int correctAnswers = 0;		//정답자수
+		int total = 0; 	//총 시험자 
+		
+		int[] answers = testCMD.getAnswers();
+		
+		ExcelDTO excelDTO = new ExcelDTO();
+		
+		// 파일경로 추가
+		excelDTO.setFilePath(excelTempPath + testCMD.getFileName());
+		
+		// 시작행
+		excelDTO.setStartRow(2);
+		
+		//엑셀파일 읽기
+		XSSFWorkbook workbook = new XSSFWorkbook(excelDTO.getFilePath());
+
+		// 첫번째 시트 불러오기
+		XSSFSheet sheet = workbook.getSheetAt(0);
+
+		//유효한 데이터가 있는 행의 갯수를 가져온다
+		int numOfRows = sheet.getPhysicalNumberOfRows();
+
+
+		List<Map<String, String>> excelContent = ExcelUtil.read(excelDTO);
+		List<ExamExcelVO> examList = new ArrayList<ExamExcelVO>();
+		for (Map<String, String> test : excelContent) {
+			ExamExcelVO examExcel = new ExamExcelVO();
+
+			examExcel.setTestNum((int) Float.parseFloat(test.get("A")));
+			examExcel.setExamQuestions(test.get("B"));
+			
+			examExcel.setTestAnswer((int) Double.parseDouble(test.get("C").toString()));
+			
+			examList.add(examExcel);
+		}
+		
+		for(int i = 0; i < examList.size(); i++) {
+			if(answers[i] == examList.get(i).getCorrectAnswers()) {
+				score += 5;
+				correctAnswers += 1;
+				
+				sheet.getRow(i).getCell(4).setCellValue(correctAnswers);
+			}
+		}
+		total += 1;
+		sheet.getRow(2).getCell(9).setCellValue(total);
+		
+		FileOutputStream outStream = null;
+		outStream = new FileOutputStream(excelTempPath + testCMD.getFileName());
+
+		workbook.write(outStream);
+		
+		
+		return score;
+
+	}
+	@Override
+	public void modifyMidTestSco(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateMidTestSco(memberCL);
+	}
+	@Override
+	public void modifyFinTestSco(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateFinTestSco(memberCL);
+	}
+	@Override
+	public MemberClVO getMemCLByOpclAndEmail(MemberClVO memberCL) throws SQLException {
+		MemberClVO memberClass = myClassDAO.selectMemCLByOpclAndEmail(memberCL);
+		return memberClass;
+	}
+	@Override
+	public void modifyTestCpl(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateTestCpl(memberCL);
+	}
+	@Override
+	public void modifyStudyCpl(MemberClVO memberCL) throws SQLException {
+		myClassDAO.updateStudyCpl(memberCL);
+	}
+	
+}
+

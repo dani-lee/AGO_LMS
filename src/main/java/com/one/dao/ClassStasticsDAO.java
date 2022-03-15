@@ -1,0 +1,45 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReport;
+
+import com.one.command.Criteria;
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public interface ClassStasticsDAO {
+
+	public List<ClassStasticsVO> selectselectInfoStasticsClassList()throws SQLException; 
+	
+	public List<ClassStasticsVO> selectClassGraphInfo(int age)throws SQLException;
+	
+	public List<ClassStasticsVO> selectResultValuesByAge(int age)throws SQLException;
+	
+	public List<ClassStasticsVO> selectFirstClassByDpId()throws SQLException;
+	
+	public List<ClassStasticsVO> selectSecondClassByDpId()throws SQLException;
+	
+	public List<ClassStasticsVO> selectThirdClassByDpId()throws SQLException;
+	
+	//강의 전체 목록 가져오기
+	public List<ClassStasticsVO> selectTotalOpenClass(Criteria cri)throws SQLException;
+	
+	public int selectTotalOpenClassCount(Criteria cri)throws SQLException;
+	
+	public String selectReviewAvgByOpcl(int opcl)throws SQLException;
+	
+	public ClassStasticsVO selectClassDetailByOpcl(int opcl) throws SQLException;
+	
+	// 상세 그래프 데이터
+	public List<ClassStasticsVO> selectDataStudyRatioByDpId(int opcl)throws SQLException;
+	
+	public List<ClassStasticsVO> selectDataStudyRationByAges(int opcl)throws SQLException;
+	
+	public List<ClassStasticsVO> selectMainExposureOpclNotNull()throws SQLException;
+	
+	//메인노출 상태 변경
+	public void updateMainExposureStatus(ClassStasticsVO updateInfo) throws SQLException;
+
+	public void deleteMainExposureStatus(int opcl)throws SQLException;
+}

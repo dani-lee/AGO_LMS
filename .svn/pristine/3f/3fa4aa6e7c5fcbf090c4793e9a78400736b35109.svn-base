@@ -1,0 +1,274 @@
+<%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${pageMaker.cri }" />
+<c:set var="debateReplyList" value="${dataMap.debateReplyList }" />
+<c:set var="memId" value="${memId}"/>
+<c:set var="url" value="detail.do" />
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+
+			<div class="col-md-12">
+				<!-- Box Comment -->
+				<div class="card-widget">
+					<div class="card-header">
+						<div class="buttons row">
+							<div class="ml-2">
+								<button type="button" class="btn btn-tool" onclick="fn_delete();">
+									<i class="fas fa-eraser text-danger"></i><span class="text-danger font-weight-bold">&nbsp;삭제&nbsp;</span>
+								</button>
+							</div>
+							<button class="btn btn-default btn-sm float-right ml-auto mr-2" onclick="location.href='list.do'">
+								<i class="la la-angle-double-left"></i> &nbsp;목록
+							</button>
+						</div>
+						<br>
+						<div class="user-block col-12">
+							<div class="row">
+								<p class="ml-2 text-secondary">토론게시판</p>
+							</div>
+							<p class="h5">${debateBoard.deTitle }</p>
+							<p class="text-secondary m-0">
+								<b>${debateBoard.memId }</b>
+							</p>
+
+							<div class="d-block">
+								<p class="text-secondary float-left">
+									<fmt:formatDate value="${debateBoard.deRegdate}" pattern="yyyy-MM-dd" />
+									&nbsp;| &nbsp;
+								</p>
+								<p class="text-secondary float-left">조회&nbsp;${debateBoard.deViewCnt}</p>
+								<div class="justify-content-end float-right" id="tools">
+									<a href="#replies-wrapper">
+										<button type="button" class="btn btn-tool" data-spy="scroll">
+											<i class="far fa-comment-dots mr-2"></i>댓글&nbsp;<span class="font-weight-bold">${debateBoard.replyCnt }</span>
+										</button>
+									</a>
+									<button type="button" class="btn btn-tool" onclick="fn_report(${debateBoard.dboardNo});">
+										<i class="fas fa-bullhorn mr-2"></i>신고 &nbsp;<span class="font-weight-bold reportCnt">${debateBoard.deReportCnt }</span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body">
+						<div class="content" style="min-height: 500px;">${debateBoard.deContent}</div>
+					</div>
+					<!-- /.card-body -->
+					
+					<!--댓글-->
+					<div class="card-footer card-comments replies-wrapper" id="replies-wrapper">
+						<!--댓글-->
+						<div class="replies">
+							<c:forEach var="debateReply" items="${debateReplyList}" varStatus="status">
+								<c:if test="${status.first}">
+									<div class="card-comment reply-div">
+										<div class="comment-text">
+											<div class="username" id="username">
+												<span class="username">${debateReply.memId}
+													<div class="float-right dropdown">
+														<span class="text-muted float-left mr-3">
+															<fmt:formatDate value="${debateReply.dereplyRegdate}" pattern="yyyy-MM-dd HH:mm"/>
+														</span>
+															<c:if test="${memId eq debateReply.memId }">
+				                                            	<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=""> 
+				                                            		<i class="fas fa-ellipsis-v text-secondary"></i>
+				                                            	</span>
+				                                            	
+				                                            	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+				                                            		<a onclick="fn_modifyForm()" class="dropdown-item">수정</a>
+				                                            		<a onclick="deleteReply()" class="dropdown-item">삭제</a>
+				                                            	</div>	
+															</c:if>
+													</div>
+												</span>
+											</div>
+											<input type="hidden" id="dereplyNum" value="${debateReply.dereplyNo }"/>
+											
+											<span>${debateReply.dereplyContent} ${debateReply.dereplyNo }</span>
+										</div>
+								</c:if>
+								<c:if test="${status.index ne 0}">
+									<c:if test="${debateReply.dereplyPreantNo eq 0}">
+												<form role="${status.index}reReplyForm" method="post">
+													<input type="hidden" name="dboardNo" value="${debateReply.dboardNo }">
+													<input type="hidden" name="dereplyPreantNo" value="${debateReply.prevReply }">
+													<input type="text" class="form-control col-2" id="${status.index}replyer"  style="display: none;">
+													<input type="text" class="form-control form-control-sm col-10" id="reply" name="dereplyContent" placeholder="댓글을 입력하세요" value="${debateReply.prevReply}">
+													<button class="btn btn-primary btn-sm" type="button" onclick="reReply(${status.index});">답글 쓰기</button>
+												</form>										
+										</div>
+										<div class="card-comment reply-div">
+											<div class="comment-text">
+												<div class="username" id="username">
+													<span class="username">${debateReply.memId}
+														<div class="float-right dropdown">
+															<span class="text-muted float-left mr-3">
+																<fmt:formatDate value="${debateReply.dereplyRegdate}" pattern="yyyy-MM-dd HH:mm"/>
+															</span>
+															<c:if test="${memId eq debateReply.memId }">															
+				                                            	<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=""> 
+				                                            		<i class="fas fa-ellipsis-v text-secondary"></i>
+				                                            	</span>
+				                                            	
+				                                            	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+				                                            		<a onclick="fn_modifyForm()" class="dropdown-item">수정</a>
+				                                            		<a onclick="deleteReply()" class="dropdown-item">삭제</a>
+				                                            	</div>	
+															</c:if>
+														</div>
+													</span>
+												</div>
+												<span>${debateReply.dereplyContent} ${debateReply.dereplyNo }</span>																
+											</div>
+									</c:if>
+									<c:if test="${debateReply.dereplyPreantNo ne 0}">
+										<div class="m-4 reReply-wrapper">
+											<div class="m-4">
+												<i class="fas fa-reply fa-rotate-180 img-circle img-sm text-secondary"></i>
+												<div class="comment-text bg-white p-2">
+													<span class="username">${debateReply.memId}
+														<div class="float-right dropdown">
+															<span class="text-muted float-left mr-3">
+																<fmt:formatDate value="${debateReply.dereplyRegdate}" pattern="yyyy-MM-dd HH:mm"/>
+															</span>
+															<c:if test="${memId eq debateReply.memId }">														
+				                                            	<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=""> 
+				                                            		<i class="fas fa-ellipsis-v text-secondary"></i>
+				                                            	</span>
+				                                            	
+				                                            	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+				                                            		<a onclick="fn_modifyForm()" class="dropdown-item">수정</a>
+				                                            		<a onclick="deleteReply()" class="dropdown-item">삭제</a>
+				                                            	</div>
+															</c:if>
+														</div>
+													</span> <span>${debateReply.dereplyContent}</span>
+												</div>
+												
+												
+											</div>
+										</div>
+									</c:if>
+								</c:if>
+								<c:if test="${status.last}">
+												<form role="${status.index}reReplyForm" method="post">
+													<input type="hidden" name="dboardNo" value="{{dboardNo}}">
+													<input type="hidden" name="dereplyPreantNo" value="{{dereplyNo}}">
+
+													<input type="text" class="form-control col-2" id="{{@index}}replyer"  style="display: none;">
+													<input type="text" class="form-control form-control-sm col-10" id="reply" name="dereplyContent" placeholder="댓글을 입력하세요" value="${debateReply.dereplyNo }">
+													<button class="btn btn-primary btn-sm" type="button" onclick="reReply(${status.index});">답글 쓰기</button>
+												</form>									
+								</div></c:if>
+								
+							</c:forEach>
+						</div>
+<form role="registReplyForm" method="post" action="regist.do">
+	<input type="hidden" name="dboardNo" value="${debateBoard.dboardNo }"/>
+	<div class="form-group d-inline-flex col-12 mt-3">
+		<input type="text" class="form-control" id="replyer"  style="display: none;"> <input type="text" class="form-control form-control-sm col-11" id="reply" name="dereplyContent" placeholder="댓글을 입력하세요">
+		<button class="btn btn-primary btn-sm" type="button" onclick="registReply();">댓글 쓰기</button>
+	</div>
+		
+	</form>							
+						<c:if test="${not empty debateReplyList}">
+							<div class='text-center'>
+								<ul id="pagination" class="pagination justify-content-center mt-4 mb-2" >
+									<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+								</ul>
+							</div>
+						</c:if>
+					</div>
+					<!--/댓글-->
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+	function settingdeReplyNo(){
+		var form = $('form[role=${status.index}reReplyForm]')[0];
+		
+		form.find()
+	}
+	
+	
+	
+	function reReply(index){
+		form = $('form[role='+index+'reReplyForm]')[0];
+		formData = new FormData(form);
+			
+		
+		$.ajax({
+			url 		: 'registReply.do',
+			data 		: formData,
+			type 		: 'post',
+			processData : false,
+			contentType : false,
+			success 	: function(data){
+				console.log(data);
+				alert(data);
+				location.reload();
+			},
+			error 		: function(error){
+				
+				console.log(error.status);
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		})			
+	}
+	function registReply(){
+		form = $('form[role=registReplyForm]')[0];
+		formData = new FormData(form);
+			
+		
+		$.ajax({
+			url 		: 'registReply.do',
+			data 		: formData,
+			type 		: 'post',
+			processData : false,
+			contentType : false,
+			success 	: function(data){
+				console.log(data);
+				alert(data);
+				location.reload();
+			},
+			error 		: function(error){
+				
+				console.log(error.status);
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		})			
+	}	
+	
+		function fn_remove() {
+			let form = document.querySelector('form[role="form"]');
+			let check = confirm("정말 삭제하시겠습니까?");
+			if (check) {
+
+				form.setAttribute("action", "remove.do");
+				form.setAttribute("method", "post");
+
+				form.submit();
+			}
+		}
+		
+		
+		
+	</script>
+</body>

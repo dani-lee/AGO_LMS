@@ -1,0 +1,13 @@
+package com.one.dao.scheduler;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+
+public interface ScheduledManagementClassDAO {
+
+	public List<Integer> selectMainExposureClassList()throws SQLException;
+	
+	public void updateMainExposre(Map<String, Object> dataMap)throws SQLException;
+}

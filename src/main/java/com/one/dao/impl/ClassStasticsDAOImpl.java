@@ -1,0 +1,113 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.Criteria;
+import com.one.dao.ClassStasticsDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public class ClassStasticsDAOImpl implements ClassStasticsDAO{
+
+	private SqlSession session;
+	
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectselectInfoStasticsClassList() throws SQLException {
+		return session.selectList("Stastics-Mapper.selectInfoStasticsClass");
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectClassGraphInfo(int age) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectClassGraphInfoByAges", age);
+	}
+	
+	@Override
+	public List<ClassStasticsVO> selectResultValuesByAge(int age) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectResultValuesByAge", age);
+	}
+
+	
+
+	@Override
+	public List<ClassStasticsVO> selectFirstClassByDpId() throws SQLException {
+		return session.selectList("Stastics-Mapper.selectFirstClassByDpId");
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectSecondClassByDpId() throws SQLException {
+		return session.selectList("Stastics-Mapper.selectSecondClassByDpId");
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectThirdClassByDpId() throws SQLException {
+		return session.selectList("Stastics-Mapper.selectThirdClassByDpId");
+	}
+
+	//강의 전체 목록 가져오기
+	@Override
+	public List<ClassStasticsVO> selectTotalOpenClass(Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<ClassStasticsVO> totalOpClList = session.selectList("Stastics-Mapper.selectTotalOpenClass", cri, rowBounds);
+		
+		return totalOpClList;
+	}
+
+	@Override
+	public int selectTotalOpenClassCount(Criteria cri) throws SQLException {
+		return session.selectOne("Stastics-Mapper.selectTotalOpenClassCount", cri);
+	}
+
+	@Override
+	public String selectReviewAvgByOpcl(int opcl) throws SQLException {
+		String avg = session.selectOne("Stastics-Mapper.selectReviewAvgByOpcl", opcl);
+		if(avg == null) {
+			avg = "0.0";
+		}
+		return avg;
+	}
+
+	@Override
+	public ClassStasticsVO selectClassDetailByOpcl(int opcl) throws SQLException {
+		return session.selectOne("Stastics-Mapper.selectClassDetailByOpcl", opcl);
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectDataStudyRatioByDpId(int opcl) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectDataStudyRatioByDpId", opcl);
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectDataStudyRationByAges(int opcl) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectDataStudyRationByAges", opcl);
+	}
+
+	@Override
+	public void updateMainExposureStatus(ClassStasticsVO updateInfo) throws SQLException {
+		session.update("Stastics-Mapper.updateMainExposureStatus", updateInfo);
+		
+	}
+
+	@Override
+	public void deleteMainExposureStatus(int opcl) throws SQLException {
+		session.update("Stastics-Mapper.deleteMainExposureStatus", opcl);
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectMainExposureOpclNotNull() throws SQLException {
+		List<ClassStasticsVO> exposureInfo = session.selectList("Stastics-Mapper.selectMainExposureOpclNotNull");
+		return exposureInfo;
+	}
+
+	
+
+
+}

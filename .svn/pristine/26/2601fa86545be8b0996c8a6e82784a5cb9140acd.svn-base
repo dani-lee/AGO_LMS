@@ -1,0 +1,152 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="noticeList" value="${dataMap.noticeList }" />
+
+<body>
+	<div class="card card-primary card-tabs">
+		<div class="card-header p-0 pt-1">
+			<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">시스템 교육</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">일반교육</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">자기개발 및 취미</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">네트워크 교육</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body justify-content-around" style="display: inline-block;">
+			<div class="tab-content" id="custom-tabs-one-tabContent">
+				<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+					<div class="d-flex justify-content">
+
+						<div class="container-fluid">
+							<div class="column ui-sortable" style="width: 100%;">
+
+								<hr color="#1D64F2" style="height: 3px; border-radius: 40px; margin-top: 5px;">
+
+								<div class="col-md-12 column ui-sortable"></div>
+								<table class="table mt-3">
+
+									<thead>
+										<tr>
+											<th class="col-md-1 column ui-sortable">강의코드</th>
+											<th class="col-md-6 column ui-sortable text-center">강의명</th>
+											<th class="col-md-1 column ui-sortable text-center">이수점수</th>
+											<th class="col-md-1 column ui-sortable text-center flex">수강신청</th>
+											<th class="col-md-1 column ui-sortable text-center">상세정보</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<c:if test="${empty noticeList }" >
+										</c:if>
+										<c:if test="${empty noticeList }" >
+										</c:if>
+										<tr>
+											<td>20220101</td>
+											<td class="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6 align-middle" onclick="goPage('/user/rcls/detail.do');" style="cursor: pointer;">멀티 미디어의 이해</span>
+
+													<br>
+													<span class="text-primary">2021.01.01~2022.01.01</span> <span class=" badge badge-primary" style="margin-left: 30px;">오프라인</span> <span class=" badge badge-danger">필수</span>
+												
+												</div>
+												<div class="col-md-3 column ui-sortable"></div>
+											</td>
+											<td class="text-center align-middle">30</td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">수강신청</button></td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">상세정보</button></td>
+										</tr>
+										<tr>
+											<td>20220101</td>
+											<td class="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6 align-middle">업무용 네트워크 기술</span>
+
+													<br>
+													<span class="text-primary">2021.01.01~2022.01.01</span> <span class="badge badge-primary" style="margin-left: 30px;">오프라인</span> <span class="badge badge-danger">필수</span>
+												</div>
+											</td>
+											<td class="text-center align-middle">30</td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">수강신청</button></td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">상세정보</button></td>
+										</tr>
+										<tr>
+											<td>20220101</td>
+											<td class="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6 align-middle">JSP ＆ Servlet Programming</span>
+
+													<br>
+													<span class="text-primary">2021.01.01~2022.01.01</span> <span class="badge badge-primary" style="margin-left: 30px;">오프라인</span> <span class="badge badge-danger">필수</span>
+												</div>
+												<div class="col-md-3 column ui-sortable"></div>
+											</td>
+											<td class="text-center align-middle">30</td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">수강신청</button></td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">상세정보</button></td>
+										</tr>
+										<tr>
+											<td>20220101</td>
+											<td class="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6 align-middle">디자인 시스템 구축</span>
+
+													<br>
+													<span class="text-primary">2021.01.01~2022.01.01</span> <span class="badge badge-primary" style="margin-left: 30px;">오프라인</span> <span class="badge badge-danger">필수</span>
+												</div>
+												<div class="col-md-3 column ui-sortable"></div>
+											</td>
+											<td class="text-center align-middle">30</td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">수강신청</button></td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">상세정보</button></td>
+										</tr>
+										<tr>
+											<td>20220101</td>
+											<td class="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 130px; height: 60px;">
+												<div class="col-md-8 column ui-sortable">
+													<span class="h6 align-middle">딥러닝 프로젝트</span>
+
+													<br>
+													<span class="text-primary">2021.01.01~2022.01.01</span> <span class="badge badge-primary" style="margin-left: 30px;">오프라인</span> <span class="badge badge-danger">필수</span>
+												</div>
+
+												<div class="col-md-3 column ui-sortable"></div>
+											</td>
+											<td class="text-center align-middle">30</td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">수강신청</button></td>
+											<td class="text-center align-middle"><button class="btn btn-primary" style="width: 90px;">상세정보</button></td>
+										</tr>
+									</tbody>
+								</table>
+								<%@include file="/WEB-INF/views/common/pagination.jsp" %>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab"></div>
+				<div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab"></div>
+				<div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab"></div>
+			</div>
+		</div>
+		<!-- /.card -->
+	</div>
+
+
+
+	<!-- asdfasdfasdfas -->
+
+</body>

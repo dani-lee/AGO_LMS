@@ -1,0 +1,197 @@
+package com.one.controller.manager.classManagement;
+
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import com.one.command.Criteria;
+import com.one.command.ExamRegistCommand;
+import com.one.dto.ExamExcelVO;
+import com.one.dto.ExamStastisDetailVO;
+import com.one.dto.ExamStatisVO;
+import com.one.dto.ExcelDTO;
+import com.one.dto.ManageExamVO;
+import com.one.service.CommonService;
+import com.one.service.ExamManagementService;
+import com.one.service.ExamStatisService;
+import com.one.utils.ExcelUtil;
+
+@Controller
+@RequestMapping("/manager/exam")
+public class ManagerExamController {
+
+	@Autowired
+	private ExamStatisService examStatisService;
+
+	@Autowired
+	private ExamManagementService examManagementService;
+	
+	@Resource(name = "excelTempPath")
+	private String excelTempPath;
+	
+	// 시험관리 메인페이지
+	@RequestMapping(value = "/management.do", method = RequestMethod.GET)
+	public ModelAndView main(ModelAndView mnv, Criteria cri) throws Exception {
+		String url = "/manager/exam/examDash";
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		dataMap = examStatisService.getExamStatisList(cri);
+		
+		mnv.setViewName(url);
+		mnv.addObject("dataMap", dataMap);
+		return mnv;
+	}
+
+	@RequestMapping(value = "/list.do")
+	public ModelAndView examlist(ModelAndView mnv, Criteria cri) throws Exception {
+		String url = "/manager/exam/management/managementMain";
+		Map<String, Object> dataMap = examManagementService.getManageExamList(cri);
+
+		mnv.addObject("dataMap", dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	// 시험 관리 상세-----------------------------------------------상세상세상세상세상세
+	@RequestMapping("/mgDetail.pop")
+	public ModelAndView managementDetail(String clCode, ModelAndView mnv) throws Exception {
+		String url = "/manager/exam/management/managementDetail";
+		ManageExamVO examInfoDetail = examManagementService.getExamInfoDetail(clCode);
+		if (examInfoDetail.getClCate().equals("A201")) {
+			examInfoDetail.setClCate("신입교육");
+		} else if (examInfoDetail.getClCate().equals("A202")) {
+			examInfoDetail.setClCate("일반교육");
+		} else {
+			examInfoDetail.setClCate("기타");
+		}
+		if (examInfoDetail.getMtestFile() != null && examInfoDetail.getFtestFile() != null) {
+			Map<String, Object> mtestFile = examManagementService.readExam(examInfoDetail.getMtestFile());
+			Map<String, Object> ftestFile = examManagementService.readExam(examInfoDetail.getFtestFile());
+			mnv.addObject("mtestFile", mtestFile);
+			mnv.addObject("ftestFile", ftestFile);
+		} else if (examInfoDetail.getMtestFile() != null) {
+			Map<String, Object> mtestFile = examManagementService.readExam(examInfoDetail.getMtestFile());
+			mnv.addObject("mtestFile", mtestFile);
+		} else if (examInfoDetail.getFtestFile() != null) {
+			Map<String, Object> ftestFile = examManagementService.readExam(examInfoDetail.getFtestFile());
+			mnv.addObject("ftestFile", ftestFile);
+		}
+		mnv.addObject("examInfoDetail", examInfoDetail);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/getTest.do", method=RequestMethod.POST)
+	public ResponseEntity<List<ExamExcelVO>> getTest(String fileName) throws Exception {
+		ResponseEntity<List<ExamExcelVO>> entity = null;
+
+		try {
+			Map<String, Object> map = examManagementService.readExam(fileName);
+
+			List<ExamExcelVO> data = (List<ExamExcelVO>) map.get("examList");
+
+			entity = new ResponseEntity<List<ExamExcelVO>>(data, HttpStatus.OK);
+
+		} catch (Exception e) {
+			entity = new ResponseEntity<List<ExamExcelVO>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	// 시험 통계 메인
+	@RequestMapping("/stastics.do")
+	public ModelAndView stastics(Criteria cri, ModelAndView mnv, @RequestParam(value = "tabType", defaultValue = "true") boolean isStastisTab) throws Exception {
+		String url = "/manager/exam/stastics/stasticsMain";
+		
+		cri.setPerPageNum(6);
+		
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap = examStatisService.getExamStatisList(cri);
+		
+		mnv.setViewName(url);
+		mnv.addObject("dataMap", dataMap);
+		
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	// 시험 통계 상세
+	@RequestMapping("/scDetail.pop")
+	public ModelAndView stasticsDetail(ModelAndView mnv, int opcl) throws Exception {
+		String url = "/manager/exam/stastics/stasticsDetail";
+		
+		ExamStastisDetailVO examDetail = examStatisService.getExamStastisDetail(opcl, excelTempPath);
+		
+		mnv.addObject("examDetail", examDetail);
+		mnv.setViewName(url);
+
+		return mnv;
+	}
+
+	// 시험양식 엑셀 다운받기
+	@RequestMapping("/getRegistExamFormFile.do")
+	public String getRegistExamFormFile(Model model) throws Exception {
+		String url = "downloadFile";
+
+		model.addAttribute("savePath", examManagementService.getExcelTempPath());
+		model.addAttribute("fileName", "시험등록양식.xlsx");
+
+		return url;
+	}
+
+	// 등록된 시험 파일 다운받기
+	@RequestMapping("/getRegistedExamFile.do")
+	public String getRegistedExamFile(Model model, String fileName) throws Exception {
+		String url = "downloadFile";
+
+		model.addAttribute("savePath", examManagementService.getExcelTempPath());
+		model.addAttribute("fileName", fileName);
+
+		return url;
+	}
+
+	//시험 파일 업로드 
+	@ResponseBody
+	@RequestMapping("/uploadExamFile.do")
+	public String uploadExamFile(MultipartFile examFile, ExamRegistCommand examCMD, MultipartHttpServletRequest multiRequest) throws IOException, SQLException{
+		String url = "";
+		
+		MultipartFile multiFile = multiRequest.getFile("examFile");
+		File uploadFile = new File(examManagementService.getExcelTempPath(), multiFile.getOriginalFilename());
+		if(!uploadFile.exists()) {
+			uploadFile.mkdirs();
+		}
+		try {
+			examFile.transferTo(uploadFile);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		examManagementService.registExamFile(examCMD);
+		return url;
+	}
+}

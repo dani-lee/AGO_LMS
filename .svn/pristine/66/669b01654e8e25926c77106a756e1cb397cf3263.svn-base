@@ -1,0 +1,147 @@
+package com.one.dto;
+
+import java.util.Date;
+
+public class ExamStatisVO {
+	private int testNo;
+	private String mtestFile;
+	private String ftestFile;
+	private Date mtestRegdate;
+	private Date ftestRegdate;
+	private double mtestAvgSco;
+	private double ftestAvgSco;
+	private int opcl;
+	private String testStatus; // 시험이 있는 강의인지 무조건 1만 들어옴
+	private String clCode;
+	private String clName;
+	private String clFormat;
+	private String clDivision;
+	private String clCate;
+	
+	private int countStudent; // 수강인원
+	
+	private String clFormatName; // 온라인/오프라인
+	private String clDivisionName; // 필수/선택
+	private String clCateName;
+	
+	
+	public String getClCateName() {
+		return clCateName;
+	}
+	public void setClCateName(String clCateName) {
+		this.clCateName = clCateName;
+	}
+	public String getClCate() {
+		return clCate;
+	}
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+	public String getClFormatName() {
+		return clFormatName;
+	}
+	public void setClFormatName(String clFormatName) {
+		this.clFormatName = clFormatName;
+	}
+	public String getClDivisionName() {
+		return clDivisionName;
+	}
+	public void setClDivisionName(String clDivisionName) {
+		this.clDivisionName = clDivisionName;
+	}
+	public String getClFormat() {
+		return clFormat;
+	}
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+	public String getClDivision() {
+		return clDivision;
+	}
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+	public String getMtestFile() {
+		return mtestFile;
+	}
+	public void setMtestFile(String mtestFile) {
+		this.mtestFile = mtestFile;
+	}
+	public String getFtestFile() {
+		return ftestFile;
+	}
+	public void setFtestFile(String ftestFile) {
+		this.ftestFile = ftestFile;
+	}
+	public Date getMtestRegdate() {
+		return mtestRegdate;
+	}
+	public void setMtestRegdate(Date mtestRegdate) {
+		this.mtestRegdate = mtestRegdate;
+	}
+	public Date getFtestRegdate() {
+		return ftestRegdate;
+	}
+	public void setFtestRegdate(Date ftestRegdate) {
+		this.ftestRegdate = ftestRegdate;
+	}
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public String getTestStatus() {
+		return testStatus;
+	}
+	public void setTestStatus(String testStatus) {
+		this.testStatus = testStatus;
+	}
+	public int getCountStudent() {
+		return countStudent;
+	}
+	public void setCountStudent(int countStudent) {
+		this.countStudent = countStudent;
+	}
+	public int getTestNo() {
+		return testNo;
+	}
+	public void setTestNo(int testNo) {
+		this.testNo = testNo;
+	}
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public double getMtestAvgSco() {
+		return mtestAvgSco;
+	}
+	public void setMtestAvgSco(double mtestAvgSco) {
+		this.mtestAvgSco = mtestAvgSco;
+	}
+	public double getFtestAvgSco() {
+		return ftestAvgSco;
+	}
+	public void setFtestAvgSco(double ftestAvgSco) {
+		this.ftestAvgSco = ftestAvgSco;
+	}
+	@Override
+	public String toString() {
+		return "ExamStatisVO [testNo=" + testNo + ", mtestFile=" + mtestFile + ", ftestFile=" + ftestFile
+				+ ", mtestRegdate=" + mtestRegdate + ", ftestRegdate=" + ftestRegdate + ", mtestAvgSco=" + mtestAvgSco
+				+ ", ftestAvgSco=" + ftestAvgSco + ", opcl=" + opcl + ", testStatus=" + testStatus + ", clCode="
+				+ clCode + ", clName=" + clName + ", clFormat=" + clFormat + ", clDivision=" + clDivision + ", clCate="
+				+ clCate + ", countStudent=" + countStudent + ", clFormatName=" + clFormatName + ", clDivisionName="
+				+ clDivisionName + ", clCateName=" + clCateName + "]";
+	}
+	
+	
+}

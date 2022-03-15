@@ -1,0 +1,68 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.zxing.datamatrix.DataMatrixReader;
+import com.one.dao.ClassStasticsDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.ClassStasticsService;
+
+public class ClassStasticsServiceImpl implements ClassStasticsService{
+
+	private ClassStasticsDAO classStasticsDAO;
+	
+	public void setClassStasticsDAO(ClassStasticsDAO classStasticsDAO) {
+		this.classStasticsDAO = classStasticsDAO;
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectStasticsClassInfoList() throws SQLException {
+		List<ClassStasticsVO> classList = classStasticsDAO.selectselectInfoStasticsClassList();
+		
+		return classList;
+	}
+
+	@Override
+	public Map<String, Object> getAgeSpecificPreferenceData() throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<ClassStasticsVO> listOf20s = classStasticsDAO.selectResultValuesByAge(20);
+		List<ClassStasticsVO> listOf30s = classStasticsDAO.selectResultValuesByAge(30);
+		List<ClassStasticsVO> listOf40s = classStasticsDAO.selectResultValuesByAge(40);
+		List<ClassStasticsVO> listOf50s = classStasticsDAO.selectResultValuesByAge(50);
+		List<ClassStasticsVO> listOf60s = classStasticsDAO.selectResultValuesByAge(60);
+		
+		
+		dataMap.put("listOf20s", listOf20s);
+		dataMap.put("listOf30s", listOf30s);
+		dataMap.put("listOf40s", listOf40s);
+		dataMap.put("listOf50s", listOf50s);
+		dataMap.put("listOf60s", listOf60s);
+		
+		return dataMap;
+	}
+
+	@Override
+	public Map<String, Object> getClassGraphInfo() throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<ClassStasticsVO> graph20sInfo = classStasticsDAO.selectClassGraphInfo(20);
+		List<ClassStasticsVO> graph30sInfo = classStasticsDAO.selectClassGraphInfo(30);
+		List<ClassStasticsVO> graph40sInfo = classStasticsDAO.selectClassGraphInfo(40);
+		List<ClassStasticsVO> graph50sInfo = classStasticsDAO.selectClassGraphInfo(50);
+		List<ClassStasticsVO> graph60sInfo = classStasticsDAO.selectClassGraphInfo(60);
+		
+		dataMap.put("graph20sInfo", graph20sInfo);
+		dataMap.put("graph30sInfo", graph30sInfo);
+		dataMap.put("graph40sInfo", graph40sInfo);
+		dataMap.put("graph50sInfo", graph50sInfo);
+		dataMap.put("graph60sInfo", graph60sInfo);
+		
+		return dataMap;
+	}
+	
+	
+
+}

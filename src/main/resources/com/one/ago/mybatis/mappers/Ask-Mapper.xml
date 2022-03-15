@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Ask-Mapper">
+
+	<sql id="searchAsk">
+		<if test="sortType == 'c'.toString()">
+			AND ASK_SORT = 'A301'
+		</if>
+		<if test="sortType == 's'.toString()">
+			AND ASK_SORT = 'A302'
+		</if>
+		<if test="sortType == 'etc'.toString()">
+			AND ASK_SORT = 'A303'
+		</if>
+		<if test="searchType == 't'.toString()">
+			AND QN_TITLE LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND MEM_ID LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'tw'.toString()">
+			AND (
+					MEM_ID LIKE '%'||#{keyword}||'%'
+					or
+					QN_TITLE LIKE '%'||#{keyword}||'%'
+				)
+		</if>
+	</sql>
+
+	<select id="selectAskList" resultType="ask">
+		SELECT QN_NO
+				,QN_TITLE
+				,QN_CONTENT
+				,QN_ANSWER
+				,QN_REGDATE
+				,MEM_ID
+				,ASK_SORT
+				,CLASS_FORMAT
+				,PRIVACY
+		FROM QUESTIONS
+		WHERE QN_NO IS NOT NULL
+		<include refid="searchAsk" />
+		ORDER BY QN_NO DESC
+	</select>
+
+
+	<select id="selectAskListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM QUESTIONS
+		WHERE QN_NO IS NOT NULL
+		<include refid="searchAsk" />
+		ORDER BY QN_NO DESC
+	</select>
+	
+	<select id="selectMyAskList" resultType="ask">
+		SELECT QN_NO
+				,QN_TITLE
+				,QN_CONTENT
+				,QN_ANSWER
+				,QN_REGDATE
+				,MEM_ID
+				,ASK_SORT
+				,CLASS_FORMAT
+				,PRIVACY
+		FROM QUESTIONS
+		WHERE MEM_ID = '${memId}'
+		AND QN_TITLE LIKE '%'||#{keyword}||'%'
+		<include refid="searchAsk" />
+		ORDER BY QN_NO DESC
+	</select>
+
+
+	<select id="selectMyAskListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM QUESTIONS
+		WHERE MEM_ID = '${memId}'
+		AND QN_TITLE LIKE '%'||#{keyword}||'%'
+		<include refid="searchAsk" />
+		ORDER BY QN_NO DESC
+	</select>
+
+	<select id="selectAskByAskNo" parameterType="int" resultType="ask">
+		SELECT  QN_NO
+				,QN_TITLE
+				,QN_CONTENT
+				,QN_ANSWER
+				,QN_REGDATE
+				,MEM_ID
+				,ASK_SORT
+				,CLASS_FORMAT
+				,PRIVACY
+		FROM QUESTIONS
+		WHERE QN_NO = #{ askNo }
+	</select>
+
+	<update id="updateAnswer">
+		UPDATE QUESTIONS
+			SET
+			QN_ANSWER = #{ qnAnswer }
+		WHERE
+			QN_NO = #{ qnNo }
+	</update>
+
+	<update id="deleteAsk" parameterType="map">
+		DELETE FROM QUESTIONS
+		WHERE
+			QN_NO IS NULL
+		<foreach collection="array" item="item"> 
+			or QN_NO = #{ item } 
+		</foreach>
+
+		
+	</update>
+
+	<update id="insertAsk" parameterType="ask">
+		INSERT INTO QUESTIONS 
+			(	 QN_NO
+				,QN_TITLE
+				,QN_CONTENT
+				,QN_REGDATE
+				,MEM_ID
+				,ASK_SORT
+				,PRIVACY
+			)
+		VALUES 
+			(	#{qnNo}
+				,#{qnTitle}
+				,#{qnContent}
+				,sysdate
+				,#{memId}
+				,#{askSort}
+				,#{privacy}
+			)
+	</update>
+
+	
+	<select id="selectQuestionsSeqNextValue" resultType="int">
+		SELECT SEQ_QUESTIONS.NEXTVAL FROM DUAL
+	</select>
+	
+</mapper>

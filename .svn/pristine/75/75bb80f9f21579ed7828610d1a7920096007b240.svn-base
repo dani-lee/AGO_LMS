@@ -1,0 +1,149 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+<script type="text/x-handlebars-template" id="reply-list-template">
+{{#each .}}
+<div class="card-comment reply-div">
+    <div class="comment-text">
+    	<div class="username" id="username">
+    		<span class="username">{{nickName}}
+    			<div class="float-right dropdown">
+    				<span class="text-muted float-left mr-3">{{prettifyDate frreplyRegdate}}</span> 
+    				<span class="font-weight-bold" href="#" role="button" id="dropdownOption" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:{{VisibleByLoginCheck memId}};"> 
+    					<i class="fas fa-ellipsis-v text-secondary"></i>
+    				</span>
+    				<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right modifyBtn" aria-labelledby="dropdownOption" style="left: inherit; right: 0px;">
+    					<a href="#" class="dropdown-item" onclick="fn_modifyForm(this);">수정</a>
+    					<a href="#" class="dropdown-item" onclick="fn_removeReply(this);">삭제</a>
+    				</div>
+    			</div>
+    
+    		</span>
+    	</div>
+    	<span id="replyContent" style="display:block;">{{frreplyContent}}</span>
+    </div>
+</div>
+{{/each}}
+</script>
+
+<script type="text/x-handlebars-template"  id="reply-pagination-template" >
+<li class="paginate_button page-item">
+	<a href="1" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">
+		<i class='fas fa-angle-double-left'></i>
+	</a>
+</li>
+<li class="paginate_button page-item">
+	<a href="{{#if prev}}{{prevPageNum}}{{/if}}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">
+		<i class='fas fa-angle-left'></i>
+	</a>
+</li>
+{{#each pageNum}}
+<li class="paginate_button page-item {{signActive this}} ">
+	<a href="{{this}}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">
+		{{this}}
+	</a>
+</li>
+{{/each}}
+
+<li class="paginate_button page-item ">
+	<a href="{{#if next}}{{nextPageNum}}{{/if}}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">
+		<i class='fas fa-angle-right'></i>
+	</a>
+</li>
+<li class="paginate_button page-item">
+	<a href="{{realEndPage}}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">
+		<i class='fas fa-angle-double-right'></i>
+	</a>
+</li>
+</script>
+
+
+<script>
+window.onload=function(){
+	getPage("<%=request.getContextPath()%>/manager/frreply/${freeBoard.freeNo}/"+replyPage);
+
+	$('ul.pagination').on('click', 'li a', function(event){
+		//alert('ul click');
+		if($(this).attr("href")){
+			replyPage=$(this).attr("href");
+			getPage("<%=request.getContextPath()%>/manager/frreply/${freeBoard.freeNo}/"+replyPage);
+		}
+		return false;
+	});
+}
+
+let replyPage = 1;
+
+function printData(replyArr, target, templateObject){
+	let template = Handlebars.compile(templateObject.html());
+	let html = template(replyArr);
+	$('.reply-div').remove();
+	target.after(html);
+}
+
+function printPagination(pageMaker, target, templateObject) {
+    // array 사이즈 잡기(10)
+    var pageNum = new Array(pageMaker.endPage-pageMaker.startPage+1);
+
+    for(var i=0;i<pageMaker.endPage-pageMaker.startPage+1;i++){
+       pageNum[i]=pageMaker.startPage+i;
+    }
+
+    //pageNum 속성으로 pageNum값이 들어감
+    pageMaker.pageNum=pageNum;
+    pageMaker.prevPageNum=pageMaker.startPage-1;
+    pageMaker.nextPageNum=pageMaker.endPage+1;
+
+    var template=Handlebars.compile(templateObject.html());
+    var html = template(pageMaker);
+    target.html("").html(html);
+ }
+
+
+function getPage(pageInfo){
+	$.ajax({
+		url : pageInfo,
+		type : "get",
+		dataType : "json",
+		success : function(data){
+			printData(data.freeReplyList, $('.replies'), $('#reply-list-template'));
+			printPagination(data.pageMaker, $('ul#pagination'), $('#reply-pagination-template'));
+			parent.resize(window.parent.document.getElementById("ifr"));
+
+		},
+		error:function(error){
+			AjaxErrorSecurityRedirectHandler(error.status);
+		}
+	});
+}
+
+Handlebars.registerHelper({
+	"prettifyDate" : function(timeValue){
+		let dateObj = new Date(timeValue);
+		let year = dateObj.getFullYear();
+		let month = dateObj.getMonth() + 1;
+		let date = dateObj.getDate();
+		return year + "/" + month + "/" + date;
+	},
+	"VisibleByLoginCheck" : function(replyer){
+		let result = "none";
+		if(replyer == "${loginUser.memId}") result="visible";
+		return result;
+	},
+	"signActive" : function(pageNum){
+		if(pageNum == replyPage) return 'active';
+	}
+});
+
+function fn_modifyForm(aTag){
+	let modifyInput = $(aTag).parents('div.comment-text').find('#modifyInput');
+	let replyContent = $(aTag).parents('div.comment-text').find('#replyContent');
+	let modifyBtn = $(aTag).parents('div.comment-text').find('#modifyBtn');
+	
+	modifyInput.css("display","block")
+	replyContent.css("display","none")
+	modifyBtn.css("display","block")
+}
+</script>

@@ -1,0 +1,42 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.dao.ClassStasticsDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public class ClassStasticsDAOImpl implements ClassStasticsDAO{
+
+	private SqlSession session;
+	
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectselectInfoStasticsClassList() throws SQLException {
+		return session.selectList("Stastics-Mapper.selectInfoStasticsClass");
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectClassGraphInfo(int age) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectClassGraphInfoByAges", age);
+	}
+	
+	@Override
+	public List<ClassStasticsVO> selectResultValuesByAge(int age) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectResultValuesByAge", age);
+	}
+
+	@Override
+	public List<ClassStasticsVO> selectClassGraphInfoByDpId(String dpId) throws SQLException {
+		return session.selectList("Stastics-Mapper.selectClassGraphInfoByDp", dpId);
+	}
+
+
+
+
+}

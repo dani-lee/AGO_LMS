@@ -1,0 +1,29 @@
+package com.one.command;
+
+public class CriteriaDpCommand extends Criteria{
+	private String dpId;
+	private int opcl;
+	private String favType;
+	
+	
+	public String getDpId() {
+		return dpId;
+	}
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public String getFavType() {
+		return favType;
+	}
+	public void setFavType(String favType) {
+		this.favType = favType;
+	}
+	
+	
+}

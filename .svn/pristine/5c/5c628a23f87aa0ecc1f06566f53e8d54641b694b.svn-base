@@ -1,0 +1,19 @@
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import com.one.utils.CSVParser;
+
+public class test {
+	public static void main(String[] args) {
+		String logPath = "c:/log/login_log/";
+		String fileName = "login_user_log.csv";
+		File filePath = new File (logPath, fileName);
+
+		List<Map<String, String>> dataCSV = CSVParser.parse(filePath.getAbsolutePath());
+
+		for(Map<String, String> list : dataCSV) {
+			System.out.println(list);
+		}
+	}
+}

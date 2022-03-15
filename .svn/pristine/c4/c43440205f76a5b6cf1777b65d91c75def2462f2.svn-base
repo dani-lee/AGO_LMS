@@ -1,0 +1,249 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/jstree/style.min.css" />
+<script src="<%=request.getContextPath()%>/resources/js/jstree.min.js"></script>
+</head>
+
+<title></title>
+
+<body>
+	<div class="content-wrapper m-0" style="min-width:1280px; background-color:#ffffff;">
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">쪽지발송</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">운영관리</a>
+						</li>
+						<li class="breadcrumb-item active">쪽지</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+
+			<div class="row row-card-no-pd">
+				<div class="col-6 card card-secondary card-outline" style="height:600px; overflow:scroll;">
+					<div class="card-header d-flex">
+					 <div id="search">
+                        <div class="input-group">
+                            <input type="search" id="memSearch" class="form-control form-control-sm" placeholder="">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sm btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+					</div>
+	                <div class="ml-auto">
+	                  <input type="button" class="btn btn-secondary btn-sm" value="추가" onclick="insert_receiver();">
+	                  </div>
+	                </div>
+					<div class="card-body table-responsive">
+						<div id="recivers" class="demo"></div>
+						<div id="opclList" class="demo"></div>
+					</div>
+					<!-- /.card-body -->
+				</div>
+
+				<div class="col-md-6">
+					<form id="sendMsgForm" action="send.do" method="post">
+					<div class="card">
+						<div class="card-body">
+							<div class="form-group row">
+			                    <label for="receiver" class="col-sm-2 col-form-label">받는사람</label>
+			                    <div class="col-sm-10">
+			                      <textarea class="form-control" id="receiver" rows="2" placeholder="" style="resize: none;"></textarea>
+								  <input type="hidden" name="memEmail" id="memEmail" value="">
+			                    </div>
+			                  </div>
+
+							<br>
+
+							<div class="msgContent">
+								<textarea class="form-control" name="msgContent" id="content" rows="5" placeholder="" maxlength="250" style="resize: none;"></textarea>
+								<p class="text-muted float-right" id="checkRemain">[250]</p>
+							</div>
+						</div>
+						<div class="card-footer">
+							<div class="float-right">
+								<button class="btn btn-secondary btn-sm" type="button" onclick="fn_sendMsg();">쪽지 발송</button>
+								<button class="btn btn-default btn-sm" type="button" onclick="location.href='list.do'">취소</button>
+							</div>
+						</div>
+					</div>
+					</form>
+				</div>
+
+
+			</div>
+
+		</div>
+	</section>
+	</div>
+
+
+
+	<script>
+		$('textarea[name="msgContent"]').on('keyup', function() {
+			// 남은 글자 수를 구한다.
+			var letterLength = $(this).val().length;
+			var remain = 250 - letterLength;
+
+			// 문서 객체에 입력한다.
+			$('#checkRemain').html(remain);
+
+			if(remain <= 0){
+				alert("250자까지 입력가능합니다");
+				return;
+			}
+		});
+	</script>
+
+	<script>
+		$('#recivers').on('select_node.jstree', function(e, data) {
+			if (data.event) {
+				data.instance.select_node(data.node.children_d);
+			}
+		}).on('deselect_node.jstree', function(e, data) {
+			if (data.event) {
+				data.instance.deselect_node(data.node.children_d);
+				data.instance.close_node(data.node.id);
+			}
+		}).jstree(
+				{
+					'core' : {
+						'data' : {
+							'url' : 'msgMemberList'
+						}
+
+					},
+
+					"plugins" : [ "massload", "wholerow", "checkbox", "sort",
+							"search" ]
+				});
+
+		$('#opclList').on('select_node.jstree', function(e, data) {
+			if (data.event) {
+				data.instance.select_node(data.node.children_d);
+			}
+		}).on('deselect_node.jstree', function(e, data) {
+			if (data.event) {
+				data.instance.deselect_node(data.node.children_d);
+				data.instance.close_node(data.node.id);
+			}
+		}).jstree(
+				{
+					'core' : {
+						'data' : {
+							'url' : 'msgClassList'
+						}
+
+					},
+
+					"plugins" : [ "massload", "wholerow", "checkbox", "sort",
+							"search" ]
+				});
+
+		function insert_receiver() {
+			reciverSelect = $('#recivers a.jstree-clicked');
+			classSelect = $('#opclList a.jstree-clicked');
+			select = $.merge(reciverSelect, classSelect);
+
+
+			for (i = 0; i < select.length; i++) {
+				if (!(reciverSelect[i].id.indexOf("ROOT") < 0)){
+					continue;
+				}
+
+				let textAreaForReceiver = document.querySelector('textarea[id="receiver"]');
+				let inputEmail = document.querySelector('input[id="memEmail"]');
+
+				if (textAreaForReceiver.value.indexOf(reciverSelect[i].text) >= 0) {
+					continue;
+				}
+
+				console.log(textAreaForReceiver);
+
+				let memId = reciverSelect[i].id.substring(0,reciverSelect[i].id.lastIndexOf('_anchor'))
+				if(memId.indexOf("&&") >0){
+					memId = memId.substring(memId.indexOf("&&") + 2);
+				}
+				if(!textAreaForReceiver.value){
+					textAreaForReceiver.value += reciverSelect[i].text;
+				}else{
+					textAreaForReceiver.value += ","+reciverSelect[i].text;
+				}
+				inputEmail.value += memId  + ",";
+
+				console.log(inputEmail.value);
+			}
+		}
+
+		function delete_class() {
+			$('input:checkbox[name="selectList"]').each(function() {
+				if (this.checked) {
+					this.parentNode.remove();
+				}
+			});
+		}
+
+		function fn_sendMsg(){
+			let textAreaForReceiver = document.querySelector('textarea[id="receiver"]');
+			let textAreaForContent = document.querySelector('textarea[name="msgContent"]');
+
+			if(!textAreaForReceiver.value){
+				alert("받는사람을 입력해주세요");
+				return;
+			}
+
+			if(!textAreaForContent.value){
+				alert("쪽지 내용을 입력해주세요");
+				return;
+			}
+
+			let check = confirm("쪽지를 발송하시겠습니까?");
+			if(check){
+				document.querySelector('Form[id="sendMsgForm"]').submit();
+			}
+		}
+		window.onload = function() {
+			$("#recivers").unbind('dblclick');
+
+			let memTo = false;
+			$('#memSearch').keyup(function() {
+				if (memTo) {
+					clearTimeout(memTo);
+				}
+				memTo = setTimeout(function() {
+					var v = $('#memSearch').val();
+					$('#recivers').jstree(true).search(v);
+					$('#opclList').jstree(true).search(v);
+				}, 250);
+			});
+
+		}
+	</script>
+
+</body>

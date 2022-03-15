@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FreeBoard-Mapper">
+	
+	<sql id="sort">
+		<if test="sortType == 'r'.toString()">
+			and FREE_REPORT_CNT > 0
+		</if>
+	</sql>
+	
+	<sql id="search">
+		<if test="searchType == 'a'.toString()">
+			AND (FREE_TITLE LIKE '%'||#{keyword}||'%'
+			OR FREE_CONTENT LIKE '%'||#{keyword}||'%'
+			OR MEM_ID LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="searchType == 't'.toString()">
+			AND FREE_TITLE LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND FREE_CONTENT LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND MEM_ID LIKE '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<select id="selectFreeBoardList" parameterType="string" resultType="freeBoard">
+		SELECT
+			  FREE_NO
+			, FREE_TITLE
+			, FREE_CONTENT
+			, FREE_REGDATE
+			, FREE_VIEW_CNT
+			, FREE_REPORT_CNT
+			, MEM_ID
+			, NICK_NAME
+		FROM
+		FREE_BOARD
+		WHERE 
+		FREE_NO is not null
+		<include refid="search" />
+		ORDER BY 
+		FREE_REGDATE DESC
+	</select>
+
+	<select id="selectFreeBoardSortList" parameterType="string" resultType="freeBoard">
+		SELECT
+			  FREE_NO
+			, FREE_TITLE
+			, FREE_CONTENT
+			, FREE_REGDATE
+			, FREE_VIEW_CNT
+			, FREE_REPORT_CNT
+			, MEM_ID
+			, NICK_NAME
+		FROM
+		FREE_BOARD
+		WHERE 
+		FREE_NO is not null
+		<include refid="sort" />
+		ORDER BY 
+		FREE_REGDATE DESC
+	</select>
+	
+	<select id="selectFreeBoardByFreeNo" parameterType="int" resultType="freeBoard">
+		SELECT
+			  FREE_NO
+			, FREE_TITLE
+			, FREE_CONTENT
+			, FREE_REGDATE
+			, FREE_VIEW_CNT
+			, FREE_REPORT_CNT
+			, MEM_ID
+			, NICK_NAME
+		FROM
+		FREE_BOARD
+		WHERE 
+		FREE_NO = #{freeNo}
+	</select>
+	
+	<select id="selectFreeBoardListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM 
+			   FREE_BOARD
+		 WHERE FREE_NO IS NOT NULL
+		 <include refid="search" />
+	</select>
+	
+	<update id="increaseViewCnt" parameterType="int">
+		UPDATE
+			   FREE_BOARD
+		   SET
+			   FREE_VIEW_CNT = FREE_VIEW_CNT+1
+		 WHERE
+			   FREE_NO = #{freeNo}
+	</update>
+
+	<select id="selectFreeBoardSeqNext" resultType="int">
+		SELECT
+			   FREE_BOARD_SEQ.NEXTVAL AS FREE_NO 
+		  FROM DUAL
+	</select>
+	
+	<update id="deleteFreeBoard" parameterType="int">
+		DELETE
+		  FROM
+			   FREE_BOARD
+		 WHERE
+			   FREE_NO = #{freeNo}
+	</update>
+	
+	<update id="insertFreeBoard">
+		INSERT INTO 
+		FREE_BOARD (  FREE_NO
+					, FREE_TITLE
+					, FREE_REGDATE
+					, FREE_VIEW_CNT
+					, FREE_REPORT_CNT
+					, MEM_ID
+					, FREE_CONTENT
+					, NICK_NAME ) 
+		    VALUES (  FREE_BOARD_SEQ.nextval
+		    		, #{freeTitle}
+		    		, SYSDATE
+		    		, 0
+		    		, 0
+		    		, #{memId}
+		    		, #{freeContent}
+		    		, #{nickName})
+	</update>
+	
+	<update id="increaseReportCnt" parameterType="int">
+		UPDATE
+			   FREE_BOARD
+		   SET
+			   FREE_REPORT_CNT = FREE_REPORT_CNT+1
+		 WHERE
+			   FREE_NO = #{freeNo}
+	</update>
+	
+	<update id="updateFreeBoard">
+		UPDATE FREE_BOARD
+		    SET
+		       FREE_TITLE = #{freeTitle}
+			 , FREE_CONTENT = #{freeContent}
+		WHERE
+		    FREE_NO = #{freeNo}
+	</update>
+	
+</mapper>

@@ -1,0 +1,198 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="dpName" value="${dataMap.dpName}" />
+<c:set var="memName" value="${dataMap.memName }" />
+<c:set var="report" value="${dataMap.report }" />
+<c:set var="classInfo" value="${dataMap.classInfo}" />
+<c:set var="certificate" value="${dataMap.certificate}" />
+<c:set var="memCertificate" value="${dataMap.memCertificate}" />
+
+<head>
+<meta charset="UTF-8">
+<title>교육이수보고서</title>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/report.css">
+</head>
+<body>
+
+	<div>
+		
+		<div id="onlyShow" class="paper">
+			
+			<div class="content">
+				<div class="row mb-3">
+					<div class="mr-5 p-5" style="width: 357px;">
+						<span class="text-center text-bold" style="font-size: 35px;">교육이수보고서</span>
+					</div>
+					<div class="ml-4 mt-3" style="width: 225px;">
+						<table border="1">
+							<tr>
+								<td class="text-center">교육담당</td>
+								<td class="text-center">부서장</td>
+							</tr>
+							<tr>
+								<td style="width: 110px; height: 90px;">
+									<div id="agoStamp" data-id="agoStamp" style="width: 90px; height: 90px;" class="ml-2"></div>
+								</td>
+								<td style="width: 110px; height: 90px;"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<form action="intReportRegist" role="reportForm" enctype="multipart/form-data" method="post">
+					<table border="1">
+						<tbody>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" rowspan="3" colspan="1">교육수료자</td>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" colspan="1">부서명</td>
+								<td class="p-2" style="width: 180px;" colspan="3">${dpName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">직위</td>
+								<td class="p-2" style="width: 120px;" colspan="3">${report.positionName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">성명</td>
+								<td class="p-2" style="width: 150px;" colspan="3">${memName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육명</td>
+								<td class="p-2" style="width: 390px;" colspan="2">${classInfo.clName}</td>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" colspan="1">교육분류</td>
+								<td colspan="1" class="p-2" style="width: 130px;">${classInfo.clCate}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 130px;" colspan="1">수료날짜</td>
+								<td class="p-2" style="width: 120px;" colspan="4">
+									${classInfo.ctfDate}
+								</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육내용</td>
+								<td id="printEduContent" style="height: 380px; vertical-align : top; padding: 10px;" colspan="4">
+									${report.eduContent }
+								</td>
+							</tr>
+							<tr style="margin">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">소감</td>
+								<td id="printEduReview" style="height: 380px; vertical-align : top; padding: 10px;" colspan="4" >
+									${report.eduReview }
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="row p-0 pl-5">
+				<div class="ml-2 col-7 p-0"></div>
+				<button type="button" class="col-2 ml-4 btn btn-block btn-primary" onclick="buttonClick(${report.intNo}, true)">승인</button>
+				<button type="button" class="col-2 m-0 ml-2 btn btn-block btn-danger" onclick="buttonClick(${report.intNo}, false)">반려</button>
+			</div>
+		</div>
+		<div id="onlyShow" class="paper" style=" background-image: url('/ago/user/departmentHead/getImg.do?fileNM=/${certificate.ctfDesign}'); background-size: 793.69px 1387.08px;">
+			<div class="container-fluid capture_area" id="pdf_wrap" style="padding: 30px; padding-left: 40px; ">
+				<div class="row mt-5" >
+					<div class="col-12 float-left mt-5" style="font-size: 18px; font-family: 'Nanum Myeongjo', serif;">
+						제
+						<fmt:formatDate value="${memCertificate.ctfDate}" pattern="yyMMdd" />
+						-
+						<fmt:formatNumber value="${memCertificate.countPrint}" pattern="000000" />
+						호
+					</div>
+					<br>
+					<br>
+					<div class="col-12 text-center" style="font-size: 45px; font-family: 'Nanum Myeongjo', serif;">
+						<span class="mt-5 font-weight-bold" >${certificate.ctfTitle}</span>
+					</div>
+					<br>
+					<table>
+						<tbody>
+							<tr style="width: 1000px; height: 50px;">
+								<td></td>
+							</tr>
+							<tr style="height: 65px;">
+								<td style="width: 150px;">
+									<span class="font-weight-bold" style="width: 140px; font-size: 18px; font-family: 'Nanum Myeongjo', serif;"> 성명(생년월일) : </span>
+								</td>
+								<td class="pl-2">
+									<span style="font-size: 18px; font-family: 'Nanum Myeongjo', serif;">${memCertificate.memName}(<fmt:formatDate value="${memCertificate.memBir}" pattern="yyMMdd" />)</span>
+								</td>
+							</tr>
+							<tr style="height: 65px;">
+								<td style="width: 120px;">
+									<div class="float-right" style="font-size: 18px; font-family: 'Nanum Myeongjo', serif;">
+										<span class="pl-4 font-weight-bold">교육과정명 :</span>
+									</div>
+								</td>
+								<td class="pl-2">
+									<span style="font-size: 18px; font-family: 'Nanum Myeongjo', serif;">${memCertificate.clName} </span>
+								</td>
+							</tr>
+							<tr style="height: 65px;">
+								<td>
+									<span class="font-weight-bold" style="width: 140px; font-size: 18px; font-family: 'Nanum Myeongjo', serif;"> 교육기간(시간) :</span>
+								</td>
+								<td class="pl-2">
+									<span style="font-size: 18px; font-family: 'Nanum Myeongjo', serif;"> ${memCertificate.clCreditTime}시간 </span>
+								</td>
+							</tr>
+							<tr style="height: 300px;">
+								<td colspan="5">
+									<span style="font-size: 23px; font-family: 'Nanum Myeongjo', serif;">${certificate.ctfContent}</span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="5">
+									<div class="float-right mt-3" style="font-size: 28px; font-family: 'Nanum Myeongjo', serif;">
+										<fmt:formatDate value="${today}" pattern="yyyy년 MM월 dd일" />
+									</div>
+								</td>
+							</tr>
+							<tr style="height: 100px;">
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="5" class="text-center mt-4 pt-5">
+									<span class="mt-5 mr-1" style="font-size: 35px; font-family: 'Nanum Myeongjo', serif;">${certificate.retName}</span>
+									<div data-id="${certificate.ctfSeal}" style="width: 120px; height: 120px; position: relative; right: -450px; top: -80px;"></div>
+								</td>
+							</tr>
+		
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+	<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	
+		<!-- 이미지 불러오기 -->
+	<script type="text/javascript">
+	window.onload=function(){
+		ReportPictureThumb(document.querySelector('#agoStamp'), 'agoStamp.jpg', '<%=request.getContextPath()%>');
+		UserCertificatePictureThumb(document.querySelector('[data-id="${certificate.ctfSeal}"]'), '${certificate.ctfSeal}', '<%=request.getContextPath()%>');
+	}
+	</script>
+	<script type="text/javascript">
+		function buttonClick(no, check) {
+			$.ajax({
+				url : "buttonClick?reType=I&no="+no+"&check="+check,
+				type : "get",
+				dataType : "text",
+				success : function(data){
+					 opener.location.reload();
+					 window.close();
+				},
+				error:function(error){
+					AjaxErrorSecurityRedirectHandler(error.status);
+				}
+			});
+		}
+		
+	</script>
+
+</body>

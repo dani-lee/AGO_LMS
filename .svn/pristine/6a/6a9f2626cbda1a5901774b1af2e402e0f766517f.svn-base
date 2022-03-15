@@ -1,0 +1,104 @@
+<%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<c:set var="cri" value="${pageMaker.cri }" />
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+
+			<div class="col-md-12">
+				<!-- Box Comment -->
+				<div class="card-widget">
+					<div class="card-header">
+						<div class="buttons row">
+							<div class="ml-2">
+								<button type="button" class="btn btn-tool" onclick="fn_delete();">
+									<i class="fas fa-eraser text-danger"></i><span class="text-danger font-weight-bold">&nbsp;삭제&nbsp;</span>
+								</button>
+							</div>
+							<button class="btn btn-default btn-sm float-right ml-auto mr-2" onclick="location.href='list.do'">
+								<i class="la la-angle-double-left"></i> &nbsp;목록
+							</button>
+						</div>
+						<br>
+						<div class="user-block col-12">
+							<div class="row">
+								<p class="ml-2 text-secondary">토론게시판</p>
+							</div>
+							<p class="h5">${debateBoard.deTitle }</p>
+							<p class="text-secondary m-0">
+								<b>${debateBoard.memId }</b>
+							</p>
+
+							<div class="d-block">
+								<p class="text-secondary float-left">
+									<fmt:formatDate value="${debateBoard.deRegdate}" pattern="yyyy-MM-dd" />
+									&nbsp;| &nbsp;
+								</p>
+								<p class="text-secondary float-left">조회&nbsp;${debateBoard.deViewCnt}</p>
+								<div class="justify-content-end float-right" id="tools">
+									<a href="#replies-wrapper">
+										<button type="button" class="btn btn-tool" data-spy="scroll">
+											<i class="far fa-comment-dots mr-2"></i>댓글&nbsp;<span class="font-weight-bold">${debateBoard.replyCnt }</span>
+										</button>
+									</a>
+									<button type="button" class="btn btn-tool" onclick="fn_report(${debateBoard.dboardNo});">
+										<i class="fas fa-bullhorn mr-2"></i>신고 &nbsp;<span class="font-weight-bold reportCnt">${debateBoard.deReportCnt }</span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body">
+						<div class="content" style="height: 450px;">${debateBoard.deContent}</div>
+					</div>
+					<!-- /.card-body -->
+					<!--댓글-->
+					<div class="card-footer card-comments replies-wrapper" id="replies-wrapper">
+						<!--댓글-->
+						<div class="replies">
+						
+						</div>
+						<c:if test="${debateBoard.replyCnt ne 0}">
+							<div class="card-body text-center">
+								<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+							</div>
+						</c:if>
+					</div>
+					<!--/댓글-->
+				</div>
+			</div>
+		</div>
+	</section>
+	<%@ include file="./debateReply_js.jsp"%>
+
+	<form role="form">
+		<input type="hidden" name="dboardNo" value="${debateBoard.dboardNo }" />
+	</form>
+
+	<script>
+		function fn_remove() {
+			let form = document.querySelector('form[role="form"]');
+			let check = confirm("정말 삭제하시겠습니까?");
+			if (check) {
+
+				form.setAttribute("action", "remove.do");
+				form.setAttribute("method", "post");
+
+				form.submit();
+			}
+		}
+	</script>
+</body>

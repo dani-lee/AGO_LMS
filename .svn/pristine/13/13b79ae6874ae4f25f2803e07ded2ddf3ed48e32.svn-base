@@ -1,0 +1,48 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.dao.AdminDAO;
+import com.one.dto.AdminVO;
+import com.one.service.AdminService;
+
+public class AdminServiceImpl implements AdminService {
+
+	AdminDAO adminDAO;
+
+	public void setAdminDAO(AdminDAO adminDAO) {
+		this.adminDAO = adminDAO;
+	}
+
+	@Override
+	public AdminVO getAdmin(String login_id) throws SQLException {
+		AdminVO admin = new AdminVO();
+		admin.setAdminId("admin");
+		admin.setAdminPwd("admin");
+		admin.setAdminEmail("admin@gmail.com");
+		return admin;
+	}
+
+	@Override
+	public Map<String, Object> selectMemberList(Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		dataMap.put("employeeList", adminDAO.selectEmployeeList(cri));
+		dataMap.put("managerList", adminDAO.selectManagerList());
+		dataMap.put("cri", cri);
+		return dataMap;
+	}
+
+	@Override
+	public void updateAuthority(String[] memId, boolean check) throws SQLException {
+		if(check) {
+			adminDAO.updateManagerAuthority(memId);
+		}else {
+			adminDAO.updateMemberAuthority(memId);
+		}
+		
+	}
+}

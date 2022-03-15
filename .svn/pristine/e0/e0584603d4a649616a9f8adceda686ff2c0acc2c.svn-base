@@ -1,0 +1,295 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="attachDoc" value="${fn:split(extReport.attachDoc,'$$')[1]}" />
+<head>
+<meta charset="UTF-8">
+<title>교육이수보고서</title>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/report.css">
+</head>
+<body>
+
+	<div>
+		<div>
+			<button class="col-2 ml-3 mt-3 btn btn-default" id="printReport" onclick="print_report();">출력하기</button>
+		</div>
+
+		<div id="onlyPrint" class="paper">
+			<div class="content" style="padding-left: 50px;">
+				<div class="row mb-3" style="height: 130px;">
+					<div class="mr-5 pt-4 pl-5" style="width: 357px;">
+						<span class="text-center text-bold" style="font-size: 35px;">교육이수보고서</span>
+					</div>
+					<div style="width: 225px; margin-left: 120px;">
+						<table border="1">
+							<tr>
+								<td class="text-center">교육담당</td>
+								<td class="text-center">부서장</td>
+							</tr>
+							<tr>
+								<td style="width: 110px; height: 90px;">얘는 걍 도장 박아놓는거 어떤가염?</td>
+								<td style="width: 110px; height: 90px;"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<form action="" enctype="multipart/form-data">
+					<table border="1">
+						<tbody>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" rowspan="3" colspan="1">교육수료자</td>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" colspan="1">부서명</td>
+								<td class="p-2" style="width: 180px;" colspan="3">${extReport.dpName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">직위</td>
+								<td class="p-2" style="width: 120px;" colspan="3">${extReport.positionName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">성명</td>
+								<td class="p-2" style="width: 150px;" colspan="3">${extReport.memName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육명</td>
+								<td class="p-2" id="clName" style="width: 430px; vertical-align: top; padding: 10px;" colspan="2">${extReport.clName}</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 130px;" colspan="1">수료날짜</td>
+								<td class="p-2" id="ctfDate" style="width: 120px; vertical-align: top; padding: 10px;" colspan="4"></td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육내용</td>
+								<td class="p-2" id="printEduContent" style="height: 380px; vertical-align: top; padding: 10px;" colspan="4"></td>
+							</tr>
+							<tr style="">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">소감</td>
+								<td class="p-2" id="printEduReview" style="height: 380px; vertical-align: top; padding: 10px;" colspan="4"></td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">수료증</td>
+								<td class="p-2" id="attachDoc" colspan="4">${attachDoc}</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+
+		<div id="onlyShow" class="paper">
+			<div class="content">
+				<div class="row mb-3">
+					<div class="mr-5 p-5" style="width: 357px;">
+						<span class="text-center text-bold" style="font-size: 35px;">교육이수보고서</span>
+					</div>
+					<div class="ml-4 mt-3" style="width: 225px;">
+						<table border="1">
+							<tr>
+								<td class="text-center">교육담당</td>
+								<td class="text-center">부서장</td>
+							</tr>
+							<tr>
+								<td style="width: 110px; height: 90px;">얘는 걍 도장 박아놓는거 어떤가염?</td>
+								<td style="width: 110px; height: 90px;"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<form action="extReportRegist.do" enctype="multipart/form-data" role="reportForm" method="post">
+					<table border="1">
+						<tbody>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" rowspan="3" colspan="1">교육수료자</td>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 100px;" colspan="1">부서명</td>
+								<td class="p-2" style="width: 180px;" colspan="3">
+								<input type="hidden" name="dpId" value="${extReport.dpId}">
+								${extReport.dpName}
+								</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">직위</td>
+								<td class="p-2" style="width: 120px;" colspan="3">
+								<input type="hidden" name="positionId" value="${extReport.positionId}">
+								${extReport.positionName}
+								</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">성명</td>
+								<td class="p-2" style="width: 150px;" colspan="3">
+								<input type="hidden" name="memName" value="${extReport.memName}">
+								${extReport.memName}
+								</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육명</td>
+								<td class="p-2" style="width: 513px;" colspan="2">
+								<input type="hidden" name="clName" value="${extReport.clName}">
+								${extReport.clName}
+								</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey; width: 130px;" colspan="1">수료날짜</td>
+								<td class="p-2" style="width: 120px;" colspan="4">
+									<input class="form-control" type="date" name="insertCtfDate" style="width: 100%; border: none; border-right: 0px; border-top: 0px; boder-left: 0px; boder-bottom: 0px;">
+								</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">교육내용</td>
+								<td style="height: 380px;" colspan="4">
+									<textarea class="form-control" name="eduContent" style="width: 100%; height: 95%; font-size:12px; border: none; resize: none;" rows="10" cols=""></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">소감</td>
+								<td style="height: 380px;" colspan="4">
+									<textarea class="form-control" name="eduReview" style="width: 100%; height: 95%; font-size:12px; border: none; resize: none;" rows="10" cols=""></textarea>
+								</td>
+							</tr>
+							<tr class="trHeight">
+								<td class="font-weight-bold text-center" style="background-color: lightgrey;" colspan="1">수료증</td>
+								<td colspan="4" class="form-group">
+									<div class="custom-file">
+										<div class="row m-0">
+											<input id="attachDocFileName" class="form-control-file col-8" type="file" name="attachDoc" value="${attachDoc}"/>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<button class="btn btn-primary" style="width: 140px; float: right; margin-top: 30px;" type="submit" onclick="report_save();">제 출</button>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		function print_report() {
+			alert("여기서 데이터 넣어줘야돼....");
+			
+			let form = document.querySelector('form[role="reportForm"]');
+			var ctfDate = form.ctfDate.value;
+			var eduContent = form.eduContent.value;
+			var eduReview = form.eduReview.value;
+			document.getElementById('ctfDate').innerText=ctfDate;
+			document.getElementById('printEduContent').innerText=eduContent;
+			document.getElementById('printEduReview').innerText=eduReview;
+			window.print();
+		}
+		
+		function report_save() {
+			let form = document.querySelector('form[role="reportForm"]');
+			var eduContent = form.eduContent.value;
+			var eduReview = form.eduReview.value;
+			
+			var files=$('input[name="attachDoc"]');
+			console.log(files);
+	 		for(var file of files){
+				console.log(file.name+" : "+file.value);
+				if(file.value==""){
+					alert("수료증을 첨부하지 않으면 제출할 수 없습니다.");
+					file.focus();
+					file.click();
+					return;
+				}
+			}
+	 		
+	 		if(!eduContent){
+				alert("교육내용을 작성해주세요.");
+				return;
+			}
+			if(!eduReview){
+				alert("교육소감을 작성해주세요.");
+				return;
+			}
+			
+			if(confirm("이대로 제출하시겠습니까?")){
+				form.submit();
+			}
+			
+		}
+		
+		// ########################################################################################################
+		
+		// <!-- 수료증 디자인 -->
+		let ctfDesignFormData = "";
+		function ctfDesign_go() {
+			ctfDesignFormData = new FormData($('form[role="ctfDesignForm"]')[0]);
+			let form = $('form[role="ctfDesignForm"]');
+			let picture = form.find('[name=pictureFile]')[0];
+
+			console.log(picture.value); // 전체경로
+			console.log(picture.files[0].name); // 파일명
+
+			// 이미지 확장자 jpg 확인
+			let fileFormat = picture.value.substr(picture.value.lastIndexOf('.') + 1)
+					.toUpperCase();
+			if (!(fileFormat == "JPG" || fileFormat == "JPEG")) {
+				alert("이미지는 jpg/jpeg 형식만 가능합니다.");
+				picture.value = "";
+				return;
+			}
+
+			// 이미지 파일 용량 체크
+			if (picture.files[0].size > 1024 * 1024 * 1) {
+				alert("사진 용량은 1MB 이하만 가능합니다.");
+				picture.value = "";
+				return;
+			}
+
+			// 업로드 확인변수 초기화(사진 변경)
+			form.find('[name="ctfDesignCheckUpload"]').val(0);
+
+			document.getElementById('ctfDesignFileName').value = picture.files[0].name;
+
+			if (picture.files && picture.files[0]) {
+				let reader = new FileReader();
+				reader.onload = function(e) {
+					$('div#ctfDesignView').css({
+						'background-image' : 'url(' + e.target.result + ')',
+						'background-position' : 'center',
+						'background-size' : 'cover',
+						'background-repeat' : 'no-repeat'
+					});
+				}
+				reader.readAsDataURL(picture.files[0]);
+			}
+		}
+		
+// 		function ctfDesign_upload_go() {
+// 			if (!$('form[role="ctfDesignForm"] input[name="pictureFile"]').val()) {
+// 				alert("사진을 선택하세요");
+// 				$('input[name="pictureFile"]').click();
+// 				return;
+// 			}
+// 			if ($('input[name="ctfDesignCheckUpload"]').val() == 1) {
+// 				alert("이미 업로드 된 사진입니다.");
+// 				return;
+// 			}
+
+// 			$.ajax({
+// 				url : 'picture',
+// 				data : ctfDesignFormData,
+// 				type : 'post',
+// 				processData : false,
+// 				contentType : false,
+// 				success : function(data) {
+// 					// 업로드 확인 변수 세팅
+// 					$('input[name="ctfDesignCheckUpload"]').val(1);
+
+// 					// 저장된 파일명 저장
+// 					$('input#oldCtfDesignFile').val(data); // 변경시 삭제될 파일명
+// 					$('form[role="form"] input[name="ctfDesign"]').val(data);
+// 					alert("사진이 업로드 되었습니다.");
+// 				},
+// 				error : function(error) {
+// 					// alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+// 					AjaxErrorSecurityRedirectHandler(error.status);
+// 					console.log(error.status);
+// 				}
+// 			})
+// 		}
+	</script>
+
+</body>
+

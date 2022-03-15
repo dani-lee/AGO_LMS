@@ -1,0 +1,75 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.dao.JMSClassDAO;
+import com.one.dto.MemberClVO;
+import com.one.dto.MemberVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDocumentVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassReviewVO;
+
+public class JMSClassDAOImpl implements JMSClassDAO {
+
+	private SqlSession session;
+
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public ClassListVO selectClassAndOpClByOpcl(int opcl) throws SQLException {
+		ClassListVO claz = session.selectOne("selectClassAndOpClByOpcl", opcl);
+		return claz;
+	}
+
+	@Override
+	public List<ClassDocumentVO> selectClDocListByOpcl(int opcl) throws SQLException {
+		List<ClassDocumentVO> docList = session.selectList("selectClDocListByOpcl", opcl);
+		return docList;
+	}
+
+	@Override
+	public List<ClassChapterVO> selectClChapterListByOpcl(int opcl) throws SQLException {
+		List<ClassChapterVO> chapList = session.selectList("selectClChapterListByOpcl", opcl);
+		return chapList;
+	}
+
+	@Override
+	public List<ClassReviewVO> selectClReviewListByOpcl(int opcl) throws SQLException {
+		List<ClassReviewVO> reviewList = session.selectList("selectClReviewListByOpcl", opcl);
+		return reviewList;
+	}
+
+	@Override
+	public MemberVO selectMemberByMemId(String memId) throws SQLException {
+		MemberVO member =session.selectOne("selectMemberByMemId", memId);
+		return member;
+	}
+
+	@Override
+	public String selectAvgReviewScoreByOpcl(int opcl) throws SQLException {
+		String avg = session.selectOne("selectAvgReviewScoreByOpcl", opcl);
+		return avg;
+	}
+
+	@Override
+	public Boolean checkMemChap(MemberClVO clChap) throws SQLException {
+		Boolean chk = true;
+		MemberClVO chap = session.selectOne("checkMemChap", clChap);
+		if(chap == null) {
+			chk = false;
+		}
+		return chk;
+	}
+
+	@Override
+	public MemberClVO getMemChap(MemberClVO memChap) throws SQLException {
+		MemberClVO chapInfo = session.selectOne("checkMemChap", memChap);
+		return chapInfo;
+	}
+}

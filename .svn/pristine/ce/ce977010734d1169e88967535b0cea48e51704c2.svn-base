@@ -1,0 +1,76 @@
+package com.one.dto;
+
+import java.util.Date;
+
+public class ExamStastisDetailVO {
+	
+	private String clCode;
+	private String clName;
+	
+	private int joinStudent;
+	private Date postSdate;
+	private Date postEdate;
+	
+	private int[] middleScoreArray;
+	private int[] finalScoreArray;
+	private int startNum;
+	private int endNum;
+	
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public int getJoinStudent() {
+		return joinStudent;
+	}
+	public void setJoinStudent(int joinStudent) {
+		this.joinStudent = joinStudent;
+	}
+	public Date getPostSdate() {
+		return postSdate;
+	}
+	public void setPostSdate(Date postSdate) {
+		this.postSdate = postSdate;
+	}
+	public Date getPostEdate() {
+		return postEdate;
+	}
+	public void setPostEdate(Date postEdate) {
+		this.postEdate = postEdate;
+	}
+	public int getStartNum() {
+		return startNum;
+	}
+	public void setStartNum(int startNum) {
+		this.startNum = startNum;
+	}
+	public int getEndNum() {
+		return endNum;
+	}
+	public void setEndNum(int endNum) {
+		this.endNum = endNum;
+	}
+	public int[] getMiddleScoreArray() {
+		return middleScoreArray;
+	}
+	public void setMiddleScoreArray(int[] middleScoreArray) {
+		this.middleScoreArray = middleScoreArray;
+	}
+	public int[] getFinalScoreArray() {
+		return finalScoreArray;
+	}
+	public void setFinalScoreArray(int[] finalScoreArray) {
+		this.finalScoreArray = finalScoreArray;
+	}
+	
+	
+	
+}

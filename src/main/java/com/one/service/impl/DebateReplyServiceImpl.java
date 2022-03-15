@@ -1,0 +1,160 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.command.PageMaker;
+import com.one.dao.DebateReplyDAO;
+import com.one.dao.MemberDAO;
+import com.one.dto.DebateReplyVO;
+import com.one.service.DebateReplyService;
+
+public class DebateReplyServiceImpl implements DebateReplyService {
+
+	private DebateReplyDAO debateReplyDAO;
+
+	public void setDebateReplyDAO(DebateReplyDAO debateReplyDAO) {
+		this.debateReplyDAO = debateReplyDAO;
+	}
+
+	private MemberDAO memberDAO;
+
+	public void setMemberDAO(MemberDAO memberDAO) {
+		this.memberDAO = memberDAO;
+	}
+
+	@Override
+	public Map<String, Object> getDebateReplyList(int dboardNo, Criteria cri) throws Exception {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+
+		List<DebateReplyVO> debateReplyList = debateReplyDAO.selectDebateReplyList(dboardNo, cri);
+		int totalCount = debateReplyDAO.countDebateReply(dboardNo);
+		System.out.println("@@@@@@@@@@@@@        " + debateReplyList.size());
+		List<DebateReplyVO> sortReplyList = replySortList(debateReplyList);
+		System.out.println("@@@@@@@@@@@@@        total count [ " + totalCount );
+		debateReplyList = replySortList(debateReplyList);
+		System.out.println(debateReplyList.size());
+		List<DebateReplyVO> testList = new ArrayList<>();
+		if(cri.getPage() == 1) {
+			if(totalCount > 15) {
+				for (int i = 0; i < 15; i++) {
+					testList.add(debateReplyList.get(i));
+				}
+			}else {                  //여기 바로 아래 totalCount였음 2022.02.14정현욱 수정 
+				for (int i = 0; i < totalCount; i++) {
+					testList.add(debateReplyList.get(i));
+				}
+			}
+		}else {
+			if(totalCount > 15 * cri.getPage()) {
+				for (int i = 15 * (cri.getPage() - 1); i < 15 * cri.getPage(); i++) {
+					testList.add(debateReplyList.get(i));
+				}
+			}else {
+				for (int i = 15 * (cri.getPage() - 1); i < totalCount; i++) {
+					System.out.println("@@@@@@@@@@@@@@@@@@@          " + i + "번째");
+					testList.add(debateReplyList.get(i));
+				}
+			}
+		}
+		debateReplyList = testList;
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		List<Integer> page = new ArrayList<Integer>();
+		for (int i = pageMaker.getStartPage(); i <= pageMaker.getEndPage(); i++) {
+			page.add(i);
+		}
+		dataMap.put("debateReplyList", debateReplyList);
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("page", page);
+
+		return dataMap;
+	}
+
+	@Override
+	public int getDebateReplyCount(int dboardNo) throws Exception {
+		return debateReplyDAO.countDebateReply(dboardNo);
+	}
+
+	@Override
+	public void registDebateReply(DebateReplyVO debateReply) throws Exception {
+		debateReplyDAO.registDebateReply(debateReply);
+	}
+
+	@Override
+	public void modifyDebateReply(DebateReplyVO debateReply) throws Exception {
+		int dereplyNo = debateReply.getDereplyNo();
+		int preant = debateReply.getDereplyPreantNo();
+		if(preant == 0) {
+			debateReplyDAO.modifyReply(debateReply);			
+		}else {
+			debateReplyDAO.modifyReReply(debateReply);
+		}
+	}
+
+	@Override
+	public void removeDebateReplyAll(int dboardNo) throws Exception {
+		debateReplyDAO.deleteDebateReplyBydboardNo(dboardNo);
+	}
+
+	public List<DebateReplyVO> replySortList(List<DebateReplyVO> debateReplyList) {
+		List<DebateReplyVO> parentList = new ArrayList<DebateReplyVO>();
+		List<DebateReplyVO> childList = new ArrayList<DebateReplyVO>();
+
+		for (DebateReplyVO debateReply : debateReplyList) {
+			if (debateReply.getDereplyPreantNo() != 0) {
+				childList.add(debateReply);
+			} else {
+				parentList.add(debateReply);
+			}
+		}
+		System.out.println("@@@@@@@@ parentList     " + parentList.size());
+		System.out.println("@@@@@@@@ childList      " + childList.size());
+		List<DebateReplyVO> replySortList = new ArrayList<DebateReplyVO>();
+		int cnt = 0;
+		int test = 0;
+		for (DebateReplyVO parenteReply : parentList) {
+			if (cnt > 0) {
+				parenteReply.setPrevReply(parentList.get(cnt - 1).getDereplyNo());
+			}
+			replySortList.add(parenteReply);
+			for (DebateReplyVO childReply : childList) {
+				if (parenteReply.getDereplyNo() == childReply.getDereplyPreantNo()) {
+					if (cnt > 0)
+						childReply.setPrevReply(parentList.get(cnt - 1).getDereplyNo());
+					replySortList.add(childReply);
+				}
+				test++;
+			}
+			cnt++;
+		}
+		System.out.println("@@@@@@@@@@@@@@@ test [" + test);
+		System.out.println("@@@@@@@@@@@@@@@ cnt  [" + cnt);
+		return replySortList;
+	}
+
+	@Override
+	public int getNextdereplyNo() throws Exception {
+		int num = debateReplyDAO.getNextdereplyNo();
+		return num;
+	}
+
+	@Override
+	public void deleteReply(int num) throws Exception {
+		debateReplyDAO.deleteDebateReplyBydboardNo(num);
+
+	}
+
+	@Override
+	public void deleteReplyRep(DebateReplyVO reply) throws SQLException {
+		debateReplyDAO.deleteReplyRep(reply);
+	}
+
+}

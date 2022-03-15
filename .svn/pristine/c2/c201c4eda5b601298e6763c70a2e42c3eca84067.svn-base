@@ -1,0 +1,254 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="likeClassList" value="${dataMap.likeClassList }" />
+
+
+<head></head>
+
+<title></title>
+
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">관심강의</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="<%=request.getContextPath()%>/user/myClass/main.do">내 강의실</a>
+						</li>
+						<li class="breadcrumb-item">관심강의</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<div class="container-fluid">
+		<div class="row">
+			<section class="card col-8 m-2 ml-4 mr-4">
+				<div class="row" style="margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+					<span>총 ${fn:length(likeClassList)}개의 강의가 있습니다.</span>
+					<div class="ml-auto">
+						<button class="btn btn-sm btn-primary" onclick="removeCls();">삭제</button>
+					</div>
+				</div>
+				<div style="min-height: 550px;">
+					<table class="table mt-3 table-hover table-sm">
+
+						<thead>
+							<tr class="text-center" style="background-color: #E6EFFC;">
+								<th class="col-1 align-middle text-center">선택</th>
+								<th class="col-2">강의구분</th>
+								<th class="col-5">강의명</th>
+								<th class="col-1 align-middle">점수</th>
+								<th class="col-1">인원</th>
+								<th class="col-2">수강신청</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if test="${empty  likeClassList}">
+								<tr>
+									<td colspan="6" class="text-center text-bold">관심 강의가 없습니다.</td>
+								</tr>
+							</c:if>
+							<c:forEach items="${likeClassList }" var="likeClassList">
+								<tr>
+									<td class="text-center align-middle">
+										<input type="checkbox" class="individual_check_boxes" name="check" style="width: 15px; height: 15px;" value="${likeClassList.opcl }">
+									</td>
+
+									<td class="text-center align-middle">
+										<c:if test="${likeClassList.clCate eq 'A201' }">신입사원교육</c:if> 
+										<c:if test="${likeClassList.clCate eq 'A202' }">일반교육</c:if> 
+										<c:if test="${likeClassList.clCate eq 'A203' }">자기개발/취미</c:if>
+									</td>
+
+									<td class="row" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath() %>/user/rcls/detail.do?clCode=${likeClassList.clCode }&opcl=${likeClassList.opcl }&from=likeClsList'">
+										<div class="column ui-sortable">
+											<span class="h6">
+												 <c:choose>
+													<c:when test="${fn:length(likeClassList.clName) gt 30 }">
+														<c:out value="[${likeClassList.openRound }차시]${fn:substring(likeClassList.clName,0,30) }..."></c:out>
+													</c:when>
+													<c:otherwise>
+														[${likeClassList.openRound }차시]${likeClassList.clName }
+													</c:otherwise>
+												</c:choose>
+											</span> 
+											<br> 
+											<span class="text-primary"> 
+											<fmt:formatDate value="${likeClassList.postSdate }" pattern="yyyy-MM-dd" /> ~<fmt:formatDate value="${likeClassList.postEdate }" pattern="yyyy-MM-dd" />
+											</span>
+
+											<c:if test="${likeClassList.clFormat eq 'A601' }">
+												<span class="badge badge-info ml-3">오프라인</span>
+											</c:if>
+											<c:if test="${likeClassList.clFormat eq 'A602' }">
+												<span class="badge badge-primary ml-3">온라인</span>
+											</c:if>
+											<c:if test="${likeClassList.clFormat eq 'A603' }">
+												<span class="badge badge-success ml-3">실시간</span>
+											</c:if>
+
+											<c:if test="${likeClassList.clDivision eq 'A501' }">
+												<span class="badge badge-warning">필수</span>
+											</c:if>
+											<c:if test="${likeClassList.clDivision eq 'A502' }">
+												<span class="badge badge-danger">선택</span>
+											</c:if>
+										</div>
+									</td>
+
+									<td class="text-center align-middle">${likeClassList.clPoint }</td>
+
+									<td class="text-success text-center align-middle">
+										<c:choose>
+											<c:when test="${likeClassList.enrPers eq '제한없음' }">
+												제한없음
+											</c:when>
+											<c:otherwise>
+												<c:if test="${!empty likeClassList.count }">
+													${likeClassList.count }/${likeClassList.enrPers }
+												</c:if>
+												<c:if test="${empty likeClassList.count }">
+													0/${likeClassList/enrPers }
+												</c:if>
+											</c:otherwise>
+										</c:choose>
+									</td>
+
+									<td class="text-center align-middle"><c:if test="${!empty likeClassList.matchClDp }">
+											<c:choose>
+												<c:when test="${likeClassList.clCate eq 'A201' }">
+													<c:if test="${memPost eq 'PS101' }">
+														<button type="submit" class="btn btn-sm btn-primary" onclick="registFunction(${likeClassList.opcl},'${likeClassList.studyDate }','${likeClassList.lDate }', ${likeClassList.count}, ${likeClassList.enrPers});">수강신청</button>
+													</c:if>
+													<c:if test="${memPost ne 'PS101' }">
+														<button type="submit" class="btn btn-sm btn-primary" onclick="sign_up_impossible_not_newbie();">수강신청</button>
+													</c:if>
+												</c:when>
+												<c:when test="${likeClassList.matchClDp eq 'match'}">
+													<button type="submit" class="btn btn-sm btn-primary" onclick="registFunction(${likeClassList.opcl},'${likeClassList.studyDate }','${likeClassList.lDate }', ${likeClassList.count}, ${likeClassList.enrPers});">수강신청</button>
+												</c:when>
+											</c:choose>
+										</c:if> <c:if test="${empty likeClassList.matchClDp }">
+											<c:if test="${!empty likeClassList.dpIds}">
+												<button type="submit" class="btn btn-sm btn-primary" onclick="sign_up_impossible();">수강신청</button>
+											</c:if>
+											<c:if test="${empty likeClassList.dpIds}">
+												<button type="submit" class="btn btn-sm btn-primary" onclick="registFunction(${likeClassList.opcl},'${likeClassList.studyDate }','${likeClassList.lDate }', ${likeClassList.count}, ${likeClassList.enrPers});">수강신청</button>
+											</c:if>
+
+										</c:if> </td>
+
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+				<div class="card-body text-center">
+					<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+				</div>
+			</section>
+			<section class="card col-3 m-2">
+
+				<div class="card-header ui-sortable-handle" style="cursor: move;">
+					<h3 class="card-title">현황</h3>
+				</div>
+				<!-- /.card-header -->
+				<div class="card-body">
+					<div class="row">
+						<div class="col-sm-6 border-right">
+							<div class="description-block">
+								<h5 class="description-header">관심 점수</h5>
+								<span class="description-text">${pointInfo.totalPoint }</span>
+							</div>
+							<!-- /.description-block -->
+						</div>
+						<!-- /.col -->
+						<div class="col-sm-6">
+							<div class="description-block">
+								<h5 class="description-header">내 이수점수</h5>
+								<span class="description-text">${pointInfo.memCredit }</span>
+							</div>
+							<!-- /.description-block -->
+						</div>
+
+						<div class="col-sm-12">
+							<table class="table mt-3">
+								<tr>
+									<td>일반 교육</td>
+									<td class="text-center">${pointInfo. pointA202}</td>
+								</tr>
+								<tr>
+									<td>신입사원교육</td>
+									<td class="text-center">${pointInfo. pointA201}</td>
+								</tr>
+								<tr>
+									<td>자기개발/취미</td>
+									<td class="text-center">${pointInfo. pointA203}</td>
+								</tr>
+							</table>
+
+						</div>
+						<!-- /.col -->
+					</div>
+				</div>
+				<!-- /.card-body -->
+
+			</section>
+		</div>
+
+	</div>
+	<%@include file="./clsLike_list_js.jsp"%>
+	<script>
+    $(document).ready(function(){
+    	$('.check-all').click(function(){
+    		$('.individual_check_boxes').prop('checked', this.checked);
+    	});
+    });
+  
+	function removeCls(){
+		var check = confirm("선택된 강의를 관심강의에서 삭제하시겠습니까?");
+		if(check){
+			var checkVal = [];
+			$("input:checkbox[name='check']:checked").each(function(){
+				checkVal.push($(this).val());
+			});
+			
+			location.href="removeLikeCls.do?opcl="+checkVal;
+		}
+	}
+	
+	function sign_up_impossible_not_newbie(){
+		alert("신입사원 교육입니다.");
+	}
+	
+	function sign_up_impossible(){
+		alert("타부서는 수강할 수 없습니다. ");
+	}
+  </script>
+</body>

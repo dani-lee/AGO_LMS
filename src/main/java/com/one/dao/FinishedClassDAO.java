@@ -1,0 +1,66 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.ExtReportCommand;
+import com.one.command.MemberCriteria;
+import com.one.dto.ExtReportVO;
+import com.one.dto.FinishedClassVO;
+import com.one.dto.IntReportVO;
+import com.one.dto.ClassVO.ClassReviewVO;
+
+public interface FinishedClassDAO {
+	
+	// 내부 강의 카운트
+	public int countIntClass(String memEmail) throws SQLException;
+	
+	// 외부 강의 카운트
+	public int countExtClass(String memEmail) throws SQLException;
+	
+	// 내부 강의
+	public List<FinishedClassVO> selectIntFinishedClassList(MemberCriteria mCri) throws SQLException;
+	
+	// 외부 강의
+	public List<FinishedClassVO> selectExtFinishedClassList(MemberCriteria mCri) throws SQLException;
+	
+	// 내부 보고서
+	public IntReportVO selectIntReport(int memClNo) throws SQLException;
+	
+	// 내부 보고서 작성 양식
+	public IntReportVO selectIntReportInsertForm(int memClNo) throws SQLException;
+	
+	// 내부 보고서 수정
+	public void updateIntReport(IntReportVO intreport) throws SQLException;
+	
+	// 내부 보고서 등록
+	public void insertIntReport(IntReportVO intreport) throws SQLException;
+	
+	// 외부 보고서
+	public ExtReportVO selectExtReport(int extNo) throws SQLException;
+	
+	// 외부 보고서 등록
+	public int insertExtReport(ExtReportVO extReport) throws SQLException;
+	
+	// 외부 보고서 수정
+	public void updateExtReport(ExtReportVO extReport) throws SQLException;
+	
+	// 외부 강의에 외부보고서 번호 넣기
+	public void updateExtNo(ExtReportVO extReport) throws SQLException;
+	
+	// 수강후기
+	public ClassReviewVO selectIntClassReview(ClassReviewVO myReview) throws SQLException;
+	
+	// 수강후기 작성 폼
+	public ClassReviewVO selectIntClassReviewForm(int memClNo) throws SQLException;
+	
+	// 수강후기 작성
+	public void insertClassReview(ClassReviewVO myReview) throws SQLException;
+	
+	//HRD 삭제
+	public void deleteHRDByExtNo(ExtReportCommand ext) throws SQLException;
+	
+	//외부수료증 수정
+	public void modifyExtReport(ExtReportVO ext) throws SQLException;
+}

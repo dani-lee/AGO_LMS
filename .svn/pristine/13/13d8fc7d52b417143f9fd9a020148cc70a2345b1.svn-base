@@ -1,0 +1,318 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="classDetail" value="${dataMap.detail}" />
+<c:set var="chapterList" value="${dataMap.chapterList }" />
+<c:set var="documentList" value="${dataMap.documentList }" />
+<c:set var="reviewList" value="${dataMap.reviewList }" />
+<c:set var="opcl" value="${dataMap.opcl }"/>
+
+
+<head></head>
+
+<title></title>
+
+<body>
+
+<br>
+	<section class="content">
+		<div class="container-fluid">
+
+			<div class="row">
+				<div class="class-detail d-flex col-10 ">
+					<div style="width: 200px; height: 150px;" id="pictureView"></div>
+					<div class="column ui-sortable">
+					<span class="h4 ml-2">[${opcl.openRound}회]</span>
+						<span class="h4 font-bold ml-2">${classDetail.clName}</span>
+						
+						<span class="badge badge-primary ml-3">
+							${classDetail.clFormat}
+						</span>
+						 <span class="badge badge-danger">
+						 	${classDetail.clDivision}
+						 </span>
+						 
+						<br>
+						<span class="ml-2">
+							<c:if test="${classDetail.clCate  == 'A201'}">[신입사원교육]</c:if>
+							<c:if test="${classDetail.clCate  == 'A202'}">[일반교육]</c:if>
+							<c:if test="${classDetail.clCate  == 'A203'}">[자기개발/취미]</c:if>
+						</span>
+						<br>
+						
+						<span class="ml-2">
+							<i class="text-warning fas fa-star"></i>
+							<i class="text-warning fas fa-star"></i>
+							<i class="text-warning fas fa-star"></i>
+							<i class="text-warning fas fa-star"></i>
+							<i class="text-warning fas fa-star-half"></i>
+							<span class="text-warning">(4.5)</span>
+						</span>
+						
+						<br><br>
+						
+						<c:if test="${classDetail.clFormat == '오프라인'}">
+							<button type="button" class="btn btn-secondary btn-sm ml-2" onclick="OpenWindow('getQR.do?clCode=${classDetail.clCode}&opcl=${opcl.opcl }','QR코드생성',800,700)">QR코드 생성</button>
+						</c:if>
+					</div>
+				</div>
+				<div class="col-2 d-block justify-content-end float-right">
+					<button class="btn btn-primary btn-sm " onclick="location.href='modifyClass.do?clCode=${classDetail.clCode}&openRound=${opcl.openRound }&opclNo=${opcl.opcl }'">수정</button>
+					<button class="btn btn-default btn-sm " onclick="deleteClass(${classDetail.clCode},${opcl.openRound})">삭제</button>
+				</div>
+			</div>
+			<br>
+
+			<div class="col-12">
+				<div class="list-group d-flex flex-row" id="list-tab" role="tablist">
+					<a class="list-group-item list-group-item-action active" id="class-info-list" data-toggle="list" href="#class-info" role="tab" aria-controls="info">강의정보</a>
+						<c:if test="${classDetail.clFormat eq '온라인'}">
+							<a class="list-group-item list-group-item-action" id="list-index-list" data-toggle="list" href="#list-index" role="tab" aria-controls="home">강의목차</a>
+						</c:if>
+					<a class="list-group-item list-group-item-action" id="list-reference-list" data-toggle="list" href="#list-reference" role="tab" aria-controls="profile">자료실</a>
+					<a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review" role="tab" aria-controls="messages">수강후기</a>
+					
+				</div>
+			</div>
+
+			<br>
+
+			<div class="col-12">
+				<div class="tab-content" id="nav-tabContent">
+
+					<!-- 강의정보 -->
+					<div class="tab-pane fade show active" id="class-info" role="tabpanel" aria-labelledby="class-info-list">
+						<div class="row list-title">
+							<h6 class="col-6" style="margin: 0px;">강의 정보</h6>
+							<h6 class="col-6" style="margin: 0px;">수강생 정보</h6>
+						</div>
+						<hr color="#494C4D" style="height: 3px; border-radius: 40px; margin-top: 5px;" />
+					<div class="row">
+						<table class="table mt-3 table-sm col-6">
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color:#E6EFFC; ">과정소개</td>
+								<td colspan="3">
+									<p>${classDetail.clIntro }</p>
+								</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color:#E6EFFC; ">수강인원</td>
+								<td>${opcl.enrPers}</td>
+								<td class="font-weight-bold text-center" style="background-color:#E6EFFC; ">강의이수시간</td>
+								<td>${classDetail.clCreditTime }</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center" style="background-color:#E6EFFC; ">신청기간</td>
+								<td><fmt:formatDate value="${opcl.postSdate }" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${opcl.postEdate }" pattern="yyyy-MM-dd"/></td>
+								<td class="font-weight-bold text-center" style="background-color:#E6EFFC; ">학습기간</td>
+								<td>
+								<c:if test="${opcl.studyDate == 'D101'}">신청일로부터 7일</c:if>
+								<c:if test="${opcl.studyDate == 'D102'}">신청일로부터 30일</c:if>
+								<c:if test="${opcl.studyDate == 'D103'}">제한없음</c:if>
+								</td>
+							</tr>
+							<tr>
+								<td class="font-weight-bold text-center align-middle" style="background-color:#E6EFFC; ">수료기준안내</td>
+								<td colspan="3">
+									<p>${opcl.cutline}</p>
+								</td>
+							</tr>
+						</table>
+						
+						<div class="col-5 ml-3">
+
+	
+							<table class="table table-xs">
+								<tr>
+									<td>경영혁신기술부</td>
+									<td>팀장</td>
+									<td>오태식</td>
+									<td>2020-04-24</td>
+								</tr>
+							</table>
+	
+						</div>
+						
+					</div>
+						
+					</div>
+
+				<c:if test="${classDetail.clFormat eq '온라인'}">					<!-- 강의목차 -->
+					<div class="tab-pane fade" id="list-index" role="tabpanel" aria-labelledby="list-index-list">
+
+						<div class="row list-title">
+							<h6 class="col-9" style="margin: 0px;">강의 목차</h6>
+						</div>
+						<hr color="#494C4D" style="height: 3px; border-radius: 40px; margin-top: 5px;" />
+
+						<table class="table table-hover table-sm">
+							<thead>
+								<tr class="text-center">
+									<th class="col-1">회차</th>
+									<th class="col-5">회차명</th>
+									<th class="col-2">강의시간</th>
+									<th class="col-3">강의파일코드</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${empty chapterList}">
+									<tr class="text-center">
+										<td colspan="4">등록된 목차가 없습니다.</td>
+									</tr>
+								</c:if>								
+								<c:forEach items="${chapterList}" var="list">
+									<tr class="text-center">
+										<td>${list.clChapNum}</td>
+										<td>${list.clChapName}</td>
+										<td>${list.clChapTime}</td>
+										<td>${list.clChapVideo }</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+					<!--/강의목차-->
+</c:if>
+
+					<!-- 자료실-->
+					<div class="tab-pane fade" id="list-reference" role="tabpanel" aria-labelledby="list-reference-list">
+						<div class="row list-title">
+							<h6 class="col-9" style="margin: 0px;">자료실</h6>
+						</div>
+						<hr color="#494C4D" style="height: 3px; border-radius: 40px; margin-top: 5px;" />
+
+						<table class="table table-hover table-sm">
+							<thead>
+								<tr class="text-center">
+									<th scope="col">번호</th>
+									<th scope="col">제목</th>
+									<th scope="col">비고</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${empty documentList}">
+									<tr class="text-center">
+										<td colspan="4">등록된 자료가 없습니다.</td>
+									</tr>
+								</c:if>
+								<c:forEach items="${documentList}" var="list">
+								<c:set var="realName" value="${fn:split(list.clDocName,'$$')[1] }"/>
+									<tr class="text-center">
+										<td>${list.clDocNo}</td>
+										<td style="cursor : pointer;" onclick="location.href='<%=request.getContextPath()%>/manager/classManagement/getClassDocumentFile.do?clDocName=${list.clDocName }'"><i class="fas fa-arrow-alt-circle-down"></i>${realName}</td>
+										<td><span class="h5" style="cursor: pointer;"><i class="la la-save"></i></span></td>
+									</tr>
+
+								</c:forEach>
+
+							</tbody>
+						</table>
+					</div>
+					<!--/자료실-->
+
+
+					<!--수강후기-->
+					<div class="tab-pane fade" id="list-review" role="tabpanel" aria-labelledby="list-review-list">
+						<div class="row list-title">
+							<h6 class="col-9" style="margin: 0px;">수강후기</h6>
+						</div>
+						<hr color="#494C4D" style="height: 3px; border-radius: 40px; margin-top: 5px;" />
+
+						<div class="reviews-list">
+							<ul class="list-group list-group-flush">
+								<c:if test="${empty reviewList }">
+									<li class="list-group-item">
+										<div class="reviews">
+											<p class="text-center">등록된 수강 후기가 없습니다.</p>
+										</div>
+									</li>
+								</c:if>
+
+								<c:forEach items="${reviewList }" var="list">
+									<li class="list-group-item">
+										<div class="reviews">
+											<p>
+											<div class="row">
+												<div class="col-8">
+													<span>${list.memId }</span> <span class="col">${list.reviewContent }</span>
+
+												</div>
+												<!--                                                 <div class="ml-auto h6"> -->
+												<!--                                                     <i class="text-warning la la-star"></i> -->
+												<!--                                                     <i class="text-warning la la-star"></i> -->
+												<!--                                                     <i class="text-warning la la-star"></i> -->
+												<!--                                                     <i class="text-warning la la-star"></i> -->
+												<!--                                                     <i class="text-warning la la-star-half-empty"></i> -->
+												<!--                                                     <span class="text-warning">(4.5)</span> -->
+												<!--                                                 </div> -->
+											</div>
+											</p>
+											<p class="inline-block">
+												<span class="font-weight-bold">${list.reviewContent}</span>
+											</p>
+										</div>
+									</li>
+
+								</c:forEach>
+
+
+
+							</ul>
+
+						</div>
+						<!--/수강후기-->
+
+					</div>
+
+					<div class="buttons">
+						<div class="col-1 ml-auto d-flex justify-content-between">
+							<!-- <button class="btn btn-primary float-right" onclick="fn_regist()"> &nbsp;등록&nbsp;</button> -->
+							<button class="btn btn-default float-right" onclick="location.href='list.do?mCode=M000201'">
+								<i class="la la-angle-double-left"></i>
+								&nbsp;목록
+							</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+<script>
+	window.onload=function(){
+		ClassRegistPictureThumb($('#pictureView')[0], '${classDetail.clImg}', '<%= request.getContextPath()%>');
+	}
+
+
+	function deleteClass(clCode,openRound){
+
+		if(confirm('정말 삭제하시겠습니까?')){
+			
+			$.ajax({
+				url 		: 'deleteClass.do',
+				data 		: {"clCode" : clCode,
+								"openRound" : openRound 				
+				},
+				type 		: 'post',
+				success 	: function(data){
+					
+					
+					location.href="list.do"
+				},
+				error 		: function(error){
+					
+					console.log(error.status);
+					AjaxErrorSecurityRedirectHandler(error.status);
+				}
+			})	
+		}
+		
+	}
+</script>
+
+
+</body>

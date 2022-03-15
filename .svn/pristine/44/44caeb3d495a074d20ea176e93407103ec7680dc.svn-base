@@ -1,0 +1,45 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.command.ClassCommand;
+import com.one.command.ClassReviewCommand;
+import com.one.command.Criteria;
+import com.one.command.MemberClassCommand;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDepartmentVO;
+import com.one.dto.ClassVO.ClassEXT;
+import com.one.dto.ClassVO.ClassIntr;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.dto.ClassVO.ClassReviewVO;
+
+public interface UserClassDAO {
+	public List<ClassCommand> selectClassList(Criteria cri) throws SQLException;
+	
+	public List<MemberClassCommand> selectMemberClassList(String memEmail) throws SQLException;
+	
+	public List<ClassEXT> selectExtClassList(String memEmail) throws SQLException;
+
+	public int selectClassListCount(Criteria cri) throws SQLException;
+	
+	public ClassCommand selectClass(int clCode) throws SQLException;
+	
+	public List<ClassChapterVO> selectClassChapter (int clCode) throws SQLException;
+	
+	public List<ClassReviewCommand> selectClassReview (int opcl) throws SQLException;
+	
+	public void insertBookmark(ClassIntr intr)throws SQLException;
+	
+	public void deleteBookmark(ClassIntr intr)throws SQLException;
+	
+	public void insertMemberClass(MemberClassCommand memberClass) throws SQLException;
+	
+	public void insertExtClass(ClassEXT ext) throws SQLException;
+	
+	public List<ClassDepartmentVO> selectDepartmentClass() throws SQLException;
+	
+	public List<String> selectMemberInterestClassList(String memEmail) throws SQLException;
+	
+	public int selectClassTestState(int opcl) throws SQLException;
+}

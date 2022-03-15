@@ -1,0 +1,297 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>시험통계 상세화면</title>
+</head>
+<body>
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-9">
+					<h3 class="m-0">${examDetail.clName}</h3>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-3">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<a href="#">Home</a>
+						</li>
+						<li class="breadcrumb-item active">시험통계 상세화면</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+	</div>
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-3  border-right">
+									<i class="fas fa-user-friends align-middle ml-2 mt-2" style="font-size: 55px;">
+										<p class="ml-1 mt-1 text-gray" style="font-size: 15px;">수강인원</p>
+									</i>
+
+									<span class="ml-3 align-middle" style="font-size: 46px;">${examDetail.joinStudent}</span>
+								</div>
+								<div class="col-1"></div>
+								<div class="col-8">
+									<i class="far fa-calendar-alt align-middle mt-2" style="font-size: 55px;">
+										<p class="mt-1 text-gray text-bold" style="margin-left:-5px; font-size: 15px;">수강기간</p>
+									</i>
+									<span class="ml-3 align-middle" style="font-size: 38px;">
+										<fmt:formatDate value="${examDetail.postSdate}" pattern="yyyy-MM-dd" />~
+										<fmt:formatDate value="${examDetail.postEdate}" pattern="yyyy-MM-dd" />
+									</span>
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+				</div>
+				<!-- col-md-6 -->
+
+				<div class="col-md-12">
+					<!-- BAR CHART -->
+					<div class="card">
+						<div class="card-header">
+							<h2 class="card-title float-left">
+								<b>중간/기말 평가 점수별 인원수</b>
+							</h2>
+						</div>
+						<div class="card-body">
+							<div class="chart">
+								<canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+							</div>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+				</div>
+				<!-- col-md-12 -->
+			</div>
+		</div>
+	</section>
+	
+
+	<script>
+		function go_list(url) {
+			window.top.location.replace('<%=request.getContextPath()%>'+url);
+		}
+	</script>
+	<script>
+		$(function() {
+			/* ChartJS
+			 * -------
+			 * Here we will create a few charts using ChartJS
+			 */
+			var areaChartData = {
+				labels : [ '0~19', '20~39', '40~59', '60~79', '80~100' ],
+				datasets : [ {
+					label : '기말평가 해당 인원수',
+					backgroundColor : 'rgba(60,141,188,0.9)',
+					borderColor : 'rgba(60,141,188,0.8)',
+					pointRadius : false,
+					pointColor : '#3b8bba',
+					pointStrokeColor : 'rgba(60,141,188,1)',
+					pointHighlightFill : '#fff',
+					pointHighlightStroke : 'rgba(60,141,188,1)',
+					data : [ 
+						<c:forEach var="item" items="${examDetail.finalScoreArray}">
+							'${item}',
+						</c:forEach>
+					]
+				}, {
+					label : '중간평가 해당 인원수',
+					backgroundColor : '#adb5bd',
+					borderColor : '#adb5bd',
+					pointRadius : false,
+					pointColor : 'rgba(210, 214, 222, 1)',
+					pointStrokeColor : '#c1c7d1',
+					pointHighlightFill : '#fff',
+					pointHighlightStroke : 'rgba(220,220,220,1)',
+					data : [ 
+						<c:forEach var="item" items="${examDetail.middleScoreArray}">
+							'${item}',
+						</c:forEach>
+					]
+				}, ]
+			}
+
+			var areaChartOptions = {
+				maintainAspectRatio : false,
+				responsive : true,
+				legend : {
+					display : false
+				},
+				scales : {
+					xAxes : [ {
+						gridLines : {
+							display : false,
+						}
+					} ],
+					yAxes : [ {
+						gridLines : {
+							display : false,
+						}
+					} ]
+				}
+			}
+
+			//-------------
+			//- BAR CHART -
+			//-------------
+			var barChartCanvas = $('#barChart').get(0).getContext('2d')
+			var barChartData = $.extend(true, {}, areaChartData)
+			var temp0 = areaChartData.datasets[0]
+			var temp1 = areaChartData.datasets[1]
+			barChartData.datasets[0] = temp1
+			barChartData.datasets[1] = temp0
+
+			var barChartOptions = {
+				responsive : true,
+				maintainAspectRatio : false,
+				datasetFill : false
+			}
+
+			new Chart(barChartCanvas, {
+				type : 'bar',
+				data : barChartData,
+				options : barChartOptions
+			})
+
+		})
+	</script>
+
+	<script>
+		$(function() {
+			/* jQueryKnob */
+
+			$('.knob').knob(
+					{
+						/*change : function (value) {
+						 //console.log("change : " + value);
+						 },
+						 release : function (value) {
+						 console.log("release : " + value);
+						 },
+						 cancel : function () {
+						 console.log("cancel : " + this.value);
+						 },*/
+						draw : function() {
+
+							// "tron" case
+							if (this.$.data('skin') == 'tron') {
+
+								var a = this.angle(this.cv) // Angle
+								, sa = this.startAngle // Previous start angle
+								, sat = this.startAngle // Start angle
+								, ea // Previous end angle
+								, eat = sat + a // End angle
+								, r = true
+
+								this.g.lineWidth = this.lineWidth
+
+								this.o.cursor && (sat = eat - 0.3)
+										&& (eat = eat + 0.3)
+
+								if (this.o.displayPrevious) {
+									ea = this.startAngle
+											+ this.angle(this.value)
+									this.o.cursor && (sa = ea - 0.3)
+											&& (ea = ea + 0.3)
+									this.g.beginPath()
+									this.g.strokeStyle = this.previousColor
+									this.g.arc(this.xy, this.xy, this.radius
+											- this.lineWidth, sa, ea, false)
+									this.g.stroke()
+								}
+
+								this.g.beginPath()
+								this.g.strokeStyle = r ? this.o.fgColor
+										: this.fgColor
+								this.g.arc(this.xy, this.xy, this.radius
+										- this.lineWidth, sat, eat, false)
+								this.g.stroke()
+
+								this.g.lineWidth = 2
+								this.g.beginPath()
+								this.g.strokeStyle = this.o.fgColor
+								this.g.arc(this.xy, this.xy, this.radius
+										- this.lineWidth + 1 + this.lineWidth
+										* 2 / 3, 0, 2 * Math.PI, false)
+								this.g.stroke()
+
+								return false
+							}
+						}
+					})
+			/* END JQUERY KNOB */
+
+			//INITIALIZE SPARKLINE CHARTS
+			var sparkline1 = new Sparkline($('#sparkline-1')[0], {
+				width : 240,
+				height : 70,
+				lineColor : '#92c1dc',
+				endColor : '#92c1dc'
+			})
+			var sparkline2 = new Sparkline($('#sparkline-2')[0], {
+				width : 240,
+				height : 70,
+				lineColor : '#f56954',
+				endColor : '#f56954'
+			})
+			var sparkline3 = new Sparkline($('#sparkline-3')[0], {
+				width : 240,
+				height : 70,
+				lineColor : '#3af221',
+				endColor : '#3af221'
+			})
+
+			sparkline1.draw([ 1000, 1200, 920, 927, 931, 1027, 819, 930, 1021 ])
+			sparkline2.draw([ 515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921 ])
+			sparkline3.draw([ 15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21 ])
+
+		})
+	</script>
+	<!-- FLOT CHARTS -->
+	<script src="<%=request.getContextPath()%>/resources/bootstrap/plugins/flot/jquery.flot.js"></script>
+
+	<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+	<script src="<%=request.getContextPath()%>/resources/bootstrap/plugins/flot/plugins/jquery.flot.resize.js"></script>
+
+	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+	<script src="<%=request.getContextPath()%>/resources/bootstrap/plugins/flot/plugins/jquery.flot.pie.js"></script>
+
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

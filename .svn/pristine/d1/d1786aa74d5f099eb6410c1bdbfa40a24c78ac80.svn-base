@@ -1,0 +1,216 @@
+package com.one.controller.user.community;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.josephoconnell.html.HTMLInputFilter;
+import com.one.command.Criteria;
+import com.one.command.MemberCriteria;
+import com.one.dto.DebateBoardVO;
+import com.one.dto.DebateReplyVO;
+import com.one.dto.MemberVO;
+import com.one.dto.NoticeVO;
+import com.one.service.DebateBoardService;
+import com.one.service.DebateReplyService;
+import com.one.service.NoticeService;
+
+@Controller
+@RequestMapping("/user/community/debateBoard")
+public class DebateBoardController {
+	@Autowired
+	private DebateBoardService debateBoardService;
+	@Autowired
+	private DebateReplyService debateReplyService;
+	@Autowired
+	private NoticeService noticeService;
+
+	// 토론게시판 리스트
+	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
+	public ModelAndView list(Criteria cri, ModelAndView mnv) throws Exception {
+		String url = "/user/community/debateBoard/list";
+		Map<String, Object> dataMap = debateBoardService.getDebateBoardList(cri);
+		List<NoticeVO> noticeList = noticeService.getImportantNoticeList(cri);
+		dataMap.put("importantNoticeList", noticeList);
+		mnv.addObject("dataMap", dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	@RequestMapping(value = "/detail.do", method = RequestMethod.GET)
+	public ModelAndView detail(int dboardNo, ModelAndView mnv, MemberCriteria cri,HttpSession session) throws Exception {
+		String url = "/user/community/debateBoard/debateBoardDetail";
+//		Map<String,Object> dataMap = new HashMap<>();
+//		cri.setPerPageNum(5);
+//		
+//		DebateBoardVO debateBoard = null;
+//		if(from!=null && from.equals("list")) {
+//			debateBoard = debateBoardService.getDebateBoard(dboardNo);
+//			dataMap = debateReplyService.getDebateReplyList(dboardNo, cri);
+//			
+//			url="redirect:/user/community/debateBoard/detail.do?dboardNo="+dboardNo;
+//		}else {
+//			debateBoard = debateBoardService.getDebateBoardFromModify(dboardNo);
+//		}
+//		
+//		
+//		MemberVO member = (MemberVO) session.getAttribute("loginUser");
+//		mnv.addObject("member",member);
+//		mnv.addObject("dataMap",dataMap);
+//		mnv.addObject("debateBoard", debateBoard);
+//		mnv.setViewName(url);
+		cri.setPerPageNum(15);
+		DebateBoardVO debateBoard = debateBoardService.getDebateBoard(dboardNo,cri);
+		Map<String, Object> dataMap = debateReplyService.getDebateReplyList(dboardNo, cri);
+		MemberVO member = (MemberVO) session.getAttribute("loginUser");
+		String memId = member.getMemId();
+		System.out.println("@@@@@@@@@@@@@@@@ memId          [ " + memId);
+		mnv.addObject("memId",memId);
+		mnv.addObject("dataMap", dataMap);
+		mnv.addObject("debateBoard", debateBoard);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@RequestMapping("/registForm.do")
+	public String registForm() throws Exception {
+		String url = "user/community/debateBoard/regist";
+
+		return url;
+	}
+	
+	@RequestMapping("/regist.do")
+	public String regist(DebateBoardVO debate, RedirectAttributes rttr) throws Exception {
+		String url = "redirect:/user/community/debateBoard/list.do";
+		
+		debate.setDeTitle(HTMLInputFilter.htmlSpecialChars(debate.getDeTitle()));
+		debateBoardService.registDebate(debate);
+		rttr.addFlashAttribute("from","regist");
+		return url;
+	}
+	
+	@RequestMapping("/modifyForm.do")
+	public ModelAndView modifyForm(int dboardNo,ModelAndView mnv, Criteria cri) throws Exception {
+		String url = "user/community/debateBoard/modify";
+		
+		DebateBoardVO debateBoard = debateBoardService.getDebateBoard(dboardNo, cri);
+		
+		mnv.addObject("debateBoard", debateBoard);
+		mnv.setViewName(url);
+		
+		return mnv;
+	}
+	
+	@RequestMapping("/modify.do")
+	public String modify(DebateBoardVO debate, RedirectAttributes rttr) throws Exception {
+		String url = "redirect:/user/community/debateBoard/list.do";
+		
+		debate.setDeTitle(HTMLInputFilter.htmlSpecialChars(debate.getDeTitle()));
+		debateBoardService.modifyDebate(debate);
+		
+		rttr.addFlashAttribute("from","modify");
+		return url;
+	}
+	
+	@RequestMapping(value="/delete.do", method=RequestMethod.POST)
+	public String delete(int dboardNo, RedirectAttributes rttr, Criteria cri) throws Exception{
+		String url = "redirect:/user/community/debateBoard/list.do";
+		
+		debateBoardService.removeDebateBoard(dboardNo, cri);
+		rttr.addFlashAttribute("from", "remove");
+		return url;
+	}
+	
+	@RequestMapping(value = "/detailNotice.do", method = RequestMethod.GET)
+	public ModelAndView detailNotice(int noticeNo, String from, ModelAndView mnv) throws Exception {
+		String url = "user/community/debateBoard/detailNotice";
+
+		NoticeVO notice = null;
+
+		notice = noticeService.read(noticeNo);
+
+		mnv.addObject("notice", notice);
+		mnv.setViewName(url);
+
+		return mnv;
+
+	}
+	
+	@RequestMapping(value="/report.do",method=RequestMethod.POST)
+	public ResponseEntity<Integer> repoat(@RequestParam("dboardNo")int dboardNo) throws Exception {
+		ResponseEntity<Integer> entity = null;
+		
+		try {
+			int cnt = debateBoardService.modifyReportCnt(dboardNo);
+			entity = new ResponseEntity<Integer>(cnt, HttpStatus.OK);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Integer>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return entity;
+	}
+
+	@RequestMapping(value="/registReply.do",method=RequestMethod.POST, produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> registReply(DebateReplyVO reply,  HttpSession session) throws Exception {
+		ResponseEntity<String> entity = null;
+		try {
+			//그냥 댓글
+			if(reply.getDereplyPreantNo() != 0) {
+				reply.setDereplyContent(HTMLInputFilter.htmlSpecialChars(reply.getDereplyContent()));
+				int dereplyNo = debateReplyService.getNextdereplyNo();
+				
+				reply.setDereplyNo(dereplyNo);
+				MemberVO member = (MemberVO)session.getAttribute("loginUser");
+				reply.setMemId(member.getMemId());
+				System.out.println(reply.toString());
+				debateReplyService.registDebateReply(reply);			
+			}else {
+				reply.setDereplyContent(HTMLInputFilter.htmlSpecialChars(reply.getDereplyContent()));
+				MemberVO member = (MemberVO)session.getAttribute("loginUser");
+				reply.setMemId(member.getMemId());		
+				debateReplyService.registDebateReply(reply);
+			}
+
+		entity = new ResponseEntity<String>("등록되었습니다.", HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return entity;
+	}	
+	
+	@RequestMapping(value="/deleteReply.do",method=RequestMethod.POST, produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> deleteReply(DebateReplyVO reply,  HttpSession session) throws Exception {
+		ResponseEntity<String> entity = null;
+		try {
+				
+			int num = reply.getDereplyNo();
+			debateReplyService.deleteReply(num);
+		entity = new ResponseEntity<String>("삭제되었습니다.", HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return entity;
+	}	
+}

@@ -1,0 +1,26 @@
+package com.one.command;
+
+import com.one.dto.ClassVO.ClassListVO;
+
+public class DpFavClassCommand extends ClassListVO{
+	private boolean fav = false;
+	private int count = 0;
+
+	public Boolean getFav() {
+		return fav;
+	}
+
+	public void setFav(boolean fav) {
+		this.fav = fav;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	
+}

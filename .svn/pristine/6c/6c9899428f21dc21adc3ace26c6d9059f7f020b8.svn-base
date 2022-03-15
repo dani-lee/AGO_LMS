@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Exam-Mapper">
+	
+	<sql id="row">
+		<if test="row gte 5">
+			ORDER BY a.MTEST_AVG_SCO DESC
+		</if>
+		<if test="row lte 3">
+			ORDER BY a.MTEST_AVG_SCO ASC
+		</if>
+	</sql>
+	
+	<select id="selectMiddlePrecedence" resultType="examStatis">
+		SELECT a.MTEST_AVG_SCO
+			 , b.CL_NAME
+		  FROM
+			   TEST a, CLASS b
+		 WHERE 
+			   a.CL_CODE = b.CL_CODE
+		   AND a.MTEST_AVG_SCO IS NOT NULL 	   
+  <![CDATA[AND ROWNUM <= #{row}]]>
+		 <include refid="row" />
+	</select>
+
+	<select id="selectFinalPrecedence" resultType="examStatis">
+		SELECT a.FTEST_AVG_SCO
+			 , b.CL_NAME
+		  FROM
+			   TEST a, CLASS b
+		 WHERE 
+			   a.CL_CODE = b.CL_CODE
+		   AND a.FTEST_AVG_SCO IS NOT NULL
+  <![CDATA[AND ROWNUM <= #{row}]]>
+		<include refid="row" />
+	</select>
+	
+	<select id="selectClassExamAVG" resultType="examStatis">
+		SELECT a.MTEST_AVG_SCO
+			 , a.FTEST_AVG_SCO
+			 , a.CL_CODE
+			 , b.CL_NAME
+		  FROM
+			   TEST a, CLASS b
+		 WHERE 
+			   a.CL_CODE = b.CL_CODE
+		   AND a.FTEST_AVG_SCO IS NOT NULL
+		 ORDER BY b.CL_NAME
+	</select>
+	
+	<select id="selectClassExamCount" resultType="int">
+		SELECT count(*)
+		  FROM
+			   TEST a, CLASS b
+		 WHERE 
+			   a.CL_CODE = b.CL_CODE
+		   AND a.FTEST_AVG_SCO IS NOT NULL
+	</select>
+	
+	<select id="selectClassList" resultType="examStatis">
+		SELECT a.MTEST_AVG_SCO
+			 , a.FTEST_AVG_SCO
+			 , a.CL_CODE
+			 , b.CL_NAME
+		  FROM
+			   TEST a, CLASS b
+		 WHERE 
+			   a.CL_CODE = b.CL_CODE
+		   AND a.FTEST_AVG_SCO IS NOT NULL
+		 ORDER BY b.CL_NAME
+	</select>
+	
+	<select id="selectExamStastisDetail" resultType="eStastisDetail">
+		SELECT a.POST_SDATE
+		     , a.POST_EDATE
+		     , c.CL_NAME
+		     , count(b.mem_cl_no)
+		  FROM open_class a
+		     , mem_cl b
+		     , class c
+		 WHERE a.CL_CODE = '3'
+		   AND a.opcl = b.opcl
+		   AND c.CL_CODE = a.CL_CODE
+	  GROUP BY a.POST_SDATE, a.POST_EDATE, c.CL_NAME
+	</select>
+	
+	<select id="selectExamStastisMiddleCount" resultType="int">
+		SELECT count(b.mem_cl_no)
+		  FROM open_class a
+		     , mem_cl b
+		 WHERE a.CL_CODE = #{clCode}
+		   AND a.opcl = b.opcl
+		   AND b.MIDTEST_SCORE between #{startNum} and #{endNum}
+	</select>
+	
+	<select id="selectExamStastisFinalCount" resultType="int">
+		SELECT count(b.mem_cl_no)
+		  FROM open_class a
+		     , mem_cl b
+		 WHERE a.CL_CODE = #{clCode}
+		   AND a.opcl = b.opcl
+		   AND b.FINTEST_SCORE between #{startNum} and #{endNum}
+	</select>
+	
+	
+	<select id="selectManagementExamList" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+		,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		ORDER BY B.FTEST_FILE DESC NULLS FIRST, B.MTEST_FILE DESC NULLS FIRST, LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectManagementExamListCount" resultType="int">
+		SELECT 
+		COUNT(*)
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		ORDER BY B.FTEST_FILE DESC NULLS FIRST, B.MTEST_FILE DESC NULLS FIRST, LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectNoExamClass" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+		,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		AND B.FTEST_FILE IS NULL
+		ORDER BY LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectNoExamClassCount" resultType="int">
+		SELECT 
+		COUNT(*)
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		AND B.FTEST_FILE IS NULL
+		ORDER BY LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectExamInfo" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+        ,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO 
+        FROM CLASS A, TEST B
+        WHERE A.CL_CODE = B.CL_CODE
+        AND B.CL_CODE = #{clCode}
+	</select>
+	
+	<sql id="term_condition">
+		<if test="term == 'midterm'.toString()">
+			and 
+		</if>
+		<if test="sortType == 's'.toString()">
+			and MSG_READ = 0
+		</if>
+	</sql>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

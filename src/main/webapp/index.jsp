@@ -1,0 +1,16 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!-- script 내부는 마크업이 아니여서 jstl 지양한다.  -->
+
+<script type="text/javascript">
+	if ('${ loginUser.memName }') {
+		location.href = "user/indexPage.do";
+	} else if ('${ loginManager.memName }') {
+		location.href = "manager/indexPage.do";
+	} else if ('${ loginAdmin.adminId }') {
+		location.href = "admin/indexPage.do";
+	} else {
+		location.href = "user/loginPage.do";
+	}
+</script>

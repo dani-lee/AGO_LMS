@@ -1,0 +1,74 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.ClassReviewCommand;
+import com.one.command.Criteria;
+import com.one.dao.ClassReviewDAO;
+import com.one.dto.ClassVO.ClassReviewVO;
+import com.one.dto.ClassVO.ClassVO;
+
+public class ClassReviewDAOImpl implements ClassReviewDAO {
+
+	private SqlSession session;
+
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	public List<ClassReviewCommand> selectClassReviewList(Criteria cri) throws SQLException {
+		List<ClassReviewCommand> reviewList = null;
+
+		reviewList = session.selectList("ClassReview-Mapper.selectClassReviewList", cri);
+
+		return reviewList;
+	}
+
+	@Override
+	public int selectClassListCount() throws SQLException {
+		return session.selectOne("ClassReview-Mapper.selectClassListCount");
+	}
+
+	@Override
+	public ClassVO selectClassDetail(int opcl) throws SQLException {
+		return session.selectOne("ClassReview-Mapper.selectClassDetail", opcl);
+	}
+
+	@Override
+	public double selectReviewAVG(int opcl) throws Exception {
+		double avg = session.selectOne("ClassReview-Mapper.selectReviewAVG", opcl);
+		
+		if(Double.isNaN(avg)) {
+			return 0.0;
+		}else {
+			return avg;
+		}
+		
+	}
+
+	@Override
+	public List<Integer> countReviewScore(int opcl) throws SQLException {
+		List<Integer> reviewScoreList = new ArrayList<Integer>();
+		Map<String, Integer> reviewScore = new HashMap<String, Integer>(); 
+		reviewScore.put("opcl", opcl);
+		for (int i = 1; i <= 5; i++) {
+			reviewScore.put("countType", i);
+			int count = session.selectOne("ClassReview-Mapper.countReviewScore",reviewScore);
+			reviewScoreList.add(count);
+		}
+		return reviewScoreList;
+	}
+
+	@Override
+	public List<ClassReviewCommand> selectDetailReviewList(int opcl) throws SQLException {
+		return session.selectList("ClassReview-Mapper.selectDetailReviewList", opcl);
+	}
+
+}

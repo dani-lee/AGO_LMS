@@ -1,0 +1,130 @@
+package com.one.service.impl;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import com.one.command.Criteria;
+import com.one.command.ExamRegistCommand;
+import com.one.command.PageMaker;
+import com.one.dao.ExamManagementDAO;
+import com.one.dto.ExamExcelVO;
+import com.one.dto.ExcelDTO;
+import com.one.dto.ManageExamVO;
+import com.one.service.ExamManagementService;
+import com.one.utils.ExcelUtil;
+
+public class ExamManagementServiceImpl implements ExamManagementService {
+
+	private ExamManagementDAO examManagementDAO;
+
+	public void setExamManagementDAO(ExamManagementDAO examManagementDAO) {
+		this.examManagementDAO = examManagementDAO;
+	}
+
+	private String excelTempPath;
+
+	private String excelFormPath;
+
+	public void setExcelTempPath(String excelTempPath) {
+		this.excelTempPath = excelTempPath;
+	}
+
+	public void setExcelFormPath(String excelFormPath) {
+		this.excelFormPath = excelFormPath;
+	}
+
+	@Override
+	public Map<String, Object> getManageExamList(Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<ManageExamVO> manageExamList = examManagementDAO.selectManagementExamList(cri);
+
+		int totalCount = examManagementDAO.selectManagementExamListCount(cri);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		System.out.println("#$#$#$#$#$#$#$#$#$#$#$#$" + manageExamList);
+		dataMap.put("manageExamList", manageExamList);
+		dataMap.put("pageMaker", pageMaker);
+		return dataMap;
+	}
+
+	@Override
+	public Map<String, Object> getNoExamClassList(Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<ManageExamVO> examList = examManagementDAO.selectNoExamClass(cri);
+
+		int totalCount = examManagementDAO.selectNoExamClassCount(cri);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		dataMap.put("examList", examList);
+		dataMap.put("pageMaker", pageMaker);
+		return dataMap;
+	}
+
+	@Override
+	public ManageExamVO getExamInfoDetail(String clCode) throws SQLException {
+		ManageExamVO manageExam = examManagementDAO.selectExamInfo(clCode);
+		return manageExam;
+	}
+
+	@Override
+	public Map<String, Object> readExam(String fileName) throws Exception {
+
+		ExcelDTO excelDTO = new ExcelDTO();
+
+		// 파일경로 추가
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~파일 경로 좀 보자" + excelTempPath + fileName);
+		excelDTO.setFilePath(excelTempPath + fileName);
+		// 컬럼명 추가
+		excelDTO.setOutputColumns("A", "B", "C", "D", "E", "F", "G", "H", "J");
+		// 시작행
+		excelDTO.setStartRow(2);
+
+		List<Map<String, String>> excelContent = ExcelUtil.read(excelDTO);
+		List<ExamExcelVO> examList = new ArrayList<ExamExcelVO>();
+		for (Map<String, String> test : excelContent) {
+			ExamExcelVO examExcel = new ExamExcelVO();
+
+			examExcel.setTestNum((int) Float.parseFloat(test.get("A")));
+			examExcel.setExamQuestions(test.get("B"));
+			examExcel.setTestAnswer(test.get("C"));
+			if (test.get("D") != null && !test.get("D").isEmpty()) {
+				examExcel.setCorrectAnswers((int) Float.parseFloat(test.get("D")));
+			}
+			examExcel.setTestNumber1(test.get("E"));
+			examExcel.setTestNumber2(test.get("F"));
+			examExcel.setTestNumber3(test.get("G"));
+			examExcel.setTestNumber4(test.get("H"));
+			if (test.get("J") != null && !test.get("J").isEmpty())
+				examExcel.setTotal((int) Float.parseFloat(test.get("J")));
+
+			examList.add(examExcel);
+		}
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("examList", examList);
+
+		return paramMap;
+
+	}
+
+	@Override
+	public String getExcelTempPath() throws IOException {
+		return excelTempPath;
+	}
+
+	@Override
+	public void registExamFile(ExamRegistCommand examCMD) throws SQLException {
+		examManagementDAO.updateExamFileInfo(examCMD);
+		
+	}
+
+}

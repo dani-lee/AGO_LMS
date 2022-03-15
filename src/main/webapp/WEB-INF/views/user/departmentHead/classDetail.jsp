@@ -1,0 +1,264 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="classVO" value="${dataMap.dpClass }" />
+<c:set var="chapterList" value="${dataMap.chapterList}" />
+<c:set var="reviewList" value="${dataMap.reviewList}" />
+
+<head></head>
+<title></title>
+<body>
+	<div class="content-wrapper m-0" style="min-width: 1280px;">
+		<!-- 메인 헤더 -->
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6">
+						<h4 class="m-0">강의 목록</h4>
+					</div>
+					<!-- /.col -->
+					<div class="col-sm-6">
+						<ol class="breadcrumb float-sm-right">
+							<li class="breadcrumb-item">
+								<a href="<%=request.getContextPath()%>/user/departmentHead/main.do">부서장</a>
+							</li>
+							<li class="breadcrumb-item active">강의 목록</li>
+						</ol>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.content-header -->
+
+
+
+
+		<!-- 메인 바디 -->
+		<!-- Main content -->
+		<section class="content h-100">
+			<div class="container-fluid">
+				<div class="card card-primary card-outline">
+					<div class="card-body">
+						<div class="class-detail row col-12">
+							<img src="/ago/user/departmentHead/getClassImg.do?fileNM=${classVO.clImg }" style="width: 150px; height: 100px;">
+							<div class="col-8 column ui-sortable">
+								<span class="h6 m-0">${classVO.clName }</span>
+								<c:if test="${classVO.clFormat eq 'A601'}">
+									<span class=" badge badge-info" style="margin-left: 10px;">오프라인</span>
+								</c:if>
+								<c:if test="${classVO.clFormat eq 'A602'}">
+									<span class=" badge badge-primary" style="margin-left: 10px;">온라인</span>
+								</c:if>
+								<c:if test="${classVO.clFormat eq 'A603'}">
+									<span class=" badge badge-success" style="margin-left: 10px;">실시간</span>
+								</c:if>
+								
+								<c:if test="${classVO.clDivision eq 'A502'}">
+									<span class=" badge badge-warning" style="margin-left: 2px;">선택</span>
+								</c:if>
+								<c:if test="${classVO.clDivision eq 'A501'}">
+									<span class=" badge badge-danger" style="margin-left: 2px;">필수</span>
+														</c:if>
+								<br>
+								<span class="">
+									<c:if test="${classVO.clCate eq 'A201'}">
+										신입사원교육
+									</c:if>
+									<c:if test="${classVO.clCate eq 'A202'}">
+										일반 교육
+									</c:if>
+									<c:if test="${classVO.clCate eq 'A203'}">
+										자기개발/취미
+									</c:if>
+									
+								</span>
+								<br>
+								<span class="rowtext-warning"> 
+									<c:forEach var="i" begin="1" end="${classVO.frontScope}">
+										<i class="fas fa-star"></i>
+									</c:forEach> <c:if test="${classVO.backScope >= 5}">
+										<i class="fas fa-star-half-alt"></i>
+									</c:if> <c:forEach var="i" begin="1" end="${classVO.restScope}">
+										<i class="far fa-star"></i>
+									</c:forEach> 
+									<span>(${classVO.scope})</span>
+								</span>
+								
+								<div class="row">
+									<div id="favBtn" class="col-8 d-flex justify-items-center">
+										<c:if test="${classVO.fav }">
+											<button class="btn btn-success btn-xs" onclick="fav_go(this, '${classVO.opcl }','r');">즐겨찾기 해제</button>
+										</c:if>
+										<c:if test="${not classVO.fav }">
+											<button class="btn btn-success btn-xs" onclick="fav_go(this, '${classVO.opcl }','a');">즐겨찾기</button>
+										</c:if>
+									</div>
+								</div>
+							</div>
+							<div class="col-2 p-0 column ui-sortable ml-5">
+								<button class="btn btn-default btn-sm float-right" onclick="location.href='classList.do'">목록</button>
+							</div>
+						</div>
+						
+						<ul class="nav nav-tabs mt-2" id="custom-content-above-tab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="custom-content-above-info-tab" data-toggle="pill" href="#custom-content-above-info" role="tab" aria-controls="custom-content-above-info" aria-selected="true">강의정보</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-content-above-list-tab" data-toggle="pill" href="#custom-content-above-list" role="tab" aria-controls="custom-content-above-list" aria-selected="false">강의목차</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-content-above-messages-tab" data-toggle="pill" href="#custom-content-above-messages" role="tab" aria-controls="custom-content-above-messages" aria-selected="false">수강후기</a>
+							</li>
+
+						</ul>
+						<div class="tab-content" id="custom-content-above-tabContent">
+							<div class="tab-pane fade show active" id="custom-content-above-info" role="tabpanel" aria-labelledby="custom-content-above-info-tab">
+								<table class="table">
+									<tr>
+										<td class="font-weight-bold">수료기준안내</td>
+										<td colspan="3">
+											<span style="white-space: pre-wrap;">${classVO.clIntro }</span>
+										</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">정원</td>
+										<td>${classVO.enrPers }</td>
+										<td class="font-weight-bold">강의이수시간</td>
+										<td>${classVO.clCreditTime }시간</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">신청기간</td>
+										<td>${classVO.posts}&nbsp;~&nbsp;${classVO.poste}</td>
+										<td class="font-weight-bold">교육기간</td>
+										<td>
+											<c:if test="${classVO.studyDate ne 'D103'}">
+												신청일로부터 ${classVO.studyTime }일간
+											</c:if> <c:if test="${classVO.studyDate eq 'D103'}">
+												 ${classVO.studyTime }
+											</c:if>
+										</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">과정소개</td>
+										<td colspan="3">
+											<span style="white-space: pre-wrap;">${classVO.cutLine }</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="custom-content-above-list" role="tabpanel" aria-labelledby="custom-content-above-list-tab">
+								<table class="table table-hover">
+									<thead>
+										<tr class="text-center">
+											<th scope="col">회차</th>
+											<th scope="col">회차명</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:if test="${not empty chapterList }">
+											<c:forEach items="${chapterList }" var="chapter">
+												<tr class="text-center">
+													<td class="align-middle p-1">${chapter.clChapNum}</td>
+													<td class="align-middle text-left p-1">${chapter.clChapName}</td>
+												</tr>
+											</c:forEach>
+										</c:if>
+										<c:if test="${empty chapterList }">
+											<tr>
+												<td colspan="2">
+													등록된 회차가 존재하지 않습니다.
+												</td>
+											</tr>
+										</c:if>
+										
+										
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="custom-content-above-messages" role="tabpanel" aria-labelledby="custom-content-above-messages-tab">
+								<!--수강후기-->
+								<div class="reviews-list row">
+									<div class="col-12">
+										<ul class="list-group list-group-flush">
+											
+											<c:if test="${not empty reviewList }">
+												<c:forEach items="reviewList" var="review">
+													<li class="list-group-item">
+														<div class="reviews">
+															<div class="row">
+																<div class="col-8">
+																	<span>${review.memId } </span>
+																	<span class="col">${review.date}</span>
+		
+																</div>
+																<div class="ml-auto h6">
+																	<span class="row text-warning"> 
+																		<c:forEach var="i" begin="1" end="${review.frontScope}">
+																			<i class="fas fa-star"></i>
+																		</c:forEach> <c:if test="${review.backScope >= 5}">
+																			<i class="fas fa-star-half-alt"></i>
+																		</c:if> <c:forEach var="i" begin="1" end="${review.restScope}">
+																			<i class="far fa-star"></i>
+																		</c:forEach> &nbsp; (${review.scope })
+																	</span>
+																</div>
+															</div>
+															<p class="inline-block m-0">
+																<span style="white-space: pre;" class="font-weight-bold">${review.reviewContent}</span>
+															</p>
+														</div>
+													</li>
+												</c:forEach>
+											</c:if>
+											<c:if test="${empty reviewList }">
+												<li class="list-group-item">
+													<div class="reviews">
+														<p class="text-center">등록된 수강 후기가 없습니다.</p>
+													</div>
+												</li>
+											</c:if>
+										</ul>
+									</div>
+									<!--/수강후기-->
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+						<div class="card-footer"></div>
+					</div>
+					<!-- /.card -->
+				</div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		function fav_go(aTag, opcl, check){
+			btn = "<button class='btn btn-success btn-xs' onclick='fav_go(this, '${classVO.opcl }','r');'>즐겨찾기 해제</button>";
+			let url = "favRegist.do";
+			if(check == 'r'){
+				url = "favRemove.do";
+				btn = "<button class='btn btn-success btn-xs' onclick='fav_go(this, '${classVO.opcl }','a');'>즐겨찾기</button>"
+			}
+
+			$.ajax({
+				url : url,
+				type: 'post',
+				data : {"opcl" : opcl},
+				dataType: 'json',
+				success:function(data){
+					$('#favBtn').empty();
+					$('#favBtn').append(btn);
+				},
+				error:function(error){
+					alert("에러라네요...");
+				}
+			});
+
+		}
+	</script>
+</body>

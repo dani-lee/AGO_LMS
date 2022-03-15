@@ -1,0 +1,296 @@
+package com.one.dto.ClassVO;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.one.command.JsonCommand;
+
+public class ClassListVO extends JsonCommand {
+	private String clCode; // 강의 코드
+	private String clImg; // 이미지 이름
+	private String clName; // 강의명
+	private String clIntro; // 강의 소개
+	private int clPoint; // 이수 점수
+	private int clCreditTime; // 이수 시간
+	private String clFormat; // 강의 형식 (온라인, 오프라인, 실시간) common
+	private String clCate; // 강의 분류 (신입교육, 일반교육, 자기개발/취미) common
+	private int opcl; // open된 강의 코드
+	private int clRoomNo;  // 강의실 코드(1, 2, 3, 0)
+	protected Date postSdate; // 게시 시작 날짜
+	protected Date postEdate; // 게시종료 날짜
+	private String mainExposure; // 메인 노출 설정
+	private String enrPers; // 수간 신청 인원
+	protected String studyDate; // 학습기간(7, 30, 제한없음) common
+	private String clQr; // 오픈강의 코드
+	private String clRoomName; // 강의실 이름
+	private String clRoomLoc; // 강의실 위치
+	private String clDivision; // 강의 구분 (팔수, 선택) common
+	private String cutLine; // 수료기준
+	protected Date lecDate;
+	private String leftDays; // 강의 메인 대쉬보드의 오늘기준으로부터 게시마감날짜까지의 남은 일수
+	private int openRound;
+	
+	//수강생목록 뽑으려고 추가함
+	private String memEmail;
+	private String memName;
+	private Date memBir;
+	private String memId;
+	
+	// 조명석 departmentHead에서 사용합니다.
+	private Boolean fav;
+	
+	private String lDate;
+	String pattern = "yyyy.MM.dd";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	
+	
+	public String getLeftDays() {
+		return leftDays;
+	}
+	public void setLeftDays(String leftDays) {
+		this.leftDays = leftDays;
+	}
+	public String getlDate() {
+		return lDate;
+	}
+	public void setlDate(String lDate) {
+		this.lDate = lDate;
+	}
+
+
+	public String getCutLine() {
+		return cutLine;
+	}
+
+	public void setCutLine(String cutLine) {
+		this.cutLine = cutLine;
+	}
+
+	public String getClDivision() {
+		return clDivision;
+	}
+
+	public void setClDivision(String clDivision) {
+		this.clDivision = clDivision;
+	}
+
+	public String getClCode() {
+		return clCode;
+	}
+
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+
+	public String getClImg() {
+		return clImg;
+	}
+
+	public void setClImg(String clImg) {
+		this.clImg = clImg;
+	}
+
+	public String getClName() {
+		return clName;
+	}
+
+	public void setClName(String clName) {
+		super.setText(clName);
+		super.setIcon("fas fa-book-open");
+		this.clName = clName;
+	}
+
+	public String getClIntro() {
+		return clIntro;
+	}
+
+	public void setClIntro(String clIntro) {
+		this.clIntro = clIntro;
+	}
+
+	public int getClPoint() {
+		return clPoint;
+	}
+
+	public void setClPoint(int clPoint) {
+		this.clPoint = clPoint;
+	}
+
+	public int getClCreditTime() {
+		return clCreditTime;
+	}
+
+	public void setClCreditTime(int clCreditTime) {
+		this.clCreditTime = clCreditTime;
+	}
+
+	public String getClFormat() {
+		return clFormat;
+	}
+
+	public void setClFormat(String clFormat) {
+		this.clFormat = clFormat;
+	}
+
+	public String getClCate() {
+		return clCate;
+	}
+
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+
+	public int getOpcl() {
+		return opcl;
+	}
+
+	public void setOpcl(int opcl) {
+		super.setId(opcl + "");
+		this.opcl = opcl;
+	}
+
+	public int getClRoomNo() {
+		return clRoomNo;
+	}
+
+	public void setClRoomNo(int clRoomNo) {
+		this.clRoomNo = clRoomNo;
+	}
+
+	public Date getPostSdate() {
+		return postSdate;
+	}
+
+	public Date getPostEdate() {
+		return postEdate;
+	}
+
+	public void setPostSdate(Date postSdate) {
+		this.postSdate = postSdate;
+	}
+
+	public void setPostEdate(Date postEdate) {
+		this.postEdate = postEdate;
+	}
+
+	public String getMainExposure() {
+		return mainExposure;
+	}
+
+	public void setMainExposure(String mainExposure) {
+		this.mainExposure = mainExposure;
+	}
+
+	public String getEnrPers() {
+		return enrPers;
+	}
+
+	public void setEnrPers(String enrPers) {
+		this.enrPers = enrPers;
+	}
+
+	public String getStudyDate() {
+		return studyDate;
+	}
+
+	public void setStudyDate(String studyDate) {
+		this.studyDate = studyDate;
+	}
+
+	public String getClQr() {
+		return clQr;
+	}
+
+	public void setClQr(String clQr) {
+		this.clQr = clQr;
+	}
+
+	public String getClRoomName() {
+		return clRoomName;
+	}
+
+	public void setClRoomName(String clRoomName) {
+		this.clRoomName = clRoomName;
+	}
+
+	public String getClRoomLoc() {
+		return clRoomLoc;
+	}
+
+	public void setClRoomLoc(String clRoomLoc) {
+		this.clRoomLoc = clRoomLoc;
+	}
+
+	public Boolean getFav() {
+		return fav;
+	}
+
+	public void setFav(Boolean fav) {
+		this.fav = fav;
+	}
+	
+	public Date getLecDate() {
+		return lecDate;
+	}
+
+	public void setLecDate(Date lecDate) {
+		this.lecDate = lecDate;
+		if(lecDate != null) {
+			setlDate(simpleDateFormat.format(lecDate));
+		}
+		
+	}
+
+	public String getMemEmail() {
+		return memEmail;
+	}
+
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+
+	public String getMemName() {
+		return memName;
+	}
+
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+
+	public Date getMemBir() {
+		return memBir;
+	}
+
+	public void setMemBir(Date memBir) {
+		this.memBir = memBir;
+	}
+
+	public String getMemId() {
+		return memId;
+	}
+
+	public void setMemId(String memId) {
+		this.memId = memId;
+	}
+
+	public int getOpenRound() {
+		return openRound;
+	}
+	public void setOpenRound(int openRound) {
+		this.openRound = openRound;
+	}
+	
+	@Override
+	public String toString() {
+		return "ClassListVO [clCode=" + clCode + ", clImg=" + clImg + ", clName=" + clName + ", clIntro=" + clIntro
+				+ ", clPoint=" + clPoint + ", clCreditTime=" + clCreditTime + ", clFormat=" + clFormat + ", clCate="
+				+ clCate + ", opcl=" + opcl + ", clRoomNo=" + clRoomNo + ", postSdate=" + postSdate + ", postEdate="
+				+ postEdate + ", mainExposure=" + mainExposure + ", enrPers=" + enrPers + ", studyDate=" + studyDate
+				+ ", clQr=" + clQr + ", clRoomName=" + clRoomName + ", clRoomLoc=" + clRoomLoc + ", clDivision="
+				+ clDivision + ", cutLine=" + cutLine + ", lecDate=" + lecDate + ", fav=" + fav + "]";
+	}
+
+
+	
+	
+}

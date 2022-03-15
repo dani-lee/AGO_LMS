@@ -1,0 +1,64 @@
+package com.one.dto;
+
+public class MemRemdSetVO {
+
+	private String memEmail;
+	private int reportDlFlag;
+	private int intrClFlag;
+	private int realtimeClFlag;
+	private int dutyClFlag;
+	private int msgFlag;
+	private int reportChkFlag;
+	
+	public String getMemEmail() {
+		return memEmail;
+	}
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+	public int getReportDlFlag() {
+		return reportDlFlag;
+	}
+	public void setReportDlFlag(int reportDlFlag) {
+		this.reportDlFlag = reportDlFlag;
+	}
+	public int getIntrClFlag() {
+		return intrClFlag;
+	}
+	public void setIntrClFlag(int intrClFlag) {
+		this.intrClFlag = intrClFlag;
+	}
+	public int getRealtimeClFlag() {
+		return realtimeClFlag;
+	}
+	public void setRealtimeClFlag(int realtimeClFlag) {
+		this.realtimeClFlag = realtimeClFlag;
+	}
+	public int getDutyClFlag() {
+		return dutyClFlag;
+	}
+	public void setDutyClFlag(int dutyClFlag) {
+		this.dutyClFlag = dutyClFlag;
+	}
+	public int getMsgFlag() {
+		return msgFlag;
+	}
+	public void setMsgFlag(int msgFlag) {
+		this.msgFlag = msgFlag;
+	}
+	public int getReportChkFlag() {
+		return reportChkFlag;
+	}
+	public void setReportChkFlag(int reportChkFlag) {
+		this.reportChkFlag = reportChkFlag;
+	}
+	
+	@Override
+	public String toString() {
+		return "MemRemdSetVO [memEmail=" + memEmail + ", reportDlFlag=" + reportDlFlag + ", intrClFlag=" + intrClFlag
+				+ ", realtimeClFlag=" + realtimeClFlag + ", dutyClFlag=" + dutyClFlag + ", msgFlag=" + msgFlag
+				+ ", reportChkFlag=" + reportChkFlag + "]";
+	}
+	
+	
+}

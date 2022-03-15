@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/fontawesome-free/css/all.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- iCheck -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- JQVMap -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/jqvmap/jqvmap.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="../../resources/bootstrap/dist/css/adminlte.min.css">
+<!-- overlayScrollbars -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+<!-- Daterange picker -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/daterangepicker/daterangepicker.css">
+<!-- summernote -->
+<link rel="stylesheet" href="../../resources/bootstrap/plugins/summernote/summernote-bs4.min.css">
+</head>
+
+
+<body>
+	<div class="container-fluid">
+		<div class="input-group  col-12 p-0 mb-1">
+			<div class="p-0 m-0 text-left col-5 float-left">
+			</div>
+			<div class="row col-7 justify-content-end p-0 mr-1">
+				<select class="col-md-2 form-control" name="searchType">
+			        <option value=""  ${cri.searchType eq '' ? 'selected':'' }>전체</option>
+					<option value="m" ${cri.searchType eq 'm' ? 'selected':'' }>필수</option>
+					<option value="c" ${cri.searchType eq 'c' ? 'selected':'' }>선택</option>
+				</select>
+				<input type="text" placeholder="강의명 검색..." name="keyword" class="form-control col-md-7" value="${ param.keyword }" >
+				<button class="col-md-1 btn btn-primary float-right" onclick="list_go(1);" >검색</button>
+			</div>
+			<div class="row">
+				<table style="height: 650px;">
+					<tr class="row pl-2">
+						<td class="card p-2 pb-1 ml-3 mb-2" style="width:240px; " >
+							<div class="ribbon-wrapper">
+						       <div class="ribbon bg-danger">
+						         	필수
+						       </div>
+						    </div>
+						    <img onclick="list_go(${cri.page },'detail.do',${item.clCode},${item.opcl })" class="mx-auto" src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" alt="..." style="width: 220px; height: 150px;">
+						    <div class="p-1" style="height: 70px;" onclick="list_go(${cri.page },'detail.do',${item.clCode},${item.opcl })">
+								<h6 class="m-1 font-weight-bold">강의명 들어가는 부분</h6>			
+							</div>
+							<div class="row pl-2">
+								<span class="badge bg-info ml-1 pt-2">오프라인</span>
+								<small class="badge badge-warning ml-1 pt-2 mr-5">이수점수 : 44점</small>
+								<i style="font-size: 25px;" id='bookmark' class="ml-1 pl-1 far fa-bookmark"></i>
+							</div>
+							<span class="pl-1 text-primary">2022.04.01~2022.07.23</span>
+							<input id="${item.opcl}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" onclick="regist(${item.opcl},${item.studyTime })" value="수강신청" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+		
+	<!-- pdf 형식으로 다운받기 -->
+	<script type="text/javascript">
+		$('#create_pdf').click(function() {
+			//pdf_wrap을 canvas객체로 변환
+			html2canvas($('#pdf_wrap')[0]).then(function(canvas) {
+				var doc = new jsPDF('p', 'mm', 'a4'); //jspdf객체 생성
+				var imgData = canvas.toDataURL('image/png'); //캔버스를 이미지로 변환
+				doc.addImage(imgData, 'PNG', 0, 0); //이미지를 기반으로 pdf생성
+				doc.save('sample-file.pdf'); //pdf저장
+			});
+		});
+	</script>
+	<!-- jQuery -->
+	<script src="../../resources/bootstrap/plugins/jquery/jquery.min.js"></script>
+	<!-- jQuery UI 1.11.4 -->
+	<script src="../../resources/bootstrap/plugins/jquery-ui/jquery-ui.min.js"></script>
+	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+	<!-- Bootstrap 4 -->
+	<script src="../../resources/bootstrap/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- ChartJS -->
+	<script src="../../resources/bootstrap/plugins/chart.js/Chart.min.js"></script>
+	<!-- Sparkline -->
+	<script src="../../resources/bootstrap/plugins/sparklines/sparkline.js"></script>
+	<!-- JQVMap -->
+	<script src="../../resources/bootstrap/plugins/jqvmap/jquery.vmap.min.js"></script>
+	<script src="../../resources/bootstrap/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+	<!-- jQuery Knob Chart -->
+	<script src="../../resources/bootstrap/plugins/jquery-knob/jquery.knob.min.js"></script>
+	<!-- daterangepicker -->
+	<script src="../../resources/bootstrap/plugins/moment/moment.min.js"></script>
+	<script src="../../resources/bootstrap/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Tempusdominus Bootstrap 4 -->
+	<script src="../../resources/bootstrap/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+	<!-- Summernote -->
+	<script src="../../resources/bootstrap/plugins/summernote/summernote-bs4.min.js"></script>
+	<!-- overlayScrollbars -->
+	<script src="../../resources/bootstrap/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="../../resources/bootstrap/dist/js/adminlte.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="../../resources/bootstrap/dist/js/demo.js"></script>
+	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+	<script src="../../resources/bootstrap/dist/js/pages/dashboard.js"></script>
+</body>
+</html>

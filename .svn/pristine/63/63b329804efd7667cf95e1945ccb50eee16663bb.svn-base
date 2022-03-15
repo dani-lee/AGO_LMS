@@ -1,0 +1,303 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.ClassReviewCommand;
+import com.one.command.Criteria;
+import com.one.command.CriteriaDpCommand;
+import com.one.command.DepartmentHeadReportCommand;
+import com.one.command.DepartmentMemberClassCommand;
+import com.one.command.DpFavClassCommand;
+import com.one.command.MemberCriteria;
+import com.one.command.ReportClassCommand;
+import com.one.dao.DpOrderDAO;
+import com.one.dto.CertificateListVO;
+import com.one.dto.CertificateVO;
+import com.one.dto.DpHeadVO;
+import com.one.dto.ExtReportVO;
+import com.one.dto.IntReportVO;
+import com.one.dto.MemberCertificateVO;
+import com.one.dto.MemberVO;
+import com.one.dto.OrderClassVO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassListVO;
+
+public class DpOrderDAOImpl implements DpOrderDAO {
+
+	private SqlSession session;
+
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+	
+
+	@Override
+	public List<DpFavClassCommand> selectDpClassList(CriteriaDpCommand cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DpFavClassCommand> dpClassList = session.selectList("Department-Mapper.selectDpClassList", cri, rowBounds);
+		if(dpClassList.size()>0) {
+			for(int i=0;i<dpClassList.size();i++) {
+
+				cri.setOpcl(dpClassList.get(i).getOpcl());
+				if(session.selectOne("Department-Mapper.selectDpFavClass",cri) != null) {
+					dpClassList.get(i).setFav(true);
+				}
+				if(session.selectOne("Department-Mapper.selectDpClassMemberCount",dpClassList.get(i).getOpcl()) != null) {
+					dpClassList.get(i).setCount(session.selectOne("Department-Mapper.selectDpClassMemberCount",dpClassList.get(i).getOpcl()));
+				}
+			}
+		}
+		List<DpFavClassCommand> finalDpClassList = new ArrayList<>();
+		if(cri.getSortType().equals("s")) {
+			for(DpFavClassCommand dpClass : dpClassList) {
+				if(dpClass.getFav()) {
+					finalDpClassList.add(dpClass);
+				}
+			}
+		}else if(cri.getSortType().equals("n")) {
+			for(DpFavClassCommand dpClass : dpClassList) {
+				if(!dpClass.getFav()) {
+					finalDpClassList.add(dpClass);
+				}
+			}
+		}else {
+			finalDpClassList = dpClassList;
+		}
+		return finalDpClassList;
+	}
+	
+
+	@Override
+	public int selectDpClassListCount(CriteriaDpCommand cri) throws SQLException {
+		return session.selectOne("Department-Mapper.selectDpClassListCount",cri);
+	}
+
+
+	@Override
+	public DpFavClassCommand selectDpClass(int opcl) throws SQLException {
+		DpFavClassCommand dpFavClass = session.selectOne("Department-Mapper.selectDpClass",opcl);
+		if(session.selectOne("Department-Mapper.selectDpFavClass",opcl) != null) {
+			dpFavClass.setFav(true);
+		}
+		if(session.selectOne("Department-Mapper.selectClassAvg",opcl) != null) {
+			dpFavClass.setScope(session.selectOne("Department-Mapper.selectClassAvg",opcl));
+		}
+		
+		return dpFavClass;
+	}
+
+
+	@Override
+	public List<ClassChapterVO> selectClassChapter(String clCode) throws SQLException {
+		return session.selectList("Department-Mapper.selectDpClassChapter", clCode);
+	}
+
+
+	@Override
+	public List<ClassReviewCommand> selectClassReview(int opcl) throws SQLException {
+		return session.selectList("Department-Mapper.selectDpClassReview", opcl);
+	}
+
+
+
+	@Override
+	public int getOdId() throws SQLException {
+		int odId = session.selectOne("Department-Mapper.getOdId");
+		return odId;
+	}
+
+	@Override
+	public void insertDpHeadOd(DpHeadVO order) throws SQLException {
+		session.update("Department-Mapper.insertDpHeadOd", order);
+	}
+
+	@Override
+	public void insertDpOdOpcl(DpHeadVO order) throws SQLException {
+		session.update("Department-Mapper.insertDpOdOpcl", order);
+
+	}
+
+	@Override
+	public void insertDpOdMem(DpHeadVO order) throws SQLException {
+		session.update("Department-Mapper.insertDpOdMem", order);
+
+	}
+
+	@Override
+	public List<ClassListVO> selectDpHeadFav(String dpId) throws SQLException {
+		List<ClassListVO> classList = session.selectList("Department-Mapper.selectDpHeadFav", dpId);
+		return classList;
+	}
+
+	@Override
+	public void insertDpHeadFav(DpHeadVO fav) throws SQLException {
+		session.update("Department-Mapper.insertDpHeadFav", fav);
+
+	}
+
+	@Override
+	public void deleteDpHeadFav(DpHeadVO fav) throws SQLException {
+		session.update("Department-Mapper.deleteDpHeadFav", fav);
+
+	}
+
+	@Override
+	public int favCheck(DpHeadVO fav) throws SQLException {
+		int chk = session.selectOne("Department-Mapper.DpHeadFavByDpIdAndOpclCount", fav);
+		return chk;
+	}
+
+	@Override
+	public List<DepartmentHeadReportCommand> selectReportList(Criteria cri, String department) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchType", cri.getSearchType());
+		map.put("keyword", cri.getKeyword());
+		map.put("department", department);
+		return session.selectList("Department-Mapper.selectReportList", map, rowBounds);
+	}
+
+	@Override
+	public List<DepartmentHeadReportCommand> selectDashReportList(Criteria cri, String department) throws SQLException {
+		RowBounds rowBounds = new RowBounds(0, 6);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sortType", cri.getSortType());
+		map.put("department", department);
+		List<DepartmentHeadReportCommand> reportList 
+			= session.selectList("Department-Mapper.selectDashReportList", map, rowBounds);
+		return reportList;
+	}
+
+	@Override
+	public int selectReportCount(Criteria cri, String department) throws SQLException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cri", cri);
+		map.put("department", department);
+		return session.selectOne("Department-Mapper.selectReportListCount", map);
+	}
+
+	@Override
+	public List<OrderClassVO> selectOrderClassList(String department) throws SQLException {
+		List<OrderClassVO> orderClassList = session.selectList("Department-Mapper.selectOrderClassList", department);
+		return orderClassList;
+	}
+
+	@Override
+	public List<DepartmentMemberClassCommand> selectMemberClassList(Criteria cri) throws SQLException {
+		List<DepartmentMemberClassCommand> memberClassList = session.selectList("Department-Mapper.selectMemberClassList", cri);
+		return memberClassList;
+	}
+
+	@Override
+	public List<DepartmentMemberClassCommand> selectMemberClassCheckList(String department, int opcl) throws SQLException {
+		List<MemberVO> member = session.selectList("Department-Mapper.selectDepartmentMemberList", department);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("department", department);
+		map.put("opcl", opcl);
+		List<DepartmentMemberClassCommand> memberClassCheckList = new ArrayList<>();
+
+		for(int i=0;i<member.size();i++) {
+			DepartmentMemberClassCommand departmentMemberClass = new DepartmentMemberClassCommand();
+			String memEmail = member.get(i).getMemEmail();
+			map.put("memEmail", memEmail);
+			
+			String memName = member.get(i).getMemName();
+			String clName = session.selectOne("Department-Mapper.selectMemberClassName", opcl);
+			// mem_cl에 존재하는 경우
+			if(session.selectOne("Department-Mapper.selectMemberClassCheck", map) != null) {
+				departmentMemberClass = session.selectOne("Department-Mapper.selectMemberClassCheck", map);
+				departmentMemberClass.setMemEmail(memEmail);
+				departmentMemberClass.setMemName(memName);
+				departmentMemberClass.setClName(clName);
+				memberClassCheckList.add(departmentMemberClass);
+			}else { // 존재하지 않는경우
+				departmentMemberClass.setMemEmail(memEmail);
+				departmentMemberClass.setMemName(memName);
+				departmentMemberClass.setClName(clName);
+				// System.out.println("nullpoint============================"+departmentMemberClass.getMemEmail());
+				memberClassCheckList.add(departmentMemberClass);
+			}
+			// System.out.println("memName"+i+"============================="+departmentMemberClass.getMemName()+"-"+departmentMemberClass.getProgRate()+"%");
+		}
+		return memberClassCheckList;
+	}
+
+	@Override
+	public String selectAutograph(String dpId) throws SQLException {
+		return session.selectOne("Department-Mapper.selectAutograph", dpId);
+	}
+
+	@Override
+	public ExtReportVO selectExtReport(int no) throws SQLException {
+		
+		return session.selectOne("Department-Mapper.selectExtReport", no);
+	}
+
+	@Override
+	public IntReportVO selectIntReport(int no) throws SQLException {
+		
+		return session.selectOne("Department-Mapper.selectIntReport", no);
+	}
+
+	@Override
+	public ReportClassCommand selectExtReportClass(int no) throws SQLException {
+		
+		return session.selectOne("Department-Mapper.selectExtReportClass", no);
+	}
+
+	@Override
+	public ReportClassCommand selectIntReportClass(int memClNo) throws SQLException {
+		
+		return session.selectOne("Department-Mapper.selectIntReportClass", memClNo);
+	}
+
+	@Override
+	public void updateExtReportApproval(int no) throws SQLException {
+		 session.selectOne("Department-Mapper.updateExtReportApproval", no);
+	}
+
+	@Override
+	public void updateIntReportApproval(int no) throws SQLException {
+		session.selectOne("Department-Mapper.updateIntReportApproval", no);
+	}
+
+	@Override
+	public void updateExtReportReturn(int no) throws SQLException {
+		session.selectOne("Department-Mapper.updateExtReportReturn", no);
+	}
+
+	@Override
+	public void updateIntReportReturn(int no) throws SQLException {
+		session.selectOne("Department-Mapper.updateIntReportReturn", no);
+	}
+
+	@Override
+	public CertificateVO selectCertificate() throws SQLException {
+		CertificateVO certificate = null;
+		
+		certificate = session.selectOne("Department-Mapper.selectCertificate");
+		
+		return certificate;
+	}
+
+	@Override
+	public MemberCertificateVO selectCretificateByEmail(String memClNo, String memEmail) throws SQLException{
+		MemberCertificateVO memCertificate = new MemberCertificateVO();
+		memCertificate.setClCode(memClNo);
+		memCertificate.setMemEmail(memEmail);
+		return session.selectOne("Department-Mapper.selectCretificateByEmail",memCertificate);
+	}
+
+
+}

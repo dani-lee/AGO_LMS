@@ -1,0 +1,137 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+
+
+<script type="text/x-handlebars-template"  id="class-detail-template" >
+<table class="table" style="border : none;">
+
+<tr style="border : none;">
+	<td class="text-center" style="background-color : #E6EFFC; width : 100px;">강의명</td>
+	<td colspan="3">{{clName }}</td>
+</tr>
+
+<tr style="border : none;">
+	<td class="text-center" style="background-color:#E6EFFC; ">이수시간</td>
+	<td style="width : 200px;">{{clCreditTime }}</td>
+	<td class="text-center" style="background-color:#E6EFFC; width : 100px;">이수점수</td>
+	<td>{{clPoint }}</td>
+</tr>
+
+<tr style="border : none;">
+	<td class="text-center" style="border-bottom : 1px solid #dee2e6;background-color:#E6EFFC; ">강의형식</td>
+	<td style="border-bottom : 1px solid #dee2e6;">
+		<span class="badge badge-primary">
+			{{clFormat}}
+		</span>
+	</td>
+	<td class="text-center" style="border-bottom : 1px solid #dee2e6;background-color:#E6EFFC; ">강의분류</td>
+	<td style="border-bottom : 1px solid #dee2e6;">
+		<span class="badge badge-danger">
+			{{clDivision}}
+		</span>
+	</td>
+</tr>				
+</table>
+</script>
+
+<script type="text/x-handlebars-template"  id="opcl-detail-template" >
+			{{#if.}}
+				<table class="table mt-3 table-sm">
+					<thead>
+						<tr class="text-center">
+							<th class="col-md-1 column ui-sortable">회차{{MaxRound}}</th>
+							<th class="col-md-5 column ui-sortable text-center">게시기간</th>
+						</tr>
+					</thead>
+					<tbody>
+				{{#each .}} 
+						<tr onclick="location.href='detailInfoClass.do?clCode={{clCode}}&openRound={{openRound}}'" style="cursor:pointer;">
+							<td class="text-center">{{openRound}}</td>
+							<td class="text-center">
+								<div class="column ui-sortable">
+									<span class="h6" style="cursor: poiner;" onclick="location.href='statisticsDetail.do?mCode=M010203'"></span>
+									{{prettifyDate postSdate}} ~ {{prettifyDate postEdate}}
+									<br>
+								</div>
+							</td>
+
+						</tr>
+				 {{/each}}
+					</tbody>
+				</table>
+				{{else}}
+				<table class="table mt-3 table-sm">
+					<thead>
+						<tr>
+							<th class="col-md-1 column ui-sortable">회차</th>
+							<th class="col-md-5 column ui-sortable text-center">게시기간</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr>
+							<td colspan="2">등록된 강의가 없습니다.</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+				{{/if}}
+</script>
+
+
+
+<script>
+window.onload = function () {
+	getPage('<%=request.getContextPath()%>/manager/classManagement/detailClass.do?clCode=${classList[0].clCode}');
+	$('input[name="openclCode"]').val($('#firstclCode').val());
+}
+
+function printData(detail, target, templateObject){
+	let template = document.getElementById("class-detail-template").innerText;
+	let bindTemplate = Handlebars.compile(template);
+	var append = document.getElementById("detailhandle");
+	var html = bindTemplate(detail);
+	append.innerHTML = html;
+}
+function printData2(detail, target, templateObject){
+	let template = document.getElementById("opcl-detail-template").innerText;
+	let bindTemplate = Handlebars.compile(template);
+	var append = document.getElementById("inOpcl");
+	var html = bindTemplate(detail);
+	console.log(html);
+	append.innerHTML = html;
+}
+function getPage(pageInfo){
+
+	$.ajax({
+		url : pageInfo,
+		type : "get",
+		dataType : "json",
+		success : function(data){
+			printData(data.detail, $('#detail'), $('#class-detail-template'));
+			
+ 			printData2(data.opcl, $('#outOpcl'), $('#opcl-detail-template'));
+			parent.resize(window.parent.document.getElementById("ifr"));
+
+		},
+		error:function(error){
+			AjaxErrorSecurityRedirectHandler(error.status);
+		}
+	})
+	
+};
+
+Handlebars.registerHelper({
+	"prettifyDate" : function(timeValue){
+		let dateObj = new Date(timeValue);
+		let year = dateObj.getFullYear();
+		let month = dateObj.getMonth() + 1;
+		let date = dateObj.getDate();
+		return year + "-" + month + "-" + date;
+	}
+})	
+</script>

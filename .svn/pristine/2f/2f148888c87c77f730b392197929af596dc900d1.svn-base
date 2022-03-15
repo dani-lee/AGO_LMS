@@ -1,0 +1,130 @@
+package com.one.dto;
+
+import java.util.Date;
+
+import com.one.command.JsonCommand;
+
+public class MemberVO extends JsonCommand {
+
+	private String memEmail;
+	private String memName;
+	private Date memBir;
+	private String memPhone;
+	private String memId;
+	private String memPwd;
+	private int memCredit;
+	private String positionId;
+	private String dpId;
+	private String authorityId;
+	private String memStatus;
+	private int memClassCnt;
+
+	public String getMemEmail() {
+		return memEmail;
+	}
+
+	public void setMemEmail(String memEmail) {
+		super.setId(memEmail);
+		this.memEmail = memEmail;
+	}
+
+	public String getMemName() {
+		return memName;
+	}
+
+	public void setMemName(String memName) {
+		super.setText(memName);
+		super.setIcon("fas fa-user");
+		this.memName = memName;
+	}
+
+	public Date getMemBir() {
+		return memBir;
+	}
+
+	public void setMemBir(Date memBir) {
+		this.memBir = memBir;
+	}
+
+	public String getMemPhone() {
+		return memPhone;
+	}
+
+	public void setMemPhone(String memPhone) {
+		this.memPhone = memPhone;
+	}
+
+	public String getMemId() {
+		return memId;
+	}
+
+	public void setMemId(String memId) {
+		this.memId = memId;
+	}
+
+	public String getMemPwd() {
+		return memPwd;
+	}
+
+	public void setMemPwd(String memPwd) {
+		this.memPwd = memPwd;
+	}
+
+	public int getMemCredit() {
+		return memCredit;
+	}
+
+	public void setMemCredit(int memCredit) {
+		this.memCredit = memCredit;
+	}
+
+	public String getPositionId() {
+		return positionId;
+	}
+
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+
+	public String getDpId() {
+		return dpId;
+	}
+
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+
+	public String getAuthorityId() {
+		return authorityId;
+	}
+
+	public void setAuthorityId(String authorityId) {
+		this.authorityId = authorityId;
+	}
+
+	public String getMemStatus() {
+		return memStatus;
+	}
+
+	public void setMemStatus(String memStatus) {
+		this.memStatus = memStatus;
+	}
+
+	public int getMemClassCnt() {
+		return memClassCnt;
+	}
+
+	public void setMemClassCnt(int memClassCnt) {
+		this.memClassCnt = memClassCnt;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberVO [memEmail=" + memEmail + ", memName=" + memName + ", memBir=" + memBir + ", memPhone="
+				+ memPhone + ", memId=" + memId + ", memPwd=" + memPwd + ", memCredit=" + memCredit + ", positionId="
+				+ positionId + ", dpId=" + dpId + ", authorityId=" + authorityId + ", memStatus=" + memStatus
+				+ ", memClassCnt=" + memClassCnt + "]";
+	}
+
+	
+}

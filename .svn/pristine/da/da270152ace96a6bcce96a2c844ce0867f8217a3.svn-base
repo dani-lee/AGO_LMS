@@ -1,0 +1,59 @@
+package com.one.security;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+
+import com.one.dto.ManagerVO;
+import com.one.dto.MemberVO;
+import com.one.service.CommonService;
+import com.one.service.MemberService;
+
+public class ManagerLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+	private String savePath;
+	private String saveFileName;
+	private CommonService commonService;
+
+	public void setCommonService(CommonService commonService) {
+		this.commonService = commonService;
+	}
+
+	public void setSavePath(String savePath) {
+		this.savePath = savePath;
+	}
+
+	public void setSaveFileName(String saveFileName) {
+		this.saveFileName = saveFileName;
+	}
+
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+		UserDetails userDetail = (UserDetails) authentication.getDetails();
+		HttpSession session = request.getSession();
+		String id = userDetail.getUsername();
+		ManagerVO loginManager = null;
+
+		try {
+			loginManager = ((Manager) userDetail).getManagerVO();
+			loginManager.setMember((MemberVO) session.getAttribute("manager"));
+			loginManager.setDpName(commonService.getCodeName1ByCommonCode(loginManager.getDpId()));
+			loginManager.setPositionName(commonService.getCodeName1ByCommonCode(loginManager.getPositionId()));
+			loginManager.setAuthorityName(commonService.getCodeName1ByCommonCode(loginManager.getAuthorityId()));
+			loginManager.setMemStatusName(commonService.getCodeName1ByCommonCode(loginManager.getMemStatus()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			// ExceptionLoggerHelper.write(request, e, memberService);
+			// response.getWriter() 메세지전송(script)
+		}
+		session.setAttribute("loginManager", loginManager);
+		session.setMaxInactiveInterval(60 * 60);
+		super.onAuthenticationSuccess(request, response, authentication);
+	}
+}

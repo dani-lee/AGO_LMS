@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="LikeClass-Mapper">
+
+	<select id="selectLikeClassList" parameterType="str" resultType="classStastics">
+		SELECT 
+        A.OPCL
+        , B.CL_CODE
+        , B.POST_SDATE
+        , B.POST_EDATE
+        , B.ENR_PERS
+        , B.OPEN_ROUND
+        , C.CL_NAME
+        , C.CL_POINT
+        , C.CL_FORMAT
+        , C.CL_CATE
+        , C.CL_DIVISION
+        FROM MEM_INTR_CLASS A, OPEN_CLASS B, CLASS C
+        WHERE A.OPCL = B.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND MEM_EMAIL = #{memEmail}
+        ORDER BY OPCL DESC
+	</select>
+	
+	<select id="selectLikeClassListCount" parameterType="str" resultType="int">
+		SELECT 
+        COUNT(A.OPCL)
+        FROM MEM_INTR_CLASS A, OPEN_CLASS B, CLASS C
+        WHERE A.OPCL = B.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND A.MEM_EMAIL = #{memEmail}
+        ORDER BY A.OPCL DESC
+	</select>
+
+	<select id="selectLikeClassCntAttendees" resultType="classStastics">
+		SELECT 
+        COUNT(A.OPCL) AS COUNT,
+        A.OPCL
+        FROM V_MEM_CL A, V_CLASS B
+        WHERE POST_EDATE >= SYSDATE
+        AND A.OPCL = B.OPCL
+        AND ENR_PERS NOT IN '제한없음'
+        GROUP BY A.OPCL
+        HAVING COUNT(A.OPCL) > 0
+	</select>
+	
+	<select id="selectLikeClPoint" resultType="int" parameterType="str">
+		SELECT 
+        SUM(CL_POINT) AS SUM
+        FROM MEM_INTR_CLASS A, OPEN_CLASS B, CLASS C
+        WHERE A.OPCL = B.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND MEM_EMAIL = #{memEmail}
+	</select>
+	
+	<select id="selectLikeCLPointByClCate" resultType="int" parameterType="classStastics">
+		SELECT 
+        SUM(CL_POINT) AS SUM
+        FROM MEM_INTR_CLASS A, OPEN_CLASS B, CLASS C
+        WHERE A.OPCL = B.OPCL
+        AND B.CL_CODE = C.CL_CODE
+        AND C.CL_CATE = #{clCate}
+        AND MEM_EMAIL = #{memEmail}
+	</select>
+
+	<delete id="deleteMyLikeCls" parameterType="hashmap">
+		DELETE
+        FROM MEM_INTR_CLASS
+        WHERE MEM_EMAIL = #{member}
+        <foreach collection="opcl" item="opcl" index="idx" open="AND OPCL IN(" close=")" separator=",">
+        	#{opcl}
+        </foreach>
+	</delete>
+	
+	
+	<select id="selectClassOrder" resultType="classDepartment">
+		SELECT 
+        DP_ID
+        ,OPCL
+        FROM CLASS_ORDER
+        ORDER BY OPCL DESC
+	</select>
+	
+</mapper>

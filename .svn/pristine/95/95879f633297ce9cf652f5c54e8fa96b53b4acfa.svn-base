@@ -1,0 +1,83 @@
+package com.one.dto;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+
+
+public class NoticeVO {
+	
+	private int noticeNo;
+	private String noticeTitle;
+	private String noticeContent;
+	private Date noticeRegdate;
+	private int noticeImpt;
+	private int noticeViewCnt;
+	
+	private List<AttachVO> attachList;
+
+	public List<AttachVO> getAttachList() {
+		return attachList;
+	}
+	
+	String pattern = "yyyy.MM.dd";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	
+	private String noticeDate;
+	
+	
+	
+	public String getNoticeDate() {
+		return noticeDate;
+	}
+
+	public void setNoticeDate(String noticeDate) {
+		this.noticeDate = noticeDate;
+	}
+
+	public void setAttachList(List<AttachVO> attachList) {
+		this.attachList = attachList;
+	}
+
+	public int getNoticeNo() {
+		return noticeNo;
+	}
+	public void setNoticeNo(int noticeNo) {
+		this.noticeNo = noticeNo;
+	}
+	public String getNoticeTitle() {
+		return noticeTitle;
+	}
+	public void setNoticeTitle(String noticeTitle) {
+		this.noticeTitle = noticeTitle;
+	}
+	public String getNoticeContent() {
+		return noticeContent;
+	}
+	public void setNoticeContent(String noticeContent) {
+		this.noticeContent = noticeContent;
+	}
+	public Date getNoticeRegdate() {
+		return noticeRegdate;
+	}
+	public void setNoticeRegdate(Date noticeRegdate) {
+		this.noticeRegdate = noticeRegdate;
+		setNoticeDate(simpleDateFormat.format(noticeRegdate));
+	}
+	public int getNoticeImpt() {
+		return noticeImpt;
+	}
+	public void setNoticeImpt(int noticeImpt) {
+		this.noticeImpt = noticeImpt;
+	}
+	public int getNoticeViewCnt() {
+		return noticeViewCnt;
+	}
+	public void setNoticeViewCnt(int noticeViewCnt) {
+		this.noticeViewCnt = noticeViewCnt;
+	}
+
+
+	
+}

@@ -1,0 +1,221 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="cri" value="${dataMap.cri }" />
+<c:set var="reviewList" value="${dataMap.reviewList }" />
+<c:if test="${not empty reviewList}">
+	<c:set var="reviewZero" value="${reviewList.get(0) }" />
+</c:if>
+
+<head>
+<title>수강후기 목록</title>
+<style>
+#reviewDetail::-webkit-scrollbar {
+	display: none;
+}
+
+#detailReviewList::-webkit-scrollbar {
+	display: none;
+}
+</style>
+</head>
+<body style="-ms-overflow-style: none;">
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">수강후기</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="<%=request.getContextPath()%>/user/community/freeBoard/list.do">커뮤니티</a>
+						</li>
+						<li class="breadcrumb-item">수강후기</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<!-- 최근 등록된 수강후기 5개 -->
+				<div class="col-6">
+					<!-- PRODUCT LIST -->
+					<div class="card" style="height:750px;">
+						<div class="card-header" style="background-color: #E6EFFC;">
+							<h3 class="card-title text-bold">최근 강의평</h3><br>
+							<div class="row">
+								<div class="input-group text-right m-0">
+									<div class="text-left col-3 float-left">
+										<select class="form-control" name="searchType" onchange="fn_list(1);">
+											<option value="a" ${cri.searchType eq 'a' ? 'selected': '' }>전체</option>
+											<option value="n" ${cri.searchType eq 'n' ? 'selected': '' }>신입생의무</option>
+											<option value="d" ${cri.searchType eq 'd' ? 'selected': '' }>일반</option>
+											<option value="m" ${cri.searchType eq 'm' ? 'selected': '' }>취미/개발</option>
+										</select>
+									</div>
+									<div class="row col-9 justify-content-end p-0">
+										<input type="text" placeholder="강의명으로 검색하세요." class="form-control col-md-8" name="keyword">
+										<button class="col-md-2 btn btn-primary float-right" onclick="fn_list(1);">검색</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="reviewDetailView" style="height: 660px;">
+							<div id="reviewDetail" class="card-body p-2" style="height: 100%; overflow-y: scroll; -ms-overflow-style: none;">
+								<ul class="products-list product-list-in-card pl-2 pr-2">
+									
+									<c:if test="${empty reviewList}">
+										<li class="mt-4 text-bold text-center">최근 등록된 수강후기가 없습니다.</li>
+									</c:if>
+																		
+									<c:if test="${not empty reviewList}">
+										<c:forEach var="classReview" items="${reviewList}" varStatus="status">
+											<li class="item" style="height: 118px; border-bottom:1.5px soild gray; cursor:pointer;" onclick="classReview_detail_go('<%=request.getContextPath()%>/user/community/classReview/reviewDetail?opcl=${classReview.opcl}')">
+												<div class="row">
+													<h6 class="font-weight-bold m-0 row col-9" style="height: 15px;">
+														${classReview.clName} 
+														<span class="row pl-3" name="review_rate" style="color: #F2A516; height: 15px;"> 
+															<c:if test="${classReview.scope ne 0.0}">
+																<c:forEach var="i" begin="1" end="${classReview.frontScope}">
+																	<i class="fas fa-star text-warning"></i>
+																</c:forEach>
+																<c:if test="${classReview.backScope eq 5}">
+																	<i class="fas fa-star-half-alt text-warning"></i>
+																</c:if>
+																<c:forEach var="i" begin="1" end="${classReview.restScope}">
+																	<i class="far fa-star text-warning"></i>
+																</c:forEach>
+															</c:if> 
+															<span class="text-warning">(${classReview.scope})</span>
+														</span>
+													</h6>
+													<h6 class="font-weight-bold text-right col-3" name="review_reg_date">
+														<fmt:formatDate value="${classReview.reviewRegdate }" pattern="yyyy.MM.dd" />
+													</h6>
+												</div>
+												<div class="pl-2 pr-2" name="review_content" style="height: 50px; font-size: 13px;">
+													<c:set var="content" value="${classReview.reviewContent}"></c:set>
+													<c:choose>
+														<c:when test="${fn:length(content) gt 100}">
+															<c:out value='${fn:substring(content, 0, 100)}...' />
+														</c:when>
+														<c:otherwise>
+															${content}
+														</c:otherwise>
+													</c:choose>
+												</div>
+												<div class="col-12" style="background: white;">
+													<div class="float-right" name="memId" style="font-size: 13px;">
+														<c:set var="memName" value="${classReview.memName}"></c:set>
+														<c:set var="name1" value="${fn:substring(memName, 0, 1)}"></c:set>
+														<c:set var="name2" value="${fn:substring(memName, fn:length(memName) - 1, fn:length(memName))}"></c:set>
+														${name1}*${name2}
+													</div>
+												</div>
+											</li>
+											<!-- /.item -->
+											<c:if test="${fn:length(reviewList) eq 1}">
+												<hr class="m-0" style="border: soild 1px gray;">
+											</c:if>
+										</c:forEach>
+										</c:if>
+								</ul>
+							</div>
+						</div>
+						<!-- /.card-body -->
+					</div>
+				</div>
+		
+				<div class="col-6">
+					<!-- PRODUCT LIST -->
+					<div class="card" style="height:750px;">
+						<div class="card-header" style="background-color: #E6EFFC;">
+							<h3 class="card-title text-bold">상세화면</h3>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body p-0" style="height: 607px;">
+							<c:if test="${empty reviewList}">
+								<div class="p-2 text-bold text-center" style="margin-top: 150px; font-size: 23px;">등록된 수강후기가 없습니다.</div>
+							</c:if>
+							<c:if test="${not empty reviewList}">
+								<table style="width: 100%;">
+									<thead id="classDetailThead">
+										
+									</thead>
+								</table>
+								<br>
+								<div id="detailReviewList" style="max-height:420px; overflow-y: scroll; -ms-overflow-style: none;">
+									<table style="width: 100%;">
+										<tbody id="classDetailTbody">
+										</tbody>
+									</table>
+								</div>
+							</c:if>
+						</div>
+						<!-- /.card-body -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<form id="searchForm">
+		<input type="hidden" name="page" value="" />
+		<input type="hidden" name="searchType" value="" />
+		<input type="hidden" name="keyword" value="" />
+	</form>
+		<c:if test="${not empty reviewList}">
+			<%@include file="/WEB-INF/views/user/community/classReview/classReviewList_js.jsp"%>
+		</c:if>
+	<script>
+		function fn_list(page, url){
+			if(!url) url="list.do";
+			
+			var searchForm = $('#searchForm');
+			
+			searchForm.find("[name='page']").val(page);
+			searchForm.find("[name='searchType']").val($('select[name="searchType"]').val());
+			searchForm.find("[name='keyword']").val($('input[name="keyword"]').val());
+	
+			searchForm.attr({
+				action : url,
+				method : 'get'
+			}).submit();
+		}
+		
+		function classReview_detail_go(url) {
+			getPage(url);
+		}
+		
+		$.fn.extend({
+			mouse_wheel : function() {
+				$(this).on('mousewheel', function(e) {
+					if (e.originalEvent.wheelDelta >= 120) {
+						this.scrollTop -= 50;
+					} else if (e.originalEvent.wheelDelta <= -120) {
+						this.scrollTop += 50;
+					}
+					return false;
+				});
+			}
+		});
+
+		$('#reviewDetail').mouse_wheel();
+	</script>
+</body>

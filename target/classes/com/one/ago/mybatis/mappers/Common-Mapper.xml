@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Common-Mapper">
+
+	<select id="selectCommonByGroupCode" resultType="common">
+		SELECT
+			COMMON_CODE
+		  , GROUP_CODE
+		  , GROUP_CODE_NM
+		  , CODE_NAME1
+		  , CODE_NAME2
+		  , CODE_NAME3
+		  , OPTION1
+		  , OPTION2
+		  , USE_YN
+		  , OPTION3
+		FROM
+		COMMON
+		WHERE
+		GROUP_CODE = #{groupCode}
+	</select>
+
+	<select id="selectPositionByKeyword" resultType="str">
+	SELECT
+		COMMON_CODE
+	FROM
+		COMMON
+	WHERE CODE_NAME1 = #{keyword}
+	</select>
+	<select id="selectCommonByCommonCode" resultType="common">
+	SELECT
+	    COMMON_CODE,
+	    GROUP_CODE,
+	    GROUP_CODE_NM,
+	    CODE_NAME1,
+	    CODE_NAME2,
+	    CODE_NAME3,
+	    OPTION1,
+	    OPTION2,
+	    USE_YN,
+	    OPTION3
+	FROM
+	    COMMON
+	WHERE COMMON_CODE=#{commonCode}
+	</select>
+	
+	<select id="getStudyDate" resultType="classRegist">
+		select common_code, code_name1
+		from common
+		
+		where group_code = 'D1'
+	
+	</select>
+	
+	<select id="getClFormat" resultType="classRegist">
+		select common_code, code_name1
+		from common
+		
+		where group_code = 'A6'	
+	</select>
+
+	<select id="getClDivision" resultType="classRegist">
+		select common_code, code_name1
+		from common
+		
+		where group_code = 'A5'		
+	</select>
+
+	<select id="getConvertPositionByMemInfo" resultType="str">
+		select code_name1
+        from common
+        where common_code=#{data}
+	</select>
+	
+	<select id="getConvertDPByMemInfo" resultType="str">
+		select code_name1
+		from common
+		where common_code=#{data}
+	</select>
+</mapper>

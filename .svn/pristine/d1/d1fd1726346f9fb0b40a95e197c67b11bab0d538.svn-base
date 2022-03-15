@@ -1,0 +1,35 @@
+package com.one.command;
+
+public class TestCommand {
+
+	private int opcl;
+	private int[] answers;
+	private String fileName;
+	private int clChap;
+	
+	public int getOpcl() {
+		return opcl;
+	}
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+	public int[] getAnswers() {
+		return answers;
+	}
+	public void setAnswers(int[] answers) {
+		this.answers = answers;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public int getClChap() {
+		return clChap;
+	}
+	public void setClChap(int clChap) {
+		this.clChap = clChap;
+	}
+	
+}

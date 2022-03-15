@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+<script type="text/x-handlebars-template"  id="message-detail-template" >
+<table class="table table-sm detail-body">
+	<tbody>
+		<tr>
+			<td class="font-weight-bold text-center col-2" style="background-color:#E6EFFC;">보낸 사람</td>
+			<td class="col-4">운영자</td>
+		</tr>
+		<tr>
+			<td class="font-weight-bold text-center col-2" style="background-color:#E6EFFC;">받은 날짜</td>
+			<td class="col-4">{{prettifyDate msgRegdate }}</td>
+		</tr>
+		<tr>
+			<td colspan="4">{{msgContent }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<form role="removeForm">
+	<input type="hidden" name="msgNo" value="{{msgNo}}">
+</form>
+
+</script>
+
+<script>
+window.onload=function(){
+	getMessage("<%=request.getContextPath()%>/user/myPage/message/msgDetail.do?msgNo=${messageList[0].msgNo}");
+	
+}
+
+
+function printData(detail, target, templateObject){
+	let template = Handlebars.compile(templateObject.html());
+	let html = template(detail);
+	$('.detail-body').remove();
+	target.after(html);
+}
+
+function getMessage(pageInfo, pickedNo){
+	var pickedTr = $('tr[id="'+pickedNo+'"]');
+	iconNm = pickedTr.find('i').attr("class");
+	console.log(iconNm);
+	if(iconNm == "far fa-envelope"){
+		pickedTr.find("i").attr("class","far fa-envelope-open");
+	}
+	$.ajax({
+		url : pageInfo,
+		type : "get",
+		dataType : "json",
+		success : function(data){
+			printData(data, $('.table-wrapper'), $('#message-detail-template'));
+			parent.resize(window.parent.document.getElementById("ifr"));
+
+		},
+		error:function(error){
+			AjaxErrorSecurityRedirectHandler(error.status);
+		}
+	});
+}
+
+Handlebars.registerHelper({
+	"prettifyDate" : function(timeValue){
+		let dateObj = new Date(timeValue);
+		let year = dateObj.getFullYear();
+		let month = dateObj.getMonth() + 1;
+		let date = dateObj.getDate();
+		return year + "-" + month + "-" + date;
+	}
+});
+</script>

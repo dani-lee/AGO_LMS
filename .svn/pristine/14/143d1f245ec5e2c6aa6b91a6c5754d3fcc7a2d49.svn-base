@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DebateReply-Mapper">
+	
+	<select id="selectDebateReplyList" resultType="debateReply">
+		SELECT DEREPLY_NO
+			 , DBOARD_NO
+			 , DEREPLY_REGDATE
+			 , DEREPLY_CONTENT
+			 , MEM_ID
+			 , DEREPLY_PREANT_NO
+		  FROM
+			   DE_REPLY
+		 WHERE
+			   DBOARD_NO = #{dboardNo}
+		ORDER BY DEREPLY_REGDATE ASC
+	</select>
+	
+	<select id="countDebateReply" parameterType="int" resultType="int">
+		SELECT 
+			   COUNT(*)
+		FROM
+			   DE_REPLY
+		WHERE
+			   DBOARD_NO = #{dboardNo}
+	</select>
+	
+	<delete id="deleteDebateReplyBydboardNo">
+		DELETE 
+		  FROM DE_REPLY
+		 WHERE DEREPLY_NO = #{dereplyNo}
+
+	</delete>
+	
+	<delete id="deleteDebateReplyBypreant">
+		DELETE 
+		  FROM DE_REPLY
+		 WHERE DEREPLY_PREANT_NO = #{dereplyNo}
+	</delete>
+	
+	<update id="registDebateReply" parameterType="debateReply">
+	<if test="dereplyPreantNo == 0">
+			INSERT INTO de_reply (
+		    dereply_no,
+		    dboard_no,
+		    dereply_regdate,
+		    dereply_content,
+		    mem_id
+		
+		) VALUES (
+		    #{dereplyNo}
+		    ,#{dboardNo}
+		    ,sysdate
+		    ,#{dereplyContent}
+		    ,#{memId}
+		)
+	</if>
+	<if test="dereplyPreantNo != 0">
+			INSERT INTO de_reply (
+		    dereply_no,
+		    dboard_no,
+		    dereply_regdate,
+		    dereply_content,
+		    mem_id
+		    ,DEREPLY_PREANT_NO
+		
+		) VALUES (
+		    #{dereplyNo}
+		    ,#{dboardNo}
+		    ,sysdate
+		    ,#{dereplyContent}
+		    ,#{memId}
+		    ,#{dereplyPreantNo, jdbcType=VARCHAR}
+		)	
+	</if>
+	</update>
+	
+	<select id="getNextdereplyNo" resultType="int">
+		select de_reply_seq.nextval from dual
+	</select>
+	
+	<delete id="deleteReplyRep" parameterType="debateReply">
+		delete from de_reply
+		where DEREPLY_NO = #{dereplyNo}
+		and DEREPLY_PREANT_NO = #{dereplyPreantNo}
+	</delete>
+	
+	<update id="modifyReply" parameterType="debateReply">
+		UPDATE de_reply
+		    SET
+		        dereply_content=#{dereplyContent}
+		        
+		WHERE
+		    dereply_no =#{dereplyNo}	
+	
+	</update>
+	
+	<update id="modifyReReply" parameterType="debateReply">
+		UPDATE de_reply
+		    SET
+		        dereply_content=#{dereplyContent}
+		        
+		WHERE
+		    dereply_no =#{dereplyNo}
+		    and DEREPLY_PREANT_NO = #{dereplyPreantNo}		
+	</update>
+	
+</mapper>

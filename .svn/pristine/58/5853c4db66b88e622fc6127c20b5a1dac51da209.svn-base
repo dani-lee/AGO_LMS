@@ -1,0 +1,271 @@
+package com.one.controller.user.departmentHead;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.one.command.Criteria;
+import com.one.command.DepartmentMemberClassCommand;
+import com.one.command.OrderCommand;
+import com.one.dto.DpHeadVO;
+import com.one.dto.MemberVO;
+import com.one.dto.NoticeVO;
+import com.one.dto.ClassVO.ClassListVO;
+import com.one.service.AdminService;
+import com.one.service.ClassService;
+import com.one.service.CommonService;
+import com.one.service.DpOrderService;
+import com.one.service.MemberService;
+
+@Controller
+@RequestMapping("/user/departmentHead")
+public class DepartmentHeadController {
+
+	@Autowired
+	private DpOrderService dpOrderService;
+
+	@Autowired
+	private ClassService classService;
+
+	@Autowired
+	private MemberService memberService;
+
+	@Autowired
+	private CommonService commonService;
+
+	@RequestMapping("/main.do")
+	public String main() throws Exception {
+		String url = "user/departmentHead/main";
+
+		return url;
+	}
+
+	@RequestMapping("/classList.do")
+	public ModelAndView classList(Criteria cri, ModelAndView mnv, HttpSession session) throws Exception {
+		String url = "user/departmentHead/classList";
+		cri.setPerPageNum(5);
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		DpHeadVO fav = null;
+		Map<String, Object> dataMap = classService.getClassList(cri);
+
+		for (ClassListVO list : (List<ClassListVO>) dataMap.get("mainList")) {
+			fav = new DpHeadVO();
+			fav.setDpId(dpId);
+			fav.setOpcl(list.getOpcl());
+			list.setClFormat(commonService.getCodeName1ByCommonCode(list.getClFormat()));
+			list.setClDivision(commonService.getCodeName1ByCommonCode(list.getClDivision()));
+			list.setFav(dpOrderService.favCheck(fav));
+		}
+
+		mnv.addObject("dataMap", dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@ResponseBody
+	@RequestMapping("/favRegist.do")
+	public ResponseEntity<Map<String, String>> favRegist(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<Map<String, String>> entity = null;
+		Map<String, String> data = new HashMap<String, String>();
+
+		try {
+			String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+			DpHeadVO fav = new DpHeadVO();
+			fav.setDpId(dpId);
+			fav.setOpcl(opcl);
+
+			dpOrderService.registFav(fav);
+
+			data.put("add", "fas");
+			data.put("remove", "far");
+
+			entity = new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return entity;
+	}
+
+	@ResponseBody
+	@RequestMapping("/favRemove.do")
+	public ResponseEntity<Map<String, String>> favRemove(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<Map<String, String>> entity = null;
+		Map<String, String> data = new HashMap<String, String>();
+
+		try {
+			String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+			DpHeadVO fav = new DpHeadVO();
+			fav.setDpId(dpId);
+			fav.setOpcl(opcl);
+
+			dpOrderService.removeFav(fav);
+
+			data.put("add", "far");
+			data.put("remove", "fas");
+
+			entity = new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return entity;
+	}
+
+	@RequestMapping("/classDetail.do")
+	public ModelAndView classDatil(ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/classDetail";
+
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@RequestMapping("/classOrderRegist.do")
+	public String classOrderRegist() throws Exception {
+		String url = "user/departmentHead/classOrderRegist";
+
+		return url;
+	}
+
+	@RequestMapping("/orderClassList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderClassList() throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		try {
+			List<Map<String, String>> classList = classService.getClassAllList();
+			jsonMap.put("text", "수강 목록");
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/orderFavList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderFavList(HttpServletRequest request) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		try {
+			List<Map<String, String>> classList = dpOrderService.selectFav(dpId);
+			jsonMap.put("text", "즐겨찾기");
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/orderMemList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderMemList(HttpServletRequest request) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		String dpName = commonService.getCodeName1ByCommonCode(dpId);
+		try {
+			List<Map<String, String>> classList = memberService.getMemberByDpId(dpId);
+			jsonMap.put("text", dpName);
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/isertOrder.do")
+	public String insertOrder(OrderCommand orderCmd, HttpSession session,RedirectAttributes rattr) throws Exception {
+		String url = "redirect:/user/departmentHead/classOrderRegist.do";
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+		dpOrderService.DepartmentOrderOpcl(orderCmd, dpId);
+		rattr.addFlashAttribute("message", "지시를 완료했습니다.");
+		return url;
+	}
+
+	@RequestMapping("/reportList.do")
+	public ModelAndView reportList(Criteria cri, HttpSession session, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/classNewList";
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		cri.setSortType(department);
+		Map<String,Object> dataMap = dpOrderService.selectOrderClassMain(cri);
+		dataMap.put("cri", cri);
+		// System.out.println("keyword==================================="+cri.getKeyword()+":"+cri.getSearchType());
+		mnv.addObject("dataMap",dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	
+	@RequestMapping("/classClick")
+	@ResponseBody
+	public ResponseEntity<List<DepartmentMemberClassCommand>> nomal(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<List<DepartmentMemberClassCommand>> entity = null;
+
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		List<DepartmentMemberClassCommand> memberClassList = dpOrderService.selectMemberClassList(department, opcl);
+		
+		entity = new ResponseEntity<List<DepartmentMemberClassCommand>>(memberClassList ,HttpStatus.OK);
+		return entity;
+	}
+
+	@RequestMapping("/reportApproval.do")
+	public ModelAndView reportApproval(Criteria cri, HttpSession session, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/reportNewList";
+		cri.setPerPageNum(14);
+		Date date = new Date();
+		SimpleDateFormat sdformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
+		 
+		// Java 시간 더하기
+		 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR, -1);
+		
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		Map<String,Object> dataMap = dpOrderService.selectReportList(cri, department);
+		dataMap.put("newBaseDate", cal.getTime());
+		mnv.addObject("dataMap",dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+}

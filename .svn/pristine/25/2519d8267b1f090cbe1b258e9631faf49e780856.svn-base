@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/decorators">
+
+	<decorator name="message" page="message_decorator.jsp">
+		<pattern>/**/loginTimeOut</pattern>
+		<pattern>/manager/redirectPage</pattern>
+	</decorator>
+
+	<decorator name="main" page="main_decorator.jsp">
+		<pattern>/**/*</pattern>
+	</decorator>
+
+	<decorator name="openWindow" page="open_decorator.jsp">
+		<pattern>/**/**/*</pattern>
+		<pattern>/**/**/**/*.do</pattern>
+		<pattern>/**/loginPage.do</pattern>
+	</decorator>
+
+	<excludes>
+		<pattern>/resources/*</pattern>
+	</excludes>
+</decorators>

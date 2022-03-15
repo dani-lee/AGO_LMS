@@ -1,0 +1,148 @@
+package com.one.dto;
+
+import java.util.Date;
+
+public class ExtReportVO {
+	
+	
+	private String extCode;
+	private int extNo;
+	private String memName;
+	private String memEmail;
+	private String clName;
+	private Date ctfDate;
+	private String eduContent;
+	private String eduReview;
+	private String attachDoc;
+	private String extState;
+	private Date extRegdate;
+	private String dpId;
+	private String positionId;
+	private String extSign;
+	
+	private String dpName; // 부서명
+	private String positionName; // 직위명
+	
+	private String extStateName; // 보고서 상태명
+	
+	private String insertCtfDate; // 보고서 작성할때 날짜
+	
+	private String clCateName;
+	
+	
+	public String getExtSign() {
+		return extSign;
+	}
+	public void setExtSign(String extSign) {
+		this.extSign = extSign;
+	}
+	public String getClCateName() {
+		return clCateName;
+	}
+	public void setClCateName(String clCateName) {
+		this.clCateName = clCateName;
+	}
+	public String getMemEmail() {
+		return memEmail;
+	}
+	public void setMemEmail(String memEmail) {
+		this.memEmail = memEmail;
+	}
+	public String getExtCode() {
+		return extCode;
+	}
+	public void setExtCode(String extCode) {
+		this.extCode = extCode;
+	}
+	public String getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public String getInsertCtfDate() {
+		return insertCtfDate;
+	}
+	public void setInsertCtfDate(String insertCtfDate) {
+		this.insertCtfDate = insertCtfDate;
+	}
+	public String getDpId() {
+		return dpId;
+	}
+	public void setDpId(String dpId) {
+		this.dpId = dpId;
+	}
+	public String getDpName() {
+		return dpName;
+	}
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
+	}
+	public int getExtNo() {
+		return extNo;
+	}
+	public void setExtNo(int extNo) {
+		this.extNo = extNo;
+	}
+	public String getMemName() {
+		return memName;
+	}
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public String getEduContent() {
+		return eduContent;
+	}
+	public void setEduContent(String eduContent) {
+		this.eduContent = eduContent;
+	}
+	public String getEduReview() {
+		return eduReview;
+	}
+	public void setEduReview(String eduReview) {
+		this.eduReview = eduReview;
+	}
+	public String getAttachDoc() {
+		return attachDoc;
+	}
+	public void setAttachDoc(String attachDoc) {
+		this.attachDoc = attachDoc;
+	}
+	public String getExtState() {
+		return extState;
+	}
+	public void setExtState(String extState) {
+		this.extState = extState;
+	}
+	public Date getExtRegdate() {
+		return extRegdate;
+	}
+	public void setExtRegdate(Date extRegdate) {
+		this.extRegdate = extRegdate;
+	}
+	public Date getCtfDate() {
+		return ctfDate;
+	}
+	public void setCtfDate(Date ctfDate) {
+		this.ctfDate = ctfDate;
+	}
+	public String getExtStateName() {
+		return extStateName;
+	}
+	public void setExtStateName(String extStateName) {
+		this.extStateName = extStateName;
+	}
+	
+}

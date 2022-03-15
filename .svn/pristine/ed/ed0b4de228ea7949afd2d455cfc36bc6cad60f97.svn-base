@@ -1,0 +1,467 @@
+package com.one.controller.user.departmentHead;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.josephoconnell.html.HTMLInputFilter;
+import com.one.command.Criteria;
+import com.one.command.CriteriaDpCommand;
+import com.one.command.DepartmentHeadReportCommand;
+import com.one.command.DepartmentMemberClassCommand;
+import com.one.command.DpFavClassCommand;
+import com.one.command.NoticeRegistCommand;
+import com.one.command.OrderCommand;
+import com.one.dto.AttachVO;
+import com.one.dto.DpHeadDashVO;
+import com.one.dto.DpHeadVO;
+import com.one.dto.MemberVO;
+import com.one.dto.NoticeVO;
+import com.one.service.ClassService;
+import com.one.service.CommonService;
+import com.one.service.DpOrderService;
+import com.one.service.MemberService;
+import com.one.service.UserClassService;
+import com.one.utils.GetAttachesFromMultipartFileAdapter;
+
+@Controller
+@RequestMapping("/user/departmentHead")
+public class DepartmentHeadController {
+	
+	@Resource(name = "extReportStamp")
+	private String picturePath;
+
+	@Resource(name = "certificateUploadPath")
+	private String fileUploadPath;
+	
+	@Resource(name = "extReportCertificate")
+	private String extReportCertificate;
+	
+	@Autowired
+	private DpOrderService dpOrderService;
+
+	@Autowired
+	private ClassService classService;
+
+	@Autowired
+	private MemberService memberService;
+
+	@Autowired
+	private CommonService commonService;
+
+	@RequestMapping("/main.do")
+	public ModelAndView main(ModelAndView mnv, HttpSession session) throws Exception {
+		String url = "user/departmentHead/main";
+		
+		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		CriteriaDpCommand cri = new CriteriaDpCommand();
+		cri.setDpId(loginUser.getDpId());
+		// 보고서 결재 내용 가져오기
+		List<DepartmentHeadReportCommand> reportList = getReportList(cri, loginUser.getDpId());
+		
+		// 강의목록 가져오기
+		List<DpFavClassCommand> dpClassList = getDpClassList(cri);
+		
+		// 부서원 수강 내역
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		cri.setSortType(department);
+		List<DpHeadDashVO> memberClassList = getMemberClassList(cri);
+		
+		mnv.addObject("reportList", reportList);
+		mnv.addObject("dpClassList", dpClassList);
+		mnv.addObject("memberClassList", memberClassList);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	public List<DepartmentHeadReportCommand> getReportList(CriteriaDpCommand cri, String dpId) throws Exception{
+		Map<String, Object> dataMap = dpOrderService.selectReportList(cri, dpId);
+		List<DepartmentHeadReportCommand> reportList = (List<DepartmentHeadReportCommand>) dataMap.get("reportList");
+		List<DepartmentHeadReportCommand> reportList5 = new ArrayList<>();
+		int cnt = 0;
+		for(DepartmentHeadReportCommand report : reportList) {
+			if(cnt>=5) break;
+			report.setStateName(commonService.getCodeName1ByCommonCode(report.getState()));
+			reportList5.add(report);
+			cnt++;
+		}
+		return reportList5;
+	}
+	
+	public List<DpHeadDashVO> getMemberClassList(CriteriaDpCommand cri) throws Exception{
+		Map<String, Object> dataMap = dpOrderService.selectOrderClassMain(cri);
+		List<DpHeadDashVO> memberClassList = (List<DpHeadDashVO>) dataMap.get("memberClassList");
+		List<DpHeadDashVO> memberClassList5 = new ArrayList<>();
+		int cnt = 0;
+		for(DpHeadDashVO memberClass : memberClassList) {
+			if(cnt>=5) break;
+			memberClass.setPositionName(commonService.getCodeName1ByCommonCode(memberClass.getPositionId()));
+			memberClass.setClCateName(commonService.getCodeName1ByCommonCode(memberClass.getClCate()));
+			memberClass.setClFormatName(commonService.getCodeName1ByCommonCode(memberClass.getClFormat()));
+			memberClass.setClDivisionName(commonService.getCodeName1ByCommonCode(memberClass.getClDivision()));
+			memberClassList5.add(memberClass);
+			cnt++;
+		}
+		return memberClassList5;
+	}
+	
+	public List<DpFavClassCommand> getDpClassList(CriteriaDpCommand cri) throws Exception {
+		Map<String, Object> dataMap = dpOrderService.selectDpClassList(cri);
+		List<DpFavClassCommand> dpClassList = (List<DpFavClassCommand>) dataMap.get("dpClassList");
+		List<DpFavClassCommand> dpClassList5 = new ArrayList<>();
+		int cnt = 0;
+		for(DpFavClassCommand dpClass : dpClassList) {
+			if(cnt>=5) break;
+			dpClass.setClDivision(commonService.getCodeName1ByCommonCode(dpClass.getClDivision()));
+			dpClassList5.add(dpClass);
+			cnt++;
+		}
+		return dpClassList5;
+	}
+
+	//강의목록
+	@RequestMapping("/classList.do")
+	public ModelAndView classList(CriteriaDpCommand cri, ModelAndView mnv, HttpSession session) throws Exception {
+		String url = "user/departmentHead/classList";
+		cri.setPerPageNum(6);
+		cri.setDpId(((MemberVO) session.getAttribute("loginUser")).getDpId());
+
+		Map<String, Object> dataMap = dpOrderService.selectDpClassList(cri);
+		
+		mnv.addObject("dataMap", dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/favRegist.do")
+	public ResponseEntity<Map<String, String>> favRegist(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<Map<String, String>> entity = null;
+		Map<String, String> data = new HashMap<String, String>();
+
+		try {
+			String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+			DpHeadVO fav = new DpHeadVO();
+			fav.setDpId(dpId);
+			fav.setOpcl(opcl);
+
+			dpOrderService.registFav(fav);
+
+			data.put("add", "fas");
+			data.put("remove", "far");
+
+			entity = new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return entity;
+	}
+
+	@ResponseBody
+	@RequestMapping("/favRemove.do")
+	public ResponseEntity<Map<String, String>> favRemove(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<Map<String, String>> entity = null;
+		Map<String, String> data = new HashMap<String, String>();
+
+		try {
+			String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+			DpHeadVO fav = new DpHeadVO();
+			fav.setDpId(dpId);
+			fav.setOpcl(opcl);
+
+			dpOrderService.removeFav(fav);
+
+			data.put("add", "far");
+			data.put("remove", "fas");
+
+			entity = new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return entity;
+	}
+
+	@RequestMapping("/classDetail.do")
+	public ModelAndView classDatil(int opcl,String clCode, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/classDetail";
+		Map<String, Object> dataMap = dpOrderService.selectDpClass(opcl, clCode);
+		
+		mnv.addObject("dataMap",dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	@RequestMapping("/classOrderRegist.do")
+	public String classOrderRegist() throws Exception {
+		String url = "user/departmentHead/classOrderRegist";
+
+		return url;
+	}
+
+	@RequestMapping("/orderClassList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderClassList(HttpSession session) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		try {
+			List<Map<String, String>> classList = classService.getClassAllList(loginUser.getDpId());
+			jsonMap.put("text", "수강 목록");
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/orderFavList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderFavList(HttpServletRequest request) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		try {
+			List<Map<String, String>> classList = dpOrderService.selectFav(dpId);
+			jsonMap.put("text", "즐겨찾기");
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/orderMemList.do")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> orderMemList(HttpServletRequest request) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		String dpName = commonService.getCodeName1ByCommonCode(dpId);
+		try {
+			List<Map<String, String>> classList = memberService.getMemberByDpId(dpId);
+			jsonMap.put("text", dpName);
+			jsonMap.put("id", "ROOT");
+			jsonMap.put("children", classList);
+
+			entity = new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return entity;
+	}
+
+	@RequestMapping("/isertOrder.do")
+	public String insertOrder(OrderCommand orderCmd, HttpSession session,RedirectAttributes rattr) throws Exception {
+		String url = "redirect:/user/departmentHead/classOrderRegist.do";
+		String dpId = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+
+		dpOrderService.DepartmentOrderOpcl(orderCmd, dpId);
+		rattr.addFlashAttribute("message", "지시를 완료했습니다.");
+		return url;
+	}
+
+	@RequestMapping("/reportList.do")
+	public ModelAndView reportList(Criteria cri, HttpSession session, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/classNewList";
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		cri.setSortType(department);
+		Map<String,Object> dataMap = dpOrderService.selectOrderClassMain(cri);
+		dataMap.put("cri", cri);
+		// System.out.println("keyword==================================="+cri.getKeyword()+":"+cri.getSearchType());
+		mnv.addObject("dataMap",dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+
+	
+	@RequestMapping("/classClick")
+	@ResponseBody
+	public ResponseEntity<List<DepartmentMemberClassCommand>> nomal(int opcl, HttpSession session) throws Exception {
+		ResponseEntity<List<DepartmentMemberClassCommand>> entity = null;
+		
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		List<DepartmentMemberClassCommand> memberClassList = dpOrderService.selectMemberClassList(department, opcl);
+		
+		entity = new ResponseEntity<List<DepartmentMemberClassCommand>>(memberClassList ,HttpStatus.OK);
+		return entity;
+	}
+
+	@RequestMapping("/reportApproval.do")
+	public ModelAndView reportApproval(Criteria cri, HttpSession session, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/reportNewList";
+		cri.setPerPageNum(14);
+		Date date = new Date();
+		SimpleDateFormat sdformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
+		 
+		// Java 시간 더하기
+		 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR, -1);
+		
+		String department = ((MemberVO) session.getAttribute("loginUser")).getDpId();
+		Map<String,Object> dataMap = dpOrderService.selectReportList(cri, department);
+		dataMap.put("newBaseDate", cal.getTime());
+		mnv.addObject("dataMap",dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	@RequestMapping("/autographForm.pop")
+	public ModelAndView autographForm(HttpSession session, ModelAndView mnv) throws Exception {
+		String url = "user/departmentHead/autograph";
+		Map<String,Object> dataMap = new HashMap<>();
+
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		
+		String img = dpOrderService.selectAutograph(loginUser.getDpId());
+
+		mnv.addObject("img", img);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	@RequestMapping(value="/autograph/regist.do", method = RequestMethod.POST, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String autographRegist(List<MultipartFile> picture, HttpSession session) throws Exception{
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		List<AttachVO> attachList = GetAttachesFromMultipartFileAdapter.save(picture, picturePath);
+
+		dpOrderService.updateDpSeal(loginUser.getDpId(), attachList.get(0).getFileName());
+		
+		return "success";
+
+	}
+	
+	@RequestMapping("/reportForm.pop")
+	public ModelAndView reportForm(HttpSession session, ModelAndView mnv,String reType,int no,String memName) throws Exception {
+		String url = "user/departmentHead/reportForm";
+		Map<String,Object> dataMap = new HashMap<>();
+
+		if(reType.equals("I")) {
+			dataMap = dpOrderService.selectIntReport(no);
+		}else {
+			dataMap = dpOrderService.selectExtReport(no);
+			url = "user/departmentHead/extReportForm";
+		}
+		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		String dpName = commonService.getCodeName1ByCommonCode(loginUser.getDpId());
+		dataMap.put("dpName", dpName);
+		dataMap.put("memName", memName);
+		mnv.addObject("dataMap", dataMap);
+		mnv.setViewName(url);
+		return mnv;
+	}
+	
+	@RequestMapping("/buttonClick")
+	@ResponseBody
+	public ResponseEntity<String> buttonClick(String reType, int no, int opcl, String memClNo, String memEmail, boolean check) throws Exception {
+		ResponseEntity<String> entity = null;
+		String result = "1" ;
+		
+		if(check) {
+			dpOrderService.updateReportApproval(reType, no, memClNo, opcl, memEmail);
+			result="1";
+		}else {
+			dpOrderService.updateReportReturn(reType, no);
+			result="0";
+		}
+
+		entity = new ResponseEntity<String>(result,HttpStatus.OK);
+		return entity;
+	}
+
+	
+	@Autowired
+	private UserClassService service;
+
+	@RequestMapping(value = "/getImg.do", method = RequestMethod.GET)
+	public void getImg(String fileNM, HttpServletResponse response) throws Exception {
+		String DIR = fileUploadPath;
+		String filePath = DIR + fileNM;
+		System.out.println("filePath========================================"+filePath);
+		service.getImage(filePath, response);
+	}
+	
+	@RequestMapping(value = "/getExtImg.do", method = RequestMethod.GET)
+	public void getExtImg(String fileNM, HttpServletResponse response) throws Exception {
+		String DIR = extReportCertificate;
+		String filePath = DIR + fileNM;
+		System.out.println("filePath========================================"+filePath);
+		service.getImage(filePath, response);
+	}
+	
+	@RequestMapping(value = "/getPicture.do", produces = "text/plain;charset=utf-8")
+	public ResponseEntity<byte[]> getPicture(String picture) throws IOException {
+		InputStream in = null;
+		ResponseEntity<byte[]> entity = null;
+		String imgPath = picturePath;
+
+
+			in = new FileInputStream(new File(imgPath, picture));
+
+			entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), HttpStatus.CREATED);
+
+			in.close();
+
+
+		return entity;
+	}
+	
+	@Resource(name = "classUploadPath")
+	private String classUploadPath;
+	
+	@RequestMapping(value = "/getClassImg.do", method = RequestMethod.GET)
+	public void getClassImg(String fileNM, HttpServletResponse response) throws Exception {
+		String DIR = classUploadPath;
+		String filePath = DIR + fileNM;
+
+		service.getImage(filePath, response);
+	}
+}

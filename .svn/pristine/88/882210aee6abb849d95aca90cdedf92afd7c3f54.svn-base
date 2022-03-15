@@ -1,0 +1,128 @@
+package com.one.controller.manager.site;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.one.command.SiteInfoCommand;
+import com.one.dto.SiteInfoVO;
+import com.one.service.impl.ManagementSiteServiceImpl;
+import com.one.utils.MakeFileName;
+
+@Controller
+@RequestMapping("/manager/managementSite")
+public class ManagementSiteController {
+
+	@Autowired
+	private ManagementSiteServiceImpl siteService;
+
+	@Resource(name = "logoPath")
+	private String logoPath;
+	
+	@RequestMapping("/logo.do")
+	public String managementLogo() throws Exception {
+		String url = "manager/managementSite/managementLogo";
+
+		return url;
+	}
+	
+	@RequestMapping(value="/registLogo.do",method=RequestMethod.POST, produces = "test/plain;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> registLogo(@RequestParam("attachFileLogo")MultipartFile attachFileLogo) throws IOException{
+		ResponseEntity<String> entity = null;
+		String logoPicture = "logo.png";
+		System.out.println(attachFileLogo.getName());
+		savePicture(logoPicture, attachFileLogo);
+
+		entity = new ResponseEntity<String>("변경되었습니다.", HttpStatus.OK);
+		return entity;
+	}
+	
+	@RequestMapping(value="/registPavicon.do",method=RequestMethod.POST, produces = "test/plain;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> registPavicon(@RequestParam("attachFilePavicon")MultipartFile attachFilePavicon) throws IOException{
+		ResponseEntity<String> entity = null;
+		String logoPicture = "pavicon.png";
+		System.out.println(attachFilePavicon.getName());
+		savePicture(logoPicture, attachFilePavicon);
+
+		entity = new ResponseEntity<String>("변경되었습니다.", HttpStatus.OK);
+		return entity;
+	}
+
+	// 로고테스트
+	@RequestMapping("/logotest")
+	public String managementLogoTest() throws Exception {
+		String url = "manager/managementSite/managementLogoTest";
+
+		return url;
+	}
+
+
+	@RequestMapping("/siteInfo.do")
+	public ModelAndView managementSiteInfo(ModelAndView mnv) throws Exception {
+		String url = "manager/managementSite/managementSiteInfo";
+
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+
+		SiteInfoVO siteInfo = siteService.getSiteInfo();
+		System.out.println(siteInfo);
+
+		String[] compTel = siteInfo.getCompTel().split("-");
+		String[] compEmail = siteInfo.getCompEmail().split("@");
+
+		dataMap.put("siteInfo", siteInfo);
+		dataMap.put("compTel1", compTel[0]);
+		dataMap.put("compTel2", compTel[1]);
+		dataMap.put("compTel3", compTel[2]);
+		dataMap.put("compEmail1", compEmail[0]);
+		dataMap.put("compEmail2", compEmail[1]);
+
+		mnv.setViewName(url);
+		mnv.addObject("dataMap", dataMap);
+		return mnv;
+	}
+
+	@RequestMapping("/siteInforegist.do")
+	public String RegistSiteInfo(SiteInfoCommand siteInfoCommand) throws Exception {
+		String url = "redirect:/manager/managementSite/siteInfo.do";
+		System.out.println(siteInfoCommand.toString());
+		siteService.registSiteInfo(siteInfoCommand.getSiteInfoVO());
+		return url;
+	}
+	
+	
+	private void savePicture(String logoPicture, MultipartFile multi) throws IOException {
+		// 파일 유무 확인
+		if (!(multi == null || multi.isEmpty() || multi.getSize() > 1024 * 1024 * 5)) {
+
+			// 파일 저장 폴더 설정
+			String uploadPath = logoPath;
+			File storeFile = new File(uploadPath, logoPicture);
+			
+			System.out.println("파일 있음");
+			
+			storeFile.mkdirs();
+			
+			multi.transferTo(storeFile);
+		}
+		
+
+		
+	}
+
+}

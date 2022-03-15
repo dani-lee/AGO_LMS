@@ -1,0 +1,52 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dao.CommonDAO;
+import com.one.dto.CommonVO;
+import com.one.dto.MemberVO;
+import com.one.service.CommonService;
+
+public class CommonServiceImpl implements CommonService {
+
+	private CommonDAO commonDAO;
+
+	public void setCommonDAO(CommonDAO commonDAO) {
+		this.commonDAO = commonDAO;
+	}
+
+	@Override
+	public List<CommonVO> getCommonByGroupCode(String groupCode) throws SQLException {
+		List<CommonVO> commonList = commonDAO.selectCommonByGroupCode(groupCode);
+		return commonList;
+	}
+
+	@Override
+	public String getCodeName1ByCommonCode(String commonCode) throws SQLException {
+		CommonVO common = commonDAO.selectCommonByCommonCode(commonCode);
+		String codeName1 = common.getCodeName1();
+		return codeName1;
+	}
+
+	@Override
+	public String getPositionByKeyword(String keyword) throws SQLException {
+		String commonCode = commonDAO.selectPositionByKeyword(keyword);
+		return commonCode;
+	}
+
+	@Override
+	public MemberVO getConvertPositionAndDpBymemInfo(MemberVO member) throws SQLException {
+		MemberVO convertMember = commonDAO.getConvertPositionAndDpBymemInfo(member);
+		return convertMember;
+	}
+
+	@Override
+	public CommonVO getCommonVOByCommonCode(String commonCode) throws SQLException {
+		CommonVO common = commonDAO.selectCommonByCommonCode(commonCode);
+		return common;
+	}
+	
+	
+
+}

@@ -1,0 +1,91 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.hpsf.Array;
+
+import com.one.command.Criteria;
+import com.one.command.PageMaker;
+import com.one.dao.LikeClassDAO;
+import com.one.dto.ClassVO.ClassDepartmentVO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.LikeClassService;
+
+public class LikeClassServiceImpl implements LikeClassService{
+
+	private LikeClassDAO likeClassDAO;
+	
+	public void setLikeClassDAO(LikeClassDAO likeClassDAO) {
+		this.likeClassDAO = likeClassDAO;
+	}
+
+	@Override
+	public Map<String, Object> getLikeClassList(String memEmail, Criteria cri) throws SQLException{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<ClassDepartmentVO> orderClassList = likeClassDAO.selectClassOrderList();
+		System.out.println("여깁니다오더클래스                   "+orderClassList);
+		
+		List<ClassStasticsVO> likeClassList = likeClassDAO.selectLikeClassList(memEmail, cri);
+		int totalCount = likeClassDAO.selectLikeClassListCount(memEmail);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		
+		List<ClassStasticsVO> attendeesCntList = likeClassDAO.selectLikeClassCntAttendees();
+		for(ClassStasticsVO classInfo : likeClassList) {
+			for(ClassStasticsVO attendessCnt : attendeesCntList) {
+				if(classInfo.getOpcl() == attendessCnt.getOpcl()) {
+					attendessCnt.setCount(attendessCnt.getCount());
+				}
+			}
+			for(ClassDepartmentVO orderClass : orderClassList) {
+				if(classInfo.getOpcl() == orderClass.getOpcl()) {
+					 
+				}
+			}
+		}
+	
+		
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("likeClassList", likeClassList);
+		
+		return dataMap;
+	}
+
+	@Override
+	public Map<String,Object> getLikeClPoint(String memEmail) throws SQLException {
+		Map<String, Object> clpointMap = new HashMap<String, Object>();
+		ClassStasticsVO smallInfo = new ClassStasticsVO();
+		
+		int totalPoint = Integer.parseInt(likeClassDAO.selectLikeClPoint(memEmail).toString());
+		smallInfo.setMemEmail(memEmail);
+		smallInfo.setClCate("A201");
+		int pointA201 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		smallInfo.setClCate("A202");
+		int pointA202 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		smallInfo.setClCate("A203");
+		int pointA203 = Integer.parseInt(likeClassDAO.selectLikeCLPointByClCate(smallInfo).toString());
+		
+		clpointMap.put("totalPoint", totalPoint);
+		clpointMap.put("pointA201", pointA201);
+		clpointMap.put("pointA202", pointA202);
+		clpointMap.put("pointA203", pointA203);
+		
+		
+		
+		return clpointMap;
+	}
+
+	@Override
+	public void removeLikeCls(Map<String, Object> dataMap) throws SQLException {
+		likeClassDAO.deleteLikeCls(dataMap);
+		
+	}
+
+	
+
+}

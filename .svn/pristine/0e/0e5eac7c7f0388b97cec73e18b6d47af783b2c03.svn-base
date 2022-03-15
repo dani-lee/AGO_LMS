@@ -1,0 +1,96 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.Criteria;
+import com.one.command.ExamCommand;
+import com.one.dao.ExamStatisDAO;
+import com.one.dto.ExamStastisDetailVO;
+import com.one.dto.ExamStatisVO;
+
+public class ExamStatisDAOImpl implements ExamStatisDAO {
+
+	private SqlSession session;
+
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<ExamStatisVO> selectMiddlePrecedence(ExamCommand examCmd) throws SQLException {
+		return session.selectList("Exam-Mapper.selectMiddlePrecedence", examCmd);
+	}
+
+	@Override
+	public List<ExamStatisVO> selectFinalPrecedence(ExamCommand examCmd) throws SQLException {
+		return session.selectList("Exam-Mapper.selectFinalPrecedence", examCmd);
+	}
+
+	@Override
+	public List<ExamStatisVO> selectClassExamAVG() throws SQLException {
+		List<ExamStatisVO> classExamAVGList = session.selectList("Exam-Mapper.selectClassExamAVG");
+		return classExamAVGList;
+	}
+
+	@Override
+	public int selectClassExamCount() throws SQLException {
+		return session.selectOne("Exam-Mapper.selectClassExamCount");
+	}
+
+	@Override
+	public List<ExamStatisVO> selectClassList(Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<ExamStatisVO> classList = session.selectList("Exam-Mapper.selectClassList", cri, rowBounds);
+		return classList;
+	}
+
+	@Override
+	public ExamStastisDetailVO selectExamStastisDetail(String clCode) throws SQLException {
+		return session.selectOne("Exam-Mapper.selectExamStastisDetail", clCode);
+	}
+
+	@Override
+	public int[] selectExamStastisMiddleCount(String clCode) throws SQLException {
+		ExamStastisDetailVO resultExamDetail = new ExamStastisDetailVO();
+		resultExamDetail.setClCode(clCode);
+
+		int[] result = new int[5];
+		int standard = 0;
+		for (int i = 0; i < 5; i++) {
+			resultExamDetail.setStartNum(standard);
+			resultExamDetail.setEndNum(standard + 19);
+
+			result[i] = session.selectOne("Exam-Mapper.selectExamStastisMiddleCount", resultExamDetail);
+			standard += 20;
+		}
+
+		return result;
+	}
+
+	@Override
+	public int[] selectExamStastisFinalCount(String clCode) throws SQLException {
+		ExamStastisDetailVO resultExamDetail = new ExamStastisDetailVO();
+		resultExamDetail.setClCode(clCode);
+
+		int[] result = new int[5];
+		int standard = 0;
+		for (int i = 0; i < 5; i++) {
+			resultExamDetail.setStartNum(standard);
+			resultExamDetail.setEndNum(standard + 19);
+
+			result[i] = session.selectOne("Exam-Mapper.selectExamStastisFinalCount", resultExamDetail);
+			standard += 20;
+		}
+
+		return result;
+	}
+
+}

@@ -1,0 +1,154 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<head></head>
+
+<title>운영자 로그인</title>
+
+<body>
+	<script type="text/javascript">
+	if(${check eq false}){
+		alert("권한이 없는 이메일이거나 등록되지 않은 이메일입니다.")
+	}
+</script>
+
+	<div class="container-fluid col-12 mx-auto d-flex align-items-center">
+		<div class="float-left col-7 d-flex justify-content-center align-items-center" style="background-color: #f4f7fd; height: 840px;">
+			<div class="inner mx-auto">
+				<p class="font-weight-bold text-center">
+					Constant learning not only <br>makes you knowledgeable, <br>but also a better person
+				</p>
+				<img src="<%=request.getContextPath()%>/resources/img/login1.png" style="width: 400px;" class="mx-auto">
+			</div>
+		</div>
+		<div class="float-right col-5">
+			<div class="inner col-10 mx-auto">
+				<img src="<%=request.getContextPath()%>/resources/img/logo.png" style="width: 180px;" class="mx-auto">
+				<form role="managerLogin" id="managerLogin" action="emailCheck.do" method="post">
+					<div class="form-group">
+						<p class="ml-2 h6 font-weight-bold">운영자 로그인</p>
+						<!-- 						<label for="squareInput">이메일</label> -->
+						<input type="text" class="form-control input-square" name="email" placeholder="이메일">
+					</div>
+					<div class="form-group">
+						<!-- 						<label for="squareInput">아이디</label> -->
+						<input type="text" class="form-control input-square" name="id" id="id" placeholder="아이디">
+					</div>
+					<div class="form-group">
+						<!-- 						<label for="squareInput">비밀번호</label> -->
+						<input type="password" id="manager_pass" class="form-control input-square" name="pwd" placeholder="비밀번호">
+						<i class="far fa-eye float-right" id="seethrough" onclick="javascript:see_through_pwd('manager_pass','seethrough');" style="position: absolute; right: 45px; bottom: 175px;"></i>
+					</div>
+					<div class="card-action">
+						<div class="form-group ml-2">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="checkId">
+								<label class="form-check-label">아이디 기억하기</label>
+							</div>
+						</div>
+						<button class="btn btn-lg btn-secondary btn-block col-12 ml-1" type="button" onclick="login_go()">로그인</button>
+						<div class="row ml-auto" style="margin-top: 10px; margin-bottom:5px; margin-left: 0px; margin-right:0px;">
+							<div class="col-6 mr-1">&nbsp;</div>
+							<a href="<%=request.getContextPath()%>/manager/login/searchForIdForm.pop" onclick="OpenWindow(this.href, '아이디 찾기', '455', '245'); return false;">아이디 찾기</a>
+							&nbsp;&nbsp;/&nbsp;&nbsp;
+							<a href="<%=request.getContextPath()%>/manager/login/searchForPwdForm.pop" onclick="OpenWindow(this.href, '비밀번호 찾기', '450', '385'); return false;">비밀번호 찾기</a>
+						</div>
+						<div class="ml-3">
+							사용자로 로그인 하시겠습니까?
+							<a href="<%=request.getContextPath()%>/user/loginPage.do">&nbsp;사용자로 로그인하기</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="<%=request.getContextPath()%>/resources/js/password.js"></script>
+	<script src="<%=request.getContextPath()%>/resources/js/login.js"></script>
+	<script>
+	 window.onload = function() {
+			// 저장된 쿠키값을 가져와서 ID 칸에 넣어준다. 없으면 공백으로 들어감.
+			var key = getCookie("key");
+			$("#id").val(key); 
+			 
+			// 그 전에 ID를 저장해서 처음 페이지 로딩 시, 입력 칸에 저장된 ID가 표시된 상태라면,
+			if($("#id").val() != ""){ 
+			    $("#checkId").attr("checked", true); // ID 저장하기를 체크 상태로 두기.
+			}
+			 
+			$("#checkId").change(function(){ // 체크박스에 변화가 있다면,
+			    if($("#checkId").is(":checked")){ // ID 저장하기 체크했을 때,
+			        setCookie("key", $("#id").val(), 7); // 7일 동안 쿠키 보관
+			    }else{ // ID 저장하기 체크 해제 시,
+			        deleteCookie("key");
+			    }
+			});
+			 
+			// ID 저장하기를 체크한 상태에서 ID를 입력하는 경우, 이럴 때도 쿠키 저장.
+			$("#id").keyup(function(){ // ID 입력 칸에 ID를 입력할 때,
+			    if($("#checkId").is(":checked")){ // ID 저장하기를 체크한 상태라면,
+			        setCookie("key", $("#id").val(), 7); // 7일 동안 쿠키 보관
+			    }
+			});
+
+			// 쿠키 저장하기 
+			// setCookie => saveid함수에서 넘겨준 시간이 현재시간과 비교해서 쿠키를 생성하고 지워주는 역할
+			function setCookie(cookieName, value, exdays) {
+				var exdate = new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var cookieValue = escape(value)
+						+ ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
+				document.cookie = cookieName + "=" + cookieValue;
+			}
+
+			// 쿠키 삭제
+			function deleteCookie(cookieName) {
+				var expireDate = new Date();
+				expireDate.setDate(expireDate.getDate() - 1);
+				document.cookie = cookieName + "= " + "; expires="
+						+ expireDate.toGMTString();
+			}
+		     
+			// 쿠키 가져오기
+			function getCookie(cookieName) {
+				cookieName = cookieName + '=';
+				var cookieData = document.cookie;
+				var start = cookieData.indexOf(cookieName);
+				var cookieValue = '';
+				if (start != -1) { // 쿠키가 존재하면
+					start += cookieName.length;
+					var end = cookieData.indexOf(';', start);
+					if (end == -1) // 쿠키 값의 마지막 위치 인덱스 번호 설정 
+						end = cookieData.length;
+		                console.log("end위치  : " + end);
+					cookieValue = cookieData.substring(start, end);
+				}
+				return unescape(cookieValue);
+			}
+	 }
+	 
+		function login_go(){
+			let input_email = $('input[name="email"]');
+			let input_id = $('input[name="id"]');
+			let input_pwd = $('input[name="pwd"]');
+			if(input_email == ""){
+				alert("이메일을 입력하세요.");
+				input_email.focus();
+				return;
+			}
+			check_email_regx(input_email);
+			if(input_id == ""){
+				alert("아이디를 입력하세요.");
+				input_id.focus();
+				return;
+			}
+			if(input_pwd == ""){
+				alert("비밀번호를 입력하세요.");
+				input_pwd.focus();
+				return;
+			}
+			
+			$('form[role=managerLogin]').submit();
+		}
+	</script>
+</body>

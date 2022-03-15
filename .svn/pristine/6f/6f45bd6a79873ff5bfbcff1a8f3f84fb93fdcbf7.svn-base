@@ -1,0 +1,14 @@
+pds.upload=c:/pds/file/upload
+member.picture.upload=c:/member/picture/upload/
+certificate.picture.upload=D:/A_TeachingMaterial/7.LastProject/other/certificate
+class.picture.upload=D:/A_TeachingMaterial/7.LastProject/other/classPicture/
+summernote.img=D:/A_TeachingMaterial/7.LastProject/other/summernote/img/
+logo.img=D:/A_TeachingMaterial/7.LastProject/workspace/AGO2/src/main/webapp/resources/img/
+qrCode.img=D:/A_TeachingMaterial/7.LastProject/other/qrCode/
+extreport.certificate=D:/A_TeachingMaterial/7.LastProject/other/extreport/certificate
+extreport.stamp=D:/A_TeachingMaterial/7.LastProject/other/extreport/stamp
+excel.form=D:/A_TeachingMaterial/7.LastProject/other/excelForm/
+excel.temp=D:/A_TeachingMaterial/7.LastProject/other/excelTemp/
+error.log=c:/log/error_log/
+login.log=c:/log/login_log/
+action.log=c:/log/action_log/

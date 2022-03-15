@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- manager -->
+	<authentication-manager id="adminAuthManager">
+		<authentication-provider ref="adminAuthProvider" />
+	</authentication-manager>
+
+	<authentication-manager id="managerAuthManager">
+		<authentication-provider ref="managerAuthProvider" />
+	</authentication-manager>
+
+	<authentication-manager id="userAuthManager">
+		<authentication-provider ref="userAuthProvider" />
+	</authentication-manager>
+
+	<!-- provider -->
+	<beans:bean
+		id="adminAuthProvider"
+		class="com.one.security.AdminAuthenticationProvider"
+		p:adminService-ref="adminService" />
+
+	<beans:bean
+		id="managerAuthProvider"
+		class="com.one.security.ManagerAuthenticationProvider"
+		p:managerService-ref="managerService" />
+
+	<beans:bean
+		id="userAuthProvider"
+		class="com.one.security.UserAuthenticationProvider"
+		p:memberService-ref="memberService" />
+
+	<!-- handler -->
+	<beans:bean
+		id="adminAuthSuccessHandler"
+		class="com.one.security.AdminLoginSuccessHandler"
+		p:savePath-ref="loginLog"
+		p:saveFileName-ref="adminLoginFileName" />
+
+	<beans:bean
+		id="managerAuthSuccessHandler"
+		class="com.one.security.ManagerLoginSuccessHandler"
+		p:commonService-ref="commonService"
+		p:savePath-ref="loginLog"
+		p:saveFileName-ref="managerLoginFileName" />
+
+	<beans:bean
+		id="userAuthSuccessHandler"
+		class="com.one.security.UserLoginSuccessHandler"
+		p:commonService-ref="commonService"
+		p:savePath-ref="loginLog"
+		p:saveFileName-ref="userLoginFileName" />
+
+
+
+	<beans:bean
+		id="loginFailureHandler"
+		class="com.one.security.LoginFailureHandler" />
+
+	<!-- 인증 -->
+	<http
+		pattern="/resources/**"
+		security="none" />
+
+	<http
+		pattern="/admin/**"
+		auto-config="true"
+		use-expressions="true"
+		authentication-manager-ref="adminAuthManager">
+
+		<access-denied-handler error-page="/security/accessDenied" />
+
+		<intercept-url
+			pattern="/**/loginPage.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login/**"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/loginTimeOut"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/loginExpired"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/admin/**"
+			access="hasAnyRole('A104')" />
+
+		<form-login
+			login-page="/admin/loginPage.do"
+			login-processing-url="/admin/login.do"
+			username-parameter="id"
+			password-parameter="pwd"
+			authentication-success-handler-ref="adminAuthSuccessHandler"
+			authentication-failure-handler-ref="loginFailureHandler" />
+
+
+		<logout
+			logout-url="/admin/logout.do"
+			logout-success-url="/admin/loginPage.do"
+			invalidate-session="true"
+			delete-cookies="JSESSIONID" />
+
+
+		<session-management invalid-session-url="/admin/loginTimeOut">
+			<concurrency-control
+				expired-url="/loginExpired"
+				max-sessions="1"
+				session-registry-alias="sessionRegistry" />
+		</session-management>
+
+	</http>
+
+	<http
+		pattern="/manager/**"
+		auto-config="true"
+		use-expressions="true"
+		authentication-manager-ref="managerAuthManager">
+
+		<access-denied-handler error-page="/security/accessDenied" />
+
+		<intercept-url
+			pattern="/**/emailCheck.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/manager/login/redirectPage"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/loginPage.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login/**"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/loginTimeOut"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/loginExpired"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/manager/**"
+			access="hasAnyRole('A103')" />
+
+		<form-login
+			login-page="/manager/loginPage.do"
+			login-processing-url="/manager/login.do"
+			username-parameter="id"
+			password-parameter="pwd"
+			authentication-success-handler-ref="managerAuthSuccessHandler"
+			authentication-failure-handler-ref="loginFailureHandler" />
+
+
+		<logout
+			logout-url="/manager/logout.do"
+			logout-success-url="/manager/loginPage.do"
+			invalidate-session="true"
+			delete-cookies="JSESSIONID" />
+
+
+		<session-management invalid-session-url="/manager/loginTimeOut">
+			<concurrency-control
+				expired-url="/loginExpired"
+				max-sessions="6"
+				session-registry-alias="sessionRegistry" />
+		</session-management>
+
+	</http>
+
+	<http
+		pattern="/user/**"
+		auto-config="true"
+		use-expressions="true"
+		authentication-manager-ref="userAuthManager">
+
+		<access-denied-handler error-page="/security/accessDenied" />
+
+		<intercept-url
+			pattern="/**/loginPage.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login.do"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/**/login/**"
+			access="permitAll" />
+		<intercept-url
+			pattern="/**/loginTimeOut"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/loginExpired"
+			access="permitAll" />
+
+		<intercept-url
+			pattern="/user/**/QRCheck.pop"
+			access="hasAnyRole('A101, A102')" />
+
+		<intercept-url
+			pattern="/user/**"
+			access="hasAnyRole('A101, A102')" />
+
+		<form-login
+			login-page="/user/loginPage.do"
+			login-processing-url="/user/login.do"
+			username-parameter="id"
+			password-parameter="pwd"
+			authentication-success-handler-ref="userAuthSuccessHandler"
+			authentication-failure-handler-ref="loginFailureHandler" />
+
+
+		<logout
+			logout-url="/user/logout.do"
+			logout-success-url="/user/loginPage.do"
+			invalidate-session="true"
+			delete-cookies="JSESSIONID" />
+
+
+		<session-management invalid-session-url="/user/loginTimeOut">
+			<concurrency-control
+				expired-url="/loginExpired"
+				max-sessions="1"
+				session-registry-alias="sessionRegistry" />
+		</session-management>
+
+	</http>
+
+	<beans:bean
+		id="sessionRgistry"
+		class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+</beans:beans>

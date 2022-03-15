@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Exam-Mapper">
+	
+	<sql id="countScore">
+		<if test="testType == 'm'.toString()">
+			<if test="scoreType == '0'.toString()">
+				and MIDTEST_SCORE BETWEEN 0 and 39
+			</if>
+			<if test="scoreType == '1'.toString()">
+				and MIDTEST_SCORE BETWEEN 40 and 69
+			</if>
+			<if test="scoreType == '2'.toString()">
+				<![CDATA[and MIDTEST_SCORE >= 70]]>
+			</if>
+		</if>
+		
+		<if test="testType == 'f'.toString()">
+			<if test="scoreType == '0'.toString()">
+				and FINTEST_SCORE BETWEEN 0 and 39
+			</if>
+			<if test="scoreType == '1'.toString()">
+				and FINTEST_SCORE BETWEEN 40 and 69
+			</if>
+			<if test="scoreType == '2'.toString()">
+				<![CDATA[and FINTEST_SCORE >= 70]]>
+			</if>
+		</if>
+	</sql>
+	
+	<select id="selectExamStatisList" resultType="examStatis">
+		select a.TEST_NO
+		     , a.MTEST_FILE
+		     , a.FTEST_FILE
+		     , a.MTEST_REGDATE
+		     , a.FTEST_REGDATE
+		     , a.MTEST_AVG_SCO
+		     , a.FTEST_AVG_SCO
+		     , a.OPCL
+		     , a.TEST_STATUS
+		     , b.cl_code
+		     , b.cl_name
+             , c.CL_FORMAT
+             , c.CL_DIVISION
+             , c.CL_CATE
+		  from TEST a
+		     , (select max(opcl) as opcl
+		             , cl_code
+		             , cl_name
+		          from v_class
+		         group by cl_code
+		                , cl_name
+		         order by cl_code) b
+             , V_CLASS c
+		 WHERE a.opcl=b.opcl
+           AND b.opcl=c.opcl
+		   AND a.TEST_STATUS = 1
+	</select>
+	
+	
+	<select id="countExamStatisList" resultType="int">
+		select count(*)
+		  from TEST a
+		       , (select max(opcl) as opcl
+		               , cl_code
+		               , cl_name
+		            from v_class
+		           group by cl_code
+		                  , cl_name
+		           order by cl_code) b
+		 where a.opcl=b.opcl
+		   and a.TEST_STATUS = 1
+	</select>
+	
+	<select id="selectStatisDetail" resultType="eStastisDetail">
+		select b.opcl
+			 , b.cl_code
+			 , b.cl_name
+			 , b.CL_CATE
+			 , b.post_sdate
+			 , b.post_edate
+		     , a.MTEST_FILE
+		     , a.FTEST_FILE
+		  from V_CLASS b
+		     , TEST a
+		 where b.opcl=#{opcl}
+		   and a.opcl=b.opcl
+	</select>
+	
+	<select id="countClassStudent" resultType="int">
+		select count(a.opcl) as student
+		  from MEM_CL a
+		 where a.opcl=#{opcl}
+	</select>
+	
+	
+	<select id="countStudentScore" resultType="int">
+		 select count(*)
+		   from MEM_CL a
+		  where a.opcl=#{opcl}
+		     <include refid="countScore" />
+	</select>
+	
+	
+	
+		
+	
+	<select id="selectManagementExamList" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+		,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		ORDER BY B.FTEST_FILE DESC NULLS FIRST, B.MTEST_FILE DESC NULLS FIRST, LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectManagementExamListCount" resultType="int">
+		SELECT 
+		COUNT(*)
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		ORDER BY B.FTEST_FILE DESC NULLS FIRST, B.MTEST_FILE DESC NULLS FIRST, LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectNoExamClass" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+		,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		AND B.FTEST_FILE IS NULL
+		ORDER BY LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectNoExamClassCount" resultType="int">
+		SELECT 
+		COUNT(*)
+		FROM
+		CLASS A, TEST B
+		WHERE A.CL_CODE = B.CL_CODE
+		AND NOT A.CL_CATE IN 'A203'
+		AND B.TEST_STATUS = '1'
+		AND B.FTEST_FILE IS NULL
+		ORDER BY LENGTH(B.CL_CODE) DESC, B.CL_CODE DESC
+	</select>
+	
+	<select id="selectExamInfo" resultType="manageExam">
+		SELECT 
+		B.CL_CODE
+        ,A.CL_NAME
+		,A.CL_CATE
+		,B.MTEST_FILE
+        ,B.FTEST_FILE
+		,B.MTEST_AVG_SCO
+		,B.FTEST_AVG_SCO 
+        FROM CLASS A, TEST B
+        WHERE A.CL_CODE = B.CL_CODE
+        AND B.CL_CODE = #{clCode}
+	</select>
+	
+	<sql id="term_condition">
+		<if test="term == 'midterm'.toString()">
+			and 
+		</if>
+		<if test="sortType == 's'.toString()">
+			and MSG_READ = 0
+		</if>
+	</sql>
+	
+	<select id="selectTestInfo" resultType="test">
+		SELECT
+		    TEST_NO
+		   ,MTEST_FILE
+		   ,FTEST_FILE
+		   ,MTEST_REGDATE
+		   ,FTEST_REGDATE
+		   ,MTEST_AVG_SCO
+		   ,FTEST_AVG_SCO
+		   ,OPCL
+		   ,TEST_STATUS
+		FROM
+		    TEST
+		WHERE
+		    OPCL = #{opcl}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

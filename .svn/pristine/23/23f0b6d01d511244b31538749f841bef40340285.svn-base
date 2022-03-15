@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Message-Mapper">
+	<sql id="sort">
+		<if test="sortType == 'c'.toString()">
+			and MSG_READ = 1
+		</if>
+		<if test="sortType == 's'.toString()">
+			and MSG_READ = 0
+		</if>
+	</sql>
+
+	<select id="selectMessageList" resultType="message">
+		SELECT
+		A.MSG_NO
+		,A.MSG_CONTENT
+		,A.MSG_REGDATE
+		,A.MANAGER_DELETE
+		,B.MSG_READ
+		,B.MEM_DELETE
+		,B.MEM_EMAIL
+		FROM MSG A
+			,MEM_MSG B
+		WHERE A.MSG_NO = B.MSG_NO
+		AND A.MANAGER_DELETE = 0
+        AND B.MEM_DELETE = 0
+		AND B.MEM_EMAIL = #{keyword}
+		<include refid="sort"/>
+		ORDER BY B.MSG_READ ASC, A.MSG_REGDATE DESC
+	</select>
+
+	<select id="selectMessageListCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM MSG A
+			,MEM_MSG B
+		WHERE A.MSG_NO = B.MSG_NO
+		AND A.MANAGER_DELETE = 0
+        AND B.MEM_DELETE = 0
+		AND B.MEM_EMAIL = #{keyword}
+		<include refid="sort"/>
+		ORDER BY MSG_READ ASC, MSG_REGDATE ASC
+	</select>
+	
+	<select id="selectMessage" parameterType="msgCMD" resultType="message">
+		SELECT
+        A.MSG_NO
+		,A.MSG_CONTENT
+		,A.MSG_REGDATE
+		,A.MANAGER_DELETE
+		,B.MSG_READ
+        ,B.MEM_DELETE
+        ,B.MEM_EMAIL
+        FROM MSG A, MEM_MSG B
+        WHERE A.MSG_NO = B.MSG_NO
+        AND A.MSG_NO = #{msgNo}
+        AND B.MEM_EMAIL = #{memEmail}
+	</select>
+	
+	
+	<update id="readMessage" parameterType="message">
+		UPDATE 
+		MEM_MSG
+		SET
+		MSG_READ = '1'
+		WHERE MSG_NO = #{msgNo}
+		AND MEM_EMAIL = #{memEmail}
+	</update>
+
+	<update id="insertMessage" parameterType="message">
+		INSERT INTO MSG (
+		    MSG_NO
+		   ,MSG_CONTENT
+		   ,MSG_REGDATE
+		   ,MANAGER_DELETE
+		) VALUES (
+		     #{msgNo}
+		   ,#{msgContent}
+		   ,SYSDATE
+		   ,0
+		)
+	</update>
+	
+	<update id="insertMemMsg" parameterType="message">
+		INSERT INTO MEM_MSG (
+		    MEM_EMAIL
+		   ,MSG_NO
+		   ,MSG_READ
+		   ,MEM_DELETE
+		) VALUES (
+		    #{memEmail}
+		   ,#{msgNo}
+		   ,0
+		   ,0
+		)
+	</update>
+	<select id="selectMsgSequenceNextValue" resultType="int">
+		SELECT MSG_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<update id="updateMemDelete" parameterType="hashmap">
+		UPDATE
+        MEM_MSG
+        SET
+        MEM_DELETE = '1'
+        WHERE MSG_NO IS NOT NULL
+			AND MEM_EMAIL = #{member}
+        <foreach collection="msgNo" item = "msg" index="idx" open="AND MSG_NO IN (" close=")" separator=",">
+			 #{msg}
+		</foreach>
+	</update>
+	
+	<select id="selectMsgList" resultType="message">
+		SELECT
+		    MSG_NO
+		   ,MSG_CONTENT
+		   ,MSG_REGDATE
+		   ,MANAGER_DELETE
+		FROM
+		    MSG
+		WHERE
+			MANAGER_DELETE = 0
+		ORDER BY 
+		    MSG_REGDATE DESC
+	</select>
+	
+	<select id="selectMemMsgByNo" resultType="message">
+		SELECT
+		    A.MEM_EMAIL
+		   ,A.MSG_NO
+		   ,A.MSG_READ
+		   ,A.MEM_DELETE
+		   ,B.MEM_NAME
+		FROM
+		    MEM_MSG A, MEMBER B
+		WHERE 
+		    A.MEM_EMAIL = B.MEM_EMAIL
+		AND
+		    A.MSG_NO = #{msgNo}
+	</select>
+
+	<select id="countMsg" resultType="int">
+		SELECT 
+			COUNT(*)
+    	FROM 
+    		MSG
+	</select>
+	
+	<select id="selectMsg" parameterType="int" resultType="message">
+		SELECT
+		    MSG_NO
+		   ,MSG_CONTENT
+		   ,MSG_REGDATE
+		   ,MANAGER_DELETE
+		FROM
+		    MSG
+		WHERE
+		    MSG_NO = #{msgNo}
+	</select>
+	
+	<update id="deleteMsgBymanager" parameterType="int">
+		UPDATE MSG
+		    SET
+		        MSG_CONTENT = '운영자에 의해 삭제된 쪽지입니다.'
+		       ,MANAGER_DELETE = 1
+		WHERE
+		    MSG_NO = #{msgNo}
+	</update>
+	
+	<select id="selectUnreadMsgCount" parameterType="str" resultType="int">
+		SELECT 
+		COUNT(*)
+		FROM MEM_MSG A,
+             MSG B
+		WHERE A.MSG_NO = B.MSG_NO
+        AND A.MSG_READ = 0
+        AND A.MEM_DELETE = 0
+        AND B.MANAGER_DELETE = 0
+        and MEM_EMAIL =  #{memEmail}
+	</select>
+</mapper>

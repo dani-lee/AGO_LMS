@@ -1,0 +1,276 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+
+<c:set var="classVO" value="${dataMap.classVO }" />
+<c:set var="chapterList" value="${dataMap.chapterList}" />
+
+<head></head>
+
+<title>학습중인 강의</title>
+
+<body>
+	<div class="container-fluid ">
+
+		<div class="row navList mt-2 mb-2">
+			<h3 class="col-9 font-weight-bold m-0">${classVO.clCate }</h3>
+			<div class="col-3 text-right pt-2">
+				<i class="fas fa-home" style="font-size: 15px;"></i><span> &nbsp;>&nbsp; </span> <span>수강신청</span> <span> &nbsp;>&nbsp; </span> <span>${classVO.clCate }</span>
+			</div>
+		</div>
+		<div class="row navList">
+			<div class="col-12">
+				<div class="list-group d-flex flex-row" id="list-tab" role="tablist">
+					<a class="list-group-item list-group-item-action active" id="list-review-list" data-toggle="list" href="#list-review1" role="tab" aria-controls="info">상세 정보</a>
+					<a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review2" role="tab" aria-controls="content">강의 내용</a>
+					<a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review3" role="tab" aria-controls="messages">강의 목차</a>
+					<a class="list-group-item list-group-item-action" id="list-reference-list" data-toggle="list" href="#list-reference" role="tab" aria-controls="profile">강의 자료</a>
+					<a class="list-group-item list-group-item-action" id="list-review-list" data-toggle="list" href="#list-review4" role="tab" aria-controls="messages">수강 후기</a>
+				</div>
+			</div>
+		</div>
+			<div class="tab-content" id="nav-tabContent">
+				
+				<div class="tab-pane fade show active" id="list-review1" role="tabpanel" aria-labelledby="list-content-list">
+					<table class="table mt-3">
+			            <tr>
+			            	<td class="row" colspan="4">
+			            		<img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 250px; height: 200px;">
+								<div class="class-detail row " style="margin-left: 10px;">
+									
+									<div class="col column ui-sortable p-3">
+										<h3 class="font-weight-bold">${classVO.clName }&nbsp;<i id='bookmark' class="far fa-bookmark align-items-end" onclick="bookmark();"></i></h3> 
+										<h5>
+											<c:if test="${classVO.clFormat ne '오프라인'}">
+												<span class="badge bg-info ml-1">오프라인</span>
+											</c:if>
+											<c:if test="${classVO.clFormat ne '온라인'}">
+												<span class="badge bg-primary ml-1">온라인</span>
+											</c:if>
+											<span class="badge badge-danger">필수</span>
+										</h5>
+										<br>
+										<h6 class="font-weight-bold mb-1">이수점수 :  ${classVO.clPoint }점</h6>
+										<span class="row h3 p-1 text-warning">
+											<c:forEach var="i" begin="1" end="${classVO.frontScope}" >
+													<i class="fas fa-star"></i>
+												</c:forEach>
+												<c:if test="${classVO.backScope eq 5}">
+													<i class="fas fa-star-half-alt"></i>
+												</c:if>
+												<c:forEach var="i" begin="1" end="${classVO.restScope}" >
+													<i class="far fa-star"></i>
+											</c:forEach>
+											<span>${classVO.scope}</span>
+																
+										</span>
+									</div>
+						
+								</div>
+			                </td>
+			            </tr>
+			            <tr>
+			                <td class="font-weight-bold">학점현황</td>
+			                <td class="">13/40</td>
+			                <td class="font-weight-bold">최근 신청한 강의</td>
+			                <td>JSP & Servlet Programming</td>
+			            </tr>
+			            <tr>
+			                <td class="font-weight-bold">이수 점수</td>
+			                <td>${classVO.clPoint }</td>
+			                <td class="font-weight-bold"></td>
+			                <td></td>
+			            </tr>
+			            <tr>
+			                <td class="font-weight-bold"></td>
+			                <td></td>
+			                <td></td>
+			                <td></td>
+			            </tr>
+			
+			        </table>
+				</div>
+				<div class="tab-pane fade" id="list-review2" role="tabpanel" aria-labelledby="list-content-list">
+					<table class="table mt-3">
+						<tr>
+							<td class="font-weight-bold">수료기준안내</td>
+							<td colspan="3">
+								<span style="white-space:pre;">${classVO.clIntro }</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="font-weight-bold">수강인원</td>
+							<td>${classVO.enrPers }</td>
+							<td class="font-weight-bold">총 이수시간</td>
+							<td>${classVO.clCreditTime }시간</td>
+						</tr>
+						<tr>
+							<td class="font-weight-bold">신청기간</td>
+							<td>${classVO.postSdate} ~ ${classVO.postEdate}</td>
+							<td class="font-weight-bold">교육기간</td>
+							<td>${classVO.studyDate }</td>
+						</tr>
+						<tr>
+							<td class="font-weight-bold">이수점수</td>
+							<td>${classVO.clPoint}</td>
+							<td></td>
+							<td></td>
+						</tr>
+
+						<tr>
+							<td class="font-weight-bold">과정소개</td>
+							<td colspan="3">
+								<span style="white-space:pre;">${classVO.cutLine }</span>
+							</td>
+						</tr>
+					</table>
+
+				</div>
+
+				<br>
+				<!-- 여기까지 -->
+
+
+				<!-- 강의목차 -->
+				<div class="tab-pane fade" id="list-review3" role="tabpanel" aria-labelledby="list-messages-list">
+
+					<table class="table table-hover">
+						<thead>
+							<tr class="text-center">
+								<th scope="col">회차</th>
+								<th scope="col">회차명</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if test="${not empty chapterList }" >
+								<c:forEach var="chapter" items="${chapterList}" varStatus="vs" >
+									<tr class="text-center">
+										<td>${chapter.clChapNum}</td>
+										<td>${chapter.clChapName}</td>
+									</tr>
+								</c:forEach>
+							</c:if>
+							<c:if test="${ empty chapterList }" >
+								<tr>
+									<td class="text-center">
+										등록된 목차가 없습니다.
+									</td>
+								</tr>
+							</c:if>
+
+						</tbody>
+					</table>
+				</div>
+				<!--/강의목차-->
+
+
+
+				<div class="tab-pane fade" id="list-reference" role="tabpanel" aria-labelledby="list-profile-list">
+
+					<table class="table table-hover">
+						<thead>
+							<tr class="text-center">
+								<th scope="col">번호</th>
+								<th scope="col">제목</th>
+								<th scope="col">비고</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="text-center">
+								<td>1</td>
+								<td>개인정보교육 자료</td>
+								<td><span class="h5" style="cursor: pointer;"><i class="la la-save"></i></span></td>
+							</tr>
+
+							<tr class="text-center">
+								<td colspan="4">등록된 자료가 없습니다.</td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+				<div class="tab-pane fade" id="list-review4" role="tabpanel" aria-labelledby="list-messages-list">
+
+					<div class="reviews-list">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<div class="reviews">
+									<p>
+									<div class="row">
+										<div class="col-8">
+											<span>dani</span> <span class="col">2021.01.03</span>
+
+										</div>
+										<div class="ml-auto h6">
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star-half-empty"></i>
+											<span class="text-warning">(4.5)</span>
+										</div>
+									</div>
+									</p>
+									<p class="inline-block">
+										<span class="font-weight-bold">강의 정말 잘들었습니다.</span>
+									</p>
+								</div>
+							</li>
+
+							<li class="list-group-item">
+								<div class="reviews">
+									<p>
+									<div class="row">
+										<div class="col-8">
+											<span>baldkingpenguin</span> <span class="col">2021.01.03</span>
+
+										</div>
+										<div class="ml-auto h6">
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star"></i>
+											<i class="text-warning la la-star"></i>
+											<!-- <i class="text-warning la la-star"></i> -->
+											<i class="text-warning la la-star-half-empty"></i>
+											<span class="text-warning">(3.5)</span>
+										</div>
+									</div>
+									</p>
+									<p class="inline-block">
+										<span class="font-weight-bold">대황펭이다</span>
+									</p>
+								</div>
+							</li>
+
+							<li class="list-group-item">
+								<div class="reviews">
+									<p class="text-center">등록된 수강 후기가 없습니다.</p>
+								</div>
+							</li>
+						</ul>
+
+					</div>
+
+				</div>
+			</div>
+
+
+		<button class="btn btn-primary float-right" onclick="goPage('/user/rcls/list.do');">
+			<i class="la la-angle-double-left">목록</i>
+		</button>
+
+	</div>
+
+<script type="text/javascript">
+	function bookmark() {
+		if($('#bookmark').attr('class') == 'far fa-bookmark'){
+			$('#bookmark').attr('class', 'fas fa-bookmark text-danger');
+		}else{
+			$('#bookmark').attr('class', 'far fa-bookmark');
+		}
+		
+	}
+</script>
+
+</body>

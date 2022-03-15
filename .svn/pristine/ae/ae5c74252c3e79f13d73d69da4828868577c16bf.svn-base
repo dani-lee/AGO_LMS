@@ -1,0 +1,18 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public interface ClassStasticsDAO {
+
+	public List<ClassStasticsVO> selectselectInfoStasticsClassList()throws SQLException; 
+	
+	public List<ClassStasticsVO> selectClassGraphInfoByDpId(String dpId)throws SQLException;
+	
+	public List<ClassStasticsVO> selectClassGraphInfo(int age)throws SQLException;
+	
+	public List<ClassStasticsVO> selectResultValuesByAge(int age)throws SQLException;
+	
+}

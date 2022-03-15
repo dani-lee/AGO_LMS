@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<head>
+<title>QR코드 생성</title>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/qr.css">
+</head>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="card-header d-flex mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">출결 QR코드 생성</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-3 ml-auto">
+					<button type="button" class="btn btn-sm btn-secondary" onclick="fn_print();">프린트하기</button>
+				</div>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			
+			<br>
+			<div id="printArea">
+				<div class="d-flex justify-content-center">
+					<div id="qrcode">
+						<img id="img" style="width:600px;">
+					</div>
+				</div>
+				<br>
+				<div class="mx-auto">
+					<div id="className">
+						<h4 class="font-weight-bold text-center">${classInfo.clName }</h4>
+						<table class="table table-bordered col-10 mx-auto">
+		                    <tr>
+		                      <td id="header" style="background-color:#E6EFFC !important; width: 400px;!important" class="text-center">장소</td>
+		                      <td class="font-weight-bold col-8 h4" style="width:750px;">${classInfo.clRoomName}</td>
+		                    </tr>
+		                    <tr>
+		                      <td id="header" style="background-color:#E6EFFC !important; width: 400px;!important" class="text-center">날짜</td>
+		                      <td class="font-weight-bold h4"  style="width:750px;"><fmt:formatDate value="${classInfo.lecDate }" pattern="yyyy-MM-dd HH:mm"/></td>
+		                    </tr>
+		                </table>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</section>
+	
+<script>
+	window.onload = function(){
+		getQRCodeImg(document.querySelector('#img'), '${fileName}', '<%= request.getContextPath()%>');
+	}
+
+</script>
+	
+<script>
+	var initBody;
+	
+	function beforePrint() {
+	 boxes = document.body.innerHTML;
+	 document.body.innerHTML = box.innerHTML;
+	}
+	function afterPrint() { 
+	 document.body.innerHTML = boxes;
+	}
+	function fn_print(){
+		window.print();
+	}
+	window.onbeforeprint = beforePrint;
+	window.onafterprint = afterPrint;
+</script>
+	
+</body>

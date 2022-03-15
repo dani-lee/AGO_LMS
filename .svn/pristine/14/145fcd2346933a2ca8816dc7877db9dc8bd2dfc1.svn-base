@@ -1,0 +1,208 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${pageMaker.cri }" />
+<c:set var="msgList" value="${dataMap.msgList }" />
+
+<head></head>
+
+<title></title>
+
+<body>
+	<script type="text/javascript">
+		if(${from eq "send"}){
+			alert("쪽지를 발송하였습니다.");
+			window.location.reload();
+		}
+
+		if(${from eq "remove"}){
+			alert("쪽지가 삭제되었습니다.");
+			window.location.reload();
+		}
+	</script>
+
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">쪽지</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">운영관리</a>
+						</li>
+						<li class="breadcrumb-item active">쪽지</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6 list">
+
+					<div class="d-flex d-block">
+						<span onclick="remove()" class="text-muted p-0 align-bottom" style="color: gray; cursor: pointer;">삭제</span>
+						<div class="insert-button ml-auto justify-content-end">
+							<div class="insert-button">
+								<button class="btn btn-secondary btn-sm float-right mb-2" onclick="location.href='sendForm.do'">쪽지 발송</button>
+							</div>
+						</div>
+					</div>
+
+					<div style="height: 560px;">
+
+						<table class="table table-hover table-sm">
+							<thead>
+								<tr class="text-center">
+									<th><input type="checkbox" class="check-all"></th>
+									<th>번호</th>
+									<th>내용</th>
+									<th>보낸날짜</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${empty msgList}">
+									<tr>
+										<td colspan="5" class="text-center"><strong>해당 내용이 없습니다.</strong></td>
+									</tr>
+								</c:if>
+								<c:if test="${!empty msgList }">
+								<c:forEach items="${msgList }" var="msg">
+									<tr>
+										<td class="text-center"><input type="checkbox" class="individual_check_boxes" name="impt" data-no="${msg.msgNo}"></td>
+										<td class="text-center">${msg.msgNo }</td>
+										<c:choose>
+											<c:when test="${fn:length(msg.msgContent) gt 30 }">
+												<td onclick="getPage('<%=request.getContextPath()%>/manager/message/detail.do?msgNo=${msg.msgNo}')" style="cursor:pointer"><c:out value="${fn:substring(msg.msgContent,0,30)}..."></c:out></td>
+											</c:when>
+											<c:otherwise>
+												<td onclick="getPage('<%=request.getContextPath()%>/manager/message/detail.do?msgNo=${msg.msgNo}')" style="cursor:pointer">${msg.msgContent }</td>
+											</c:otherwise>
+										</c:choose>
+
+										<td class="text-center"><fmt:formatDate value="${msg.msgRegdate }" pattern="yyyy-MM-dd" /></td>
+									</tr>
+								</c:forEach>
+								</c:if>
+							</tbody>
+						</table>
+					</div>
+					<div class="card-body text-center">
+						<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+					</div>
+				</div>
+				
+				<div class="col-6 detail border-left">
+					<div class="d-flex d-block">
+						<div class="insert-button ml-auto justify-content-end">
+							<div class="insert-button">
+								<button class="btn btn-secondary btn-sm float-left mb-2 mr-2" onclick="reSend_msg();">재전송</button>
+								<button class="btn btn-secondary btn-sm float-right mb-2" onclick="remove_msg();">삭제</button>
+							</div>
+						</div>
+					</div>
+					
+					<div style="height: 560px;">
+					
+					<div class="detail-wrapper">
+						<div class="table-wrapper">
+							<table class="table table-sm detail-body">
+								<tbody>
+									<tr>
+										<td class="font-weight-bold text-center col-2" style="background-color: #F5F4F4;">받는 사람</td>
+										<td class="col-4"></td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold text-center col-2" style="background-color: #F5F4F4;">보낸 날짜</td>
+										<td class="col-4"></td>
+									</tr>
+									<tr>
+										<td colspan="4"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<form role="removeForm">
+		<input type="hidden" name="msgNo" value="${msg.msgNo }">
+	</form>
+	
+<%@ include file="./detail_js.jsp"%>
+	<script>
+
+
+$( document ).ready( function() {
+  $( '.check-all' ).click( function() {
+    $( '.individual_check_boxes' ).prop( 'checked', this.checked );
+  });
+})
+
+function remove() {
+	if(confirm("삭제하시겠습니까?")){
+		let chkVal = [];
+		if(!(!!$("input:checkbox[name='impt']:checked").attr('data-no'))){
+			alert('항목을 선택 후 삭제를 눌러주세요.');
+			return;
+		}
+		
+		if($("input:checkbox[name='impt']:checked")){
+			$("input:checkbox[name='impt']:checked").each(function() {
+				chkVal.push($(this).attr( 'data-no' ));
+			});
+			 location.href="removeList.do?msgNo=" + chkVal;
+		}
+	}
+}
+
+function remove_msg() {
+	var check = confirm("삭제하시겠습니까?");
+	if (check) {
+		let form = document.querySelector('form[role="removeForm"]');
+
+		form.setAttribute("action", "remove.do");
+		form.setAttribute("method", "post");
+
+		form.submit();
+	}
+}
+
+function reSend_msg(){
+	var check = confirm("재전송 하시겠습니까?");
+	if (check) {
+		let form = document.querySelector('form[role="reSendForm"]');
+
+		form.setAttribute("action", "send.do");
+		form.setAttribute("method", "post");
+
+		form.submit();
+	}
+}
+
+</script>
+</body>

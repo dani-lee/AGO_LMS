@@ -1,0 +1,298 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<head></head>
+<title></title>
+<body>
+	<div class="content-wrapper m-0" style="min-width: 1280px;">
+		<!-- 메인 헤더 -->
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6">
+						<h4 class="m-0">강의 목록</h4>
+					</div>
+					<!-- /.col -->
+					<div class="col-sm-6">
+						<ol class="breadcrumb float-sm-right">
+							<li class="breadcrumb-item">
+								<a href="#">부서장</a>
+							</li>
+							<li class="breadcrumb-item active">강의 목록</li>
+						</ol>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.content-header -->
+
+
+
+
+		<!-- 메인 바디 -->
+		<!-- Main content -->
+		<section class="content h-100">
+			<div class="container-fluid">
+				<div class="card card-primary card-outline">
+					<div class="card-body">
+						<div class="class-detail row col-10 ml-2">
+							<img src="https://cdn.pixabay.com/photo/2016/01/19/17/57/car-1149997_960_720.jpg" style="width: 150px; height: 100px;">
+							<div class="col-8 column ui-sortable">
+								<span class="h6 m-0">개인 정보 보호 교육</span>
+								<span class="badge badge-primary">온라인</span>
+								<span class="badge badge-danger">필수</span>
+								<br>
+								<span class="">사내 교육</span>
+								<br>
+								<i class="text-warning fas fa-star"></i>
+								<i class="text-warning fas fa-star"></i>
+								<i class="text-warning fas fa-star"></i>
+								<i class="text-warning fas fa-star"></i>
+								<i class="text-warning fas fa-star-half"></i>
+								<span class="text-warning">(4.5)</span>
+								<div class="row">
+									<div class="col-8 d-flex justify-items-center">
+										<button class="btn btn-success btn-xs">즐겨찾기</button>
+										<button class="btn btn-success btn-xs" onclick="OpenWindow('reportForm.pop','교육 이수 보고서', 780 , 860)">즐겨찾기 해제</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<ul class="nav nav-tabs mt-2" id="custom-content-above-tab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="custom-content-above-info-tab" data-toggle="pill" href="#custom-content-above-info" role="tab" aria-controls="custom-content-above-info" aria-selected="true">강의정보</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-content-above-list-tab" data-toggle="pill" href="#custom-content-above-list" role="tab" aria-controls="custom-content-above-list" aria-selected="false">강의목차</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-content-above-messages-tab" data-toggle="pill" href="#custom-content-above-messages" role="tab" aria-controls="custom-content-above-messages" aria-selected="false">수강후기</a>
+							</li>
+
+						</ul>
+						<div class="tab-content" id="custom-content-above-tabContent">
+							<div class="tab-pane fade show active" id="custom-content-above-info" role="tabpanel" aria-labelledby="custom-content-above-info-tab">
+								<table class="table">
+									<tr>
+										<td class="font-weight-bold">수료기준안내</td>
+										<td colspan="3">
+											<p>-수료율 100%</p>
+											<p>-시험 80점이상</p>
+										</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">정원</td>
+										<td>제한없음</td>
+										<td class="font-weight-bold">강의이수시간</td>
+										<td>2</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">신청기간</td>
+										<td>2021.01.01 ~ 2021.12.31</td>
+										<td class="font-weight-bold">교육기간</td>
+										<td>신청일로부터 30일</td>
+									</tr>
+									<tr>
+										<td class="font-weight-bold">과정소개</td>
+										<td colspan="3">
+											<p>- 개인정보 보호법 주요내용</p>
+											<p>- 개인정보 안전성 확보조치</p>
+											<p>- 개인정보 유노출 예방방안</p>
+											<p>- 처리방침 및 개인정보 수집이용 동의 서식 작성(실습)</p>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="custom-content-above-list" role="tabpanel" aria-labelledby="custom-content-above-list-tab">
+								<table class="table table-hover">
+									<thead>
+										<tr class="text-center">
+											<th scope="col">회차</th>
+											<th scope="col">회차명</th>
+											<th scope="col">학습상태</th>
+											<th scope="col">강의보기</th>
+											<th scope="col">시험</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="text-center">
+											<td class="align-middle p-1">1</td>
+											<td class="align-middle p-1">개인정보안정성 확보조치 기준 소개</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs" onclick="OpenWindow('/ago/user/myClass/clsStudying/clsPlay.pop','title' ,1000, 650);">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">2</td>
+											<td class="align-middle p-1">접근권한의 관리</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">3</td>
+											<td class="align-middle p-1">접근통제</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">4</td>
+											<td class="align-middle p-1">개인정보의 암호화</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">5</td>
+											<td class="align-middle p-1">접속기록의 보관 및 점검</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">6</td>
+											<td class="align-middle p-1">악성프로그램 방치</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+										<tr class="text-center">
+											<td class="align-middle p-1">7</td>
+											<td class="align-middle p-1">개인정보의 파기</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs">강의보기</button>
+											</td>
+											<td class="align-middle p-1">-</td>
+										</tr>
+
+										<tr class="text-center">
+											<td class="align-middle p-1">8</td>
+											<td class="align-middle p-1">평가</td>
+											<td class="align-middle p-1">
+												<div class="progress">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+												</div>
+											</td>
+											<td class="align-middle p-1">
+												<button class="btn btn-primary btn-xs" disabled="disabled">시험보기</button>
+											</td>
+											<td class="align-middle p-1">[17/20] | 85점</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="custom-content-above-messages" role="tabpanel" aria-labelledby="custom-content-above-messages-tab">
+								<!--수강후기-->
+								<div class="reviews-list row">
+									<div class="col-12">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<div class="reviews">
+													<div class="row">
+														<div class="col-8">
+															<span>dani</span>
+															<span class="col">2021.01.03</span>
+
+														</div>
+														<div class="ml-auto h6">
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star-half-empty"></i>
+															<span class="text-warning">(4.5)</span>
+														</div>
+													</div>
+													<p class="inline-block m-0">
+														<span class="font-weight-bold">강의 정말 잘들었습니다.</span>
+													</p>
+												</div>
+											</li>
+
+											<li class="list-group-item">
+												<div class="reviews">
+													<div class="row">
+														<div class="col-8">
+															<span>baldkingpenguin</span>
+															<span class="col">2021.01.03</span>
+
+														</div>
+														<div class="ml-auto h6">
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star"></i>
+															<i class="text-warning la la-star"></i>
+															<!-- <i class="text-warning la la-star"></i> -->
+															<i class="text-warning la la-star-half-empty"></i>
+															<span class="text-warning">(3.5)</span>
+														</div>
+													</div>
+													<p class="inline-block m-0">
+														<span class="font-weight-bold">대황펭이다</span>
+													</p>
+												</div>
+											</li>
+
+											<li class="list-group-item">
+												<div class="reviews">
+													<p class="text-center">등록된 수강 후기가 없습니다.</p>
+												</div>
+											</li>
+										</ul>
+									</div>
+									<!--/수강후기-->
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+						<div class="card-footer"></div>
+					</div>
+					<!-- /.card -->
+				</div>
+		</section>
+	</div>
+</body>

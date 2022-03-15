@@ -1,0 +1,249 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="noticeList" value="${dataMap.noticeList }" />
+<c:set var="importantNoticeList" value="${dataMap.importantNoticeList }" />
+
+<c:set var="recentNoticeList" value="${dataMap.recentNoticeList }" />
+
+<head></head>
+<title>공지사항</title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">공지사항</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="<%=request.getContextPath()%>/manager/management/faq/list.do">운영관리</a>
+						</li>
+						<li class="breadcrumb-item">공지사항</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+
+	<div class="container-fluid ">
+		<div class="row m-0 mt-3">
+			<div class="col-7">
+				<div class="row mb-3">
+					<input type="text" placeholder="제목을 입력해주세요..." name="keyword" class="form-control" value="${ param.keyword }" style="width: 661px;">
+					<button class="col-md-1 btn btn-secondary float-right" onclick="list_go(1);">검색</button>
+				</div>
+				<div class="card row">
+					<div class="card-header">
+						<h3 class="card-title font-weight-bold">목록</h3>
+						<button onclick="location.href ='registForm.do'" type="button" class="btn btn-block btn-secondary btn-xs float-right" style="width: 50px;">등록</button>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body p-0" style="height: 600px;">
+						<div style="height: 540px;">
+							<table class="table table-sm">
+								<thead>
+									<tr class="text-center" style="background-color: #F5F4F4;">
+										<th class="col-2 p-0 py-1">번호</th>
+										<th class="col-8" style="width: 491px;">제목</th>
+										<th class="col-2">등록날짜</th>
+
+									</tr>
+								</thead>
+								<tbody id="list">
+									<c:if test="${not empty noticeList }">
+										<c:forEach items="${noticeList }" var="notice">
+											<c:if test="${notice.noticeImpt eq 1 }">
+												<tr>
+											</c:if>
+											<c:if test="${notice.noticeImpt eq 0 }">
+												<tr style="background-color: #FEDFDA;">
+											</c:if>
+											<td class="text-center">${notice.noticeNo }</td>
+											<c:if test="${notice.noticeImpt eq 1 }">
+												<td onclick="detail(${notice.noticeNo})" style="cursor: pointer;">
+													<c:choose>
+														<c:when test="${fn:length(notice.noticeTitle) gt 25}">
+															<c:out value="${fn:substring(notice.noticeTitle,0,25) }..." ></c:out>
+														</c:when>
+														<c:otherwise>
+															${notice.noticeTitle }
+														</c:otherwise>
+													</c:choose>
+													<c:if test="${not empty notice.attachList }">
+														<i class="fas fa-file-alt ml-1 text-muted"></i>
+													</c:if>
+												</td>
+											</c:if>
+											<c:if test="${notice.noticeImpt eq 0 }">
+												<td class="text-danger row" onclick="detail(${notice.noticeNo})">
+													
+													<div style="cursor: pointer; max-width: 450px;">
+														<i class="fas fa-bullhorn"></i>&nbsp;[중요]&nbsp;
+														<c:choose>
+														<c:when test="${fn:length(notice.noticeTitle) gt 25}">
+															<c:out value="${fn:substring(notice.noticeTitle,0,25) }..." ></c:out>
+														</c:when>
+														<c:otherwise>
+															${notice.noticeTitle }
+														</c:otherwise>
+													</c:choose>
+													</div> <c:if test="${not empty notice.attachList }">
+														<div style="cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+															<i class="fas fa-file-alt ml-1"></i>
+														</div>
+													</c:if>
+												</td>
+											</c:if>
+											<td class="text-center">${notice.noticeDate }</td>
+											</tr>
+
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty noticeList }">
+										<tr>
+											<td>등록된 공지사항이 없습니다.</td>
+										</tr>
+									</c:if>
+
+								</tbody>
+							</table>
+
+						</div>
+						<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+			<div class="col-5">
+				<div class="card" style="height: 386px;">
+					<div class="card-header row ml-1" style="width: 510px;">
+						<div style="width: 455px;">
+							<h4 class="card-title font-weight-bold">최근공지사항</h4>
+						</div>
+						<i id="time" class="fas fa-caret-up" style="font-size: 20px; cursor: pointer;" onclick="recent()"></i>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body p-0">
+						<table class="table table-sm" id="test">
+							<thead>
+								<tr style="background-color: #F5F4F4;">
+									<th style="width: 400px;" class="text-center">제목</th>
+									<th class="text-center">등록날짜</th>
+								</tr>
+							</thead>
+							<tbody class="recent">
+								<c:if test="${not empty recentNoticeList }">
+									<c:forEach items="${recentNoticeList }" var="recentNotice">
+										<tr>
+											<td onclick="detail(${recentNotice.noticeNo})" style="cursor: pointer; max-width: 390px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${recentNotice.noticeTitle }</td>
+											<td class="text-center">${recentNotice.noticeDate }</td>
+										</tr>
+									</c:forEach>
+								</c:if>
+								<c:if test="${empty recentNoticeList }">
+									<tr>
+										<td>등록된 중요 공지사항이 없습니다.</td>
+									</tr>
+								</c:if>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+
+				<div class="card " style="height: 300px;">
+					<div class="card-header">
+						<h4 class="card-title font-weight-bold">중요공지사항</h4>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body p-0">
+						<table class="table table-sm">
+							<thead>
+								<tr style="background-color: #F5F4F4;">
+									<th style="width: 400px;" class="text-center">제목</th>
+									<th class="text-center">등록날짜</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${not empty importantNoticeList }">
+									<c:forEach items="${importantNoticeList }" var="importantNotice">
+										<tr style="background-color: #FEDFDA;">
+											<td class="text-danger" onclick="detail(${importantNotice.noticeNo})" style="cursor: pointer; max-width: 390px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><i class="fas fa-bullhorn"> </i>&nbsp;[중요]&nbsp; ${importantNotice.noticeTitle }</td>
+											<td class="text-center">${importantNotice.noticeDate }</td>
+
+										</tr>
+									</c:forEach>
+								</c:if>
+								<c:if test="${empty importantNoticeList }">
+									<tr>
+										<td>등록된 중요 공지사항이 없습니다.</td>
+									</tr>
+								</c:if>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<input type="hidden" name="sortType" class="form-control col-md-7" value="${cri.sortType}">
+
+	<%@ include file="./list_js.jsp"%>
+
+	<script type="text/javascript">
+			function sort(sort) {
+				$('#sort').val(sort);
+				list_go(1);
+			}
+
+			function detail(num) {
+				location.href = "detail.do?noticeNo="+num;
+			}
+
+			function remove() {
+				let chkVal = [];
+				$("input:checkbox[name=impt]:checked").each(function() {
+					chkVal.push($(this).val());
+				});
+				// console.log(chk_Val);
+				//alert($("input[name='impt']:checked").val());
+				 location.href="remove.do?noticeNo=" + chkVal;
+			}
+
+			function recent() {
+				var icon = $('#time').attr('class')
+				if(icon == 'fas fa-caret-up'){
+					$('input[name="sortType"]').val('l')
+					$('#time').attr('class','fas fa-caret-down')
+				}
+				if(icon == 'fas fa-caret-down'){
+					$('input[name="sortType"]').val('')
+					$('#time').attr('class','fas fa-caret-up')
+				}
+				getPage($('input[name="sortType"]').val())
+				
+			}
+
+		</script>
+</body>

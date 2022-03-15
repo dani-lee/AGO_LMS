@@ -1,0 +1,23 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.one.command.Criteria;
+import com.one.dto.ExamStastisDetailVO;
+import com.one.dto.ExamStatisVO;
+
+public interface ExamStatisService {
+	
+	public List<ExamStatisVO> getMiddlePrecedence(int row)throws Exception;
+	
+	public List<ExamStatisVO> getFinalPrecedence(int row)throws Exception;
+	
+	public Map<String, List<ExamStatisVO>> getClassExamAVG() throws Exception;
+	
+	public Map<String, Object> getClassList(Criteria cri)throws Exception;
+	
+	public ExamStastisDetailVO getExamStastisDetail(String clCode) throws SQLException;
+	
+}

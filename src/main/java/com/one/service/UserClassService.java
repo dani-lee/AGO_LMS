@@ -1,0 +1,31 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.one.command.Criteria;
+import com.one.command.MemberClassCommand;
+import com.one.dto.ClassVO.ClassEXT;
+import com.one.dto.ClassVO.ClassIntr;
+
+public interface UserClassService {
+	public Map<String, Object> selectClassList(String memEmail, Criteria cri) throws SQLException;
+	
+	public Map<String, Object> selectClass(int clCode, int opcl, String memEmail) throws SQLException;
+	
+	public Map<String, Object> HRDParseXML(Criteria cri, String memEmail) throws SQLException;
+
+	public void updateBookmark(ClassIntr intr, boolean markState) throws SQLException;
+	
+	public void insertMemberClass(MemberClassCommand memberClass) throws SQLException;
+	
+	public void insertMemberClassRealTime(MemberClassCommand memberClass) throws SQLException;
+	
+	public void insertExtClass(ClassEXT ext) throws SQLException;
+	
+	public void getImage(String filePath, HttpServletResponse response) throws Exception;
+	
+	public int selectStudyEmployeeCount(int opcl) throws SQLException;
+}

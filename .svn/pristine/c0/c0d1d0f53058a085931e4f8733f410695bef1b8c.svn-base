@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Department-Mapper">
+	<select
+		id="selectDpHeadFav" resultType="class">
+		SELECT
+		A.CL_CODE,
+		A.CL_IMG,
+		A.CL_NAME,
+		A.CL_INTRO,
+		A.CL_POINT,
+		A.CL_CREDIT_TIME,
+		A.CL_FORMAT,
+		A.CL_CATE,
+		A.CL_DIVISION,
+		A.OPCL,
+		A.CL_ROOM_NO,
+		A.POST_SDATE,
+		A.POST_EDATE,
+		A.MAIN_EXPOSURE,
+		A.ENR_PERS,
+		A.STUDY_DATE,
+		A.CL_QR,
+		A.CUTLINE,
+		A.CL_ROOM_NAME,
+		A.CL_ROOM_LOC
+		FROM
+		V_CLASS A,
+		DP_HEAD_FAV B
+		WHERE A.OPCL=B.OPCL
+		AND B.DP_ID=#{dpId}
+	</select>
+
+	<update id="insertDpHeadFav">
+		INSERT INTO DP_HEAD_FAV (
+		DP_ID,
+		OPCL
+		) VALUES (
+		#{dpId},
+		#{opcl}
+		)
+	</update>
+
+	<update id="deleteDpHeadFav">
+		DELETE FROM DP_HEAD_FAV
+		WHERE
+		DP_ID =#{dpId}
+		AND
+		OPCL =#{opcl}
+	</update>
+
+	<select id="getOdId" resultType="int">
+		SELECT OD_ID_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+
+	<update id="insertDpHeadOd">
+		INSERT INTO DP_HEAD_OD (
+		    OD_ID,
+		    DP_ID,
+		    OD_MSG,
+		    OD_DATE
+		) VALUES (
+		    #{odId},
+		    #{dpId},
+		    #{odMsg},
+		    SYSDATE
+		)
+	</update>
+
+	<update id="insertDpOdOpcl">
+		INSERT INTO DP_OD_OPCL (
+		    OD_ID,
+		    OPCL
+		) VALUES (
+		    #{odId},
+		    #{opcl}
+		)
+	</update>
+
+	<update id="insertDpOdMem">
+		INSERT INTO DP_OD_MEM (
+		    OD_ID,
+		    MEM_EMAIL
+		) VALUES (
+		    #{odId},
+		    #{memEmail}
+		)
+	</update>
+
+	<select id="DpHeadFavByDpIdAndOpclCount" resultType="int">
+		SELECT COUNT(*)
+		FROM DP_HEAD_FAV
+		WHERE DP_ID=#{dpId}
+		AND OPCL=#{opcl}
+	</select>
+</mapper>

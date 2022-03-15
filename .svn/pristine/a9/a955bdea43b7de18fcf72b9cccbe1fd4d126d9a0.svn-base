@@ -1,0 +1,181 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${pageMaker.cri }" />
+<c:set var="freeBoardList" value="${dataMap.freeBoardList }" />
+
+<head></head>
+
+<title></title>
+
+<body>
+
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">대나무숲</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><i class="fas fa-home"></i></li>
+						<li class="breadcrumb-item">
+							<a href="#">게시판관리</a>
+						</li>
+						<li class="breadcrumb-item active">대나무숲</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">	
+		
+			<div class="input-group justify-content-end col-12 p-0 mb-1">
+				<div class="row col-7 justify-content-end p-0 mr-1">
+					<select class="col-md-2 form-control" name="searchType" id="searchType" style="height: 39px;">
+						<option value="a" ${cri.searchType eq 'a' ? 'selected': '' }>전체</option>
+						<option value="t" ${cri.searchType eq 't' ? 'selected': '' }>제목</option>
+						<option value="c" ${cri.searchType eq 'c' ? 'selected': '' }>내용</option>
+						<option value="w" ${cri.searchType eq 'w' ? 'selected': '' }>작성자</option>
+					</select>
+					<input type="text" placeholder="Search..." name="keyword" class="form-control col-md-7">
+					<button class="col-md-1 btn btn-secondary float-right" onclick="fn_list(1);">검색</button>
+				</div>
+			</div>
+
+
+			<br> 
+			<span class="text-muted" style="color: gray; cursor: pointer;" onclick="fn_list(1);">전체</span> 
+			<span class="text-muted" style="color: gray;">&nbsp;|&nbsp;</span> 
+			<span class="text-muted" style="color: gray; cursor: pointer;" id="sortOption" data-sort="r" onclick="fn_sort(1);">신고된 게시물</span>
+			<span onclick="fn_remove()" class="text-muted float-right" style="color: gray; cursor: pointer;">삭제</span>
+			<br><br>
+			
+			<table class="table table-sm table-hover">
+				<thead>
+					<tr class="text-center" style="background-color: #F5F4F4;">
+						<th><input type="checkbox" class="check-all"></th>
+						<th>번호</th>
+						<th class="col-4">제목</th>
+						<th>작성자</th>
+						<th>등록날짜</th>
+						<th>조회수</th>
+						<th>신고횟수</th>
+<!-- 						<th class="col-2">최근신고날짜</th> -->
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${empty freeBoardList }">
+						<tr>
+							<td colspan="6" class="text-center"><strong>해당 내용이 없습니다.</strong></td>
+						</tr>
+					</c:if>
+					<c:forEach items="${ freeBoardList }" var="freeBoard">
+						<tr>
+							<td class="text-center">
+								<input type="checkbox" class="individual_check_boxes"  name="impt" data-no="${freeBoard.freeNo}">
+							</td>
+							<td class="text-center">${freeBoard.freeNo}</td>
+<%-- 							onclick="OpenWindow('detail.do?${freeBoard.freeNo}','자유게시판',900,800)" --%>
+							<td style="cursor: pointer;" onclick="location.href='detail.do?freeNo=${freeBoard.freeNo}'">${ freeBoard.freeTitle}
+								<c:if test="${freeBoard.freeReplyCnt > 0 }">
+									<span class="text-primary">[${freeBoard.freeReplyCnt }]</span>
+								</c:if>
+									<span></span>
+							</td>
+							<td class="text-center">${freeBoard.nickName }</td>
+							<td class="text-center"><fmt:formatDate value="${freeBoard.freeRegdate}" pattern="yyyy-MM-dd" /></td>
+							<td class="text-center">${freeBoard.freeViewCnt}</td>
+							<td class="text-center text-danger">${freeBoard.freeReportCnt}</td>
+<!-- 							<td class="text-center">최근신고날짜?</td> -->
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			<!-- </div> -->
+
+			<div class="card-body text-center">
+				<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+			</div>
+		</div>
+	</section>
+
+<form id="sortForm">
+	<input type="hidden" name="page" value="" />
+	<input type="hidden" name="sortType" value="" />
+</form>
+<form id="searchForm">
+	<input type="hidden" name="page" value="" />
+	<input type="hidden" name="searchType" value="" />
+	<input type="hidden" name="keyword" value="" />
+</form>
+<script>
+	$( document ).ready( function() {
+	  $( '.check-all' ).click( function() {
+	    $( '.individual_check_boxes' ).prop( 'checked', this.checked );
+	  });
+	});
+	
+	function fn_remove() {
+		if(confirm("삭제하시겠습니까?")){
+			let chkVal = [];
+			if(!(!!$("input:checkbox[name='impt']:checked").attr('data-no'))){
+				alert('항목을 선택 후 삭제를 눌러주세요.');
+				return;
+			}
+			
+			if($("input:checkbox[name='impt']:checked")){
+				$("input:checkbox[name='impt']:checked").each(function() {
+					chkVal.push($(this).attr( 'data-no' ));
+				});
+				 location.href="removeList.do?freeNo=" + chkVal;
+			}
+		}
+	}
+	
+	function fn_sort(page,url) {
+		if(!url) url="sortList.do";
+		
+		let sortForm = $('#sortForm');
+		let sortOption = document.getElementById('sortOption').getAttribute('data-sort');
+		console.log(sortOption);
+		sortForm.find("[name='page']").val(page);
+		sortForm.find("[name='sortType']").val(sortOption).val();
+
+		sortForm.attr({
+			action : url,
+			method : 'get'
+		}).submit();
+	}
+	
+	function fn_list(page, url){
+		if(!url) url="list.do";
+		
+		var searchForm = $('#searchForm');
+		
+		searchForm.find("[name='page']").val(page);
+		searchForm.find("[name='searchType']").val($('select[name="searchType"]').val());
+		searchForm.find("[name='keyword']").val($('input[name="keyword"]').val());
+
+		searchForm.attr({
+			action : url,
+			method : 'get'
+		}).submit();
+	}
+</script> 
+
+</body>

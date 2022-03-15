@@ -1,0 +1,40 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.command.Criteria;
+import com.one.command.MemberClassCriteria;
+import com.one.command.MemberStudyClassCommand;
+import com.one.command.ReportCommand;
+import com.one.dto.DepartmentVO;
+import com.one.dto.MemberClVO;
+import com.one.dto.ClassVO.ClassIntr;
+
+public interface MyClassDAO {
+	public List<MemberStudyClassCommand> selectStudyClassList(String memEmail) throws SQLException;
+	
+	public List<ReportCommand> selectFinishClass(String memEmail) throws SQLException;
+	
+	public ReportCommand selectReportClass (int opcl) throws SQLException;
+	
+	public int selectStudyClassCount(String memEmail)throws SQLException;
+	
+	public int selectFinishClassCount(String memEmail) throws SQLException;
+	
+	public List<ClassIntr> selectIntrClass(String memEmail) throws SQLException;
+	
+	public List<DepartmentVO> selectDepartmentClassList() throws SQLException;
+	
+	public List<MemberStudyClassCommand> selectListStudyingClass(Criteria cri) throws SQLException;
+	
+	public int selectListStudyingClassCount(Criteria cri) throws SQLException;
+	
+	public void updateMemCLByQrScan(MemberClVO memberCL) throws SQLException;
+	
+	public void insertMemChap(MemberClVO memberCL) throws SQLException;
+	
+	public List<MemberClVO> selectMemClListByYear(MemberClassCriteria cri) throws SQLException;
+	
+	public int selectMemClListByYearCnt(String memId) throws SQLException;
+}

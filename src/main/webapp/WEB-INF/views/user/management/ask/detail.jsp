@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<head></head>
+
+<title></title>
+
+<body>
+
+	<!-- Main content -->
+	<section class="content" style="width: 1250px; margin: 0 auto;">
+		<div class="container-fluid">
+			
+			<div class="col-md-12">
+				<!-- Box Comment -->
+				<div class="card-widget">
+					<div class="card-header">
+						
+						<div class="user-block col-12">
+							<div class="row mb-2">
+								<div class="col-sm-6">
+									<p class="m-0 text-secondary">문의게시판</p>
+								</div>
+								<!-- /.col -->
+								<div class="col-sm-6">
+									<ol class="breadcrumb float-sm-right m-0 p-0" style="background-color : white;">
+										<li class="breadcrumb-item">
+											<i class="fas fa-home"></i>
+										</li>
+										<li class="breadcrumb-item">
+											<a href="<%=request.getContextPath()%>/user/management/notice/list.do">학습지원실</a>
+										</li>
+										<li class="breadcrumb-item active">문의게시판</li>
+									</ol>
+				
+								</div>
+							</div>
+							<p class="h5">${ask.qnTitle}</p>
+							<p class="text-secondary m-0">
+								<b>${ask.memId}</b>
+							</p>
+							
+							<div class="d-block">
+								<p class="text-secondary float-left mb-0">
+									<fmt:formatDate value="${ask.qnRegdate}" pattern="yyyy-MM-dd" />
+									&nbsp;| &nbsp;
+								</p>
+								<p class="text-secondary float-left mb-0">
+									<small class="badge badge-warning">
+										<c:if test="${ask.askSort eq 'A301'}" >수료문의</c:if>
+										<c:if test="${ask.askSort eq 'A302'}">학습문의</c:if> 
+										<c:if test="${ask.askSort eq 'A303'}">기타</c:if>
+									</small>
+								</p>
+								<div class="justify-content-end float-right row" id="tools">
+									<a href="#anwser-wrapper">
+									<button type="button" class="btn btn-tool" data-spy="scroll">
+										<i class="far fa-comment-alt"></i><span class="font-weight-bold">&nbsp; 답변보기 &nbsp;</span>
+									</button>
+									</a>
+									<button class="btn btn-tool float-right pt-2" onclick="location.href='list.do'">
+										<i class="fas fa-solid fa-list-ul"></i><span class="pl-1 font-weight-bold text-black">목록</span> 
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body">
+						<div class="content" style="min-height: 250px;">${ask.qnContent}</div>
+					</div>
+					<!-- /.card-body -->
+
+					<div class="">
+						<div class="card-comment" style="height:150px;">
+							<div class="comment-text">
+								<c:if test="${empty ask.qnAnswer}" ></c:if>
+								<c:if test="${not empty ask.qnAnswer}">
+									<div class="direct-chat-msg" id="anwser-wrapper">
+										<img class="direct-chat-img" src="<%=request.getContextPath()%>/resources/img/manager.png" alt="message user image">
+										<div class="direct-chat-text" style="height: 120px;">
+											<span>${ask.qnAnswer }</span>
+										</div>
+									</div>
+								</c:if>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /.card -->
+			</div>
+		</div>
+	</section>
+
+</body>

@@ -1,0 +1,89 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			
+			<div class="col-md-12">
+				<!-- Box Comment -->
+				<div class="card-widget">
+					<div class="card-header">
+						<div class="buttons row">
+							<div class="ml-2">
+								<button type="button" class="btn btn-tool" onclick="location.href='modifyForm.do?faqNo=${ faq.faqNo }';">
+									<i class="far fa-edit"></i>&nbsp;수정&nbsp;<span class="text-secondary font-weight-bold"></span>
+								</button>
+	<!-- 							<span class="float-right text-secondary btn">|</span> -->
+								<button type="button" class="btn btn-tool" onclick="fn_remove(${ faq.faqNo });">
+									<i class="fas fa-eraser"></i>&nbsp;삭제&nbsp;<span class="text-secondary font-weight-bold"></span>
+								</button>
+							</div>
+							<button class="btn btn-default btn-sm float-right ml-auto mr-2" onclick="location.href='list.do'">
+							<i class="la la-angle-double-left"></i> &nbsp;목록
+							</button>
+						</div>
+						
+						<div class="user-block col-12">
+							<div class="row">
+								<p class="ml-2 text-secondary">자주묻는질문</p>
+							</div>
+							<p class="h5">
+								<span class="text-secondary font-weight-bold" style="font-size:2em;"><i class="far fa-question-circle"></i></span>
+								<c:choose>
+									<c:when test="${fn:length(faq.faqQuestion) gt 110 }">
+										${fn:substring(faq.faqQuestion,0,110 )}<br>
+										${fn:substring(faq.faqQuestion,111,500)}
+									</c:when>
+								<c:otherwise>
+								<span>${ faq.faqQuestion}</span>
+								</c:otherwise>
+								</c:choose>
+							</p>
+							<p class="text-secondary m-0">
+								<b>${ask.memId}</b>
+							</p>
+							
+							<div class="d-block">
+								<p class="text-secondary float-left">
+									<c:if test="${faq.askSort eq 'c'}">
+										<span class="badge badge-warning">수료문의</span>
+									</c:if>
+									<c:if test="${faq.askSort eq 'l'}">
+										<span class="badge badge-success">학습문의</span>
+									</c:if>
+									<c:if test="${faq.askSort eq 'e'}">
+										<span class="badge badge-info">기타문의</span>
+									</c:if>
+								</p>
+							</div>
+						</div>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body">
+						<div class="content" style="min-height: 500px;">${faq.faqAnswer}</div>
+					</div>
+					<!-- /.card-body -->
+
+				</div>
+				<!-- /.card -->
+			</div>
+		</div>
+	</section>
+<script>
+function fn_remove(faqNo){
+	if(confirm("삭제하시겠습니까?")){
+		location.href='remove.do?faqNo='+faqNo;
+	}
+}
+</script>
+</body>

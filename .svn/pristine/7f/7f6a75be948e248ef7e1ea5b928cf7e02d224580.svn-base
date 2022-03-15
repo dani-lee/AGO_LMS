@@ -1,0 +1,158 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri}" />
+<c:set var="classList" value="${dataMap.mainList }" />
+<c:set var="detail" value="${dataMap.detail }" />
+
+<head></head>
+
+<title></title>
+<body>
+	<div id="outdiv">
+	<div class="row mt-2" id="innerdiv">
+	<input type="hidden" id="firstclCode" value="${dataMap.firstclCode}"/>
+		<section class="card content col-6">
+			<div class="container-fluid">
+				<div class="row align-items-center mt-3 ml-2">
+					<h5 class="font-weight-bold">전체 강의</h5>
+					<button class=" btn btn-default" style="margin-left: 420px;" onclick="location.href='registClass.do?mCode=M010200'">강의등록</button>
+				</div>
+
+				<%-- 						<option value=""  ${cri.searchType eq '' ? 'selected':'' }>전체</option> --%>
+				<%-- 						<option value="nm" ${cri.searchType eq 'nm' ? 'selected':'' }>이름</option> --%>
+				<%-- 						<option value="n"  ${cri.sortType eq 'n' ? 'selected':'' }>일반 교육</option> --%>
+				<%-- 						<option value="s"  ${cri.sortType eq 's' ? 'selected':'' }>신입생 의무 교육</option> --%>
+				<%-- 						<option value="h"  ${cri.sortType eq 'h' ? 'selected':'' }>자기 개발 및 취미</option> --%>
+
+
+	<input type='text' id='sort' name='sortType' value="${ cri.sortType }" hidden="hidden" />
+				<table class="table mt-3 table-sm">
+				
+					<caption style="caption-side: top;">
+				<select class="col-md-3 form-control form-control-sm" name="sortSelect" onchange="sort()">
+					<option value="" ${cri.sortType eq '' ? 'selected':'' }>분류</option>
+					<option value="n" ${cri.sortType eq 'n' ? 'selected':'' }>일반교육</option>
+					<option value="s" ${cri.sortType eq 's' ? 'selected':'' }>신입 의무 교육</option>
+					<option value="h" ${cri.sortType eq 'h' ? 'selected':'' }>자기개발 및 취미</option>
+				</select>
+					</caption>
+					<thead>
+						<tr class="text-center">
+							<th>강의코드</th>
+							<th>강의명</th>
+							<!-- 					<th>학습기간</th> -->
+							<!-- 					<th>수강기간</th> -->
+							<th>강의구분</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${classList }" var="list">
+							<tr class="p-0">
+								<td class="text-center align-middle">${list.clCode }</td>
+								<td class="row" style="cursor: pointer" onclick="getPage('<%=request.getContextPath()%>/manager/classManagement/detailClass.do?clCode=${list.clCode}'); openclCode(${list.clCode });">
+									<form action="detailClass.do" method="post">
+										<input type="hidden" value="${list.clCode }">
+									</form>
+									<img style="width: 130px; height: 90px;" src="/ago/manager/classManagement/getPicture.do?picture=${list.clImg }" alt="...">
+									<div class="col-7 column ui-sortable">
+										<span class="h6 align-middle">${list.clName }</span>
+										<br>
+										<%-- 							<span class="text-primary"><fmt:formatDate value="${list.postSdate }"/> ~ <fmt:formatDate value="${list.postEdate }"/></span><br>  --%>
+										<!-- 							<span class="badge badge-primary"> -->
+
+										<!-- 							</span>  -->
+										<!-- 							<span class="badge badge-danger"> -->
+
+										<!-- 							</span> -->
+									</div>
+								</td>
+								<!-- 					<td class="text-center align-middle"> -->
+								<%-- 								<c:if test="${list.studyDate == 'D101'}">신청일로부터 7일</c:if> --%>
+								<%-- 								<c:if test="${list.studyDate == 'D102'}">신청일로부터 30일</c:if> --%>
+								<%-- 								<c:if test="${list.studyDate == 'D103'}">제한없음</c:if> --%>
+								<!-- 					</td> -->
+								<!-- 					<td class="text-center">2021.01.01<br>~<br>2022.01.30 -->
+								<!-- 					</td> -->
+								<td class="text-center align-middle"><c:if test="${list.clCate  == 'A201'}">신입사원교육</c:if> <c:if test="${list.clCate  == 'A202'}">일반교육</c:if> <c:if test="${list.clCate  == 'A203'}">자기개발/취미</c:if></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+				<div class="card-body col-md-12 column ui-sortable ">
+					<%@include file="/WEB-INF/views/common/pagination.jsp"%>
+				</div>
+			</div>
+
+		</section>
+
+		<section class="content col-6">
+			<div class="card col-12" style="border: none; box-shadow: none;">
+				<div class="card-header">
+					<h5 class="font-weight-bold">강의 정보</h5>
+				</div>
+				<div id="detail">
+					<div id="detailhandle"></div>
+				</div>
+
+			</div>
+			<div class="card col-12" style="min-height: 520px;">
+				<div class="row align-items-center mt-3 ml-2">
+					<h5 class="font-weight-bold">회차정보</h5>
+					<input type="hidden" name="openclCode">
+					<button class=" btn btn-default" style="margin-left: 350px;" onclick="sendclCode()">회차 등록</button>
+				</div>
+
+				<div id="outOpcl">
+					<div id="inOpcl">
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+
+	</div>
+	</div>
+	<%@include file="./handlebarsDetail.jsp"%>
+
+	<script>
+
+
+		function detail(clCode) {
+
+			$.ajax({
+				url : 'detailClass.do',
+				data : {
+					'clCode' : clCode
+				},
+				type : 'post',
+				success : function(data) {
+				},
+				error : function(error) {
+					//alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+					AjaxErrorSecurityRedirectHandler(error.status);
+					console.log(error.status);
+				}
+			})
+		}
+		
+		function openclCode(clCode){
+			$('input[name="openclCode"]').val(clCode);
+		}
+		
+		function sendclCode(){
+		var clCode=	$('input[name="openclCode"]').val();
+			OpenWindow('registOpenClassForm.do?mCode=M010200&clCode='+clCode,'오픈클래스',900,800);
+		}
+		
+		function sort() {
+			$('#sort').val($("select[name=sortSelect]").val());
+			list_go(1);
+		}
+		
+	</script>
+</body>

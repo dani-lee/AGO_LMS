@@ -1,0 +1,209 @@
+package com.one.service.impl;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FilenameUtils;
+
+import com.one.command.ClassCommand;
+import com.one.command.ClassReviewCommand;
+import com.one.command.Criteria;
+import com.one.command.MemberClassCommand;
+import com.one.command.PageMaker;
+import com.one.dao.UserClassDAO;
+import com.one.dto.ClassVO.ClassChapterVO;
+import com.one.dto.ClassVO.ClassDepartmentVO;
+import com.one.dto.ClassVO.ClassEXT;
+import com.one.dto.ClassVO.ClassIntr;
+import com.one.service.UserClassService;
+import com.one.utils.HRDParseXML;
+
+public class UserClassServiceImpl implements UserClassService {
+
+	UserClassDAO classDAO;
+
+	public void setclassDAO(UserClassDAO classDAO) {
+		this.classDAO = classDAO;
+	}
+
+	@Override
+	public Map<String, Object> selectClassList(String memEmail, Criteria cri) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Date date = new Date();
+		List<ClassCommand> classList = classDAO.selectClassList(cri);
+		List<MemberClassCommand> memberClassList = classDAO.selectMemberClassList(memEmail);
+		List<String> intrList = classDAO.selectMemberInterestClassList(memEmail);
+		List<ClassDepartmentVO> departmentClassList = classDAO.selectDepartmentClass();
+		int totalCount = classDAO.selectClassListCount(cri);
+		System.out.println("totalCount============================="+totalCount);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		dataMap.put("classList", classList);
+		dataMap.put("intrList", intrList);
+		dataMap.put("memberClassList", memberClassList);
+		dataMap.put("pageMaker", pageMaker);
+		dataMap.put("sysdate", date);
+		dataMap.put("departmentClassList", departmentClassList);
+		dataMap.put("departmentClassSize", (departmentClassList.size() - 1));
+		dataMap.put("memberClassSize", (memberClassList.size() - 1));
+		return dataMap;
+	}
+
+	@Override
+	public Map<String, Object> selectClass(int clCode, int opcl, String memEmail) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Date date = new Date();
+		ClassCommand classVO = classDAO.selectClass(opcl);
+		List<ClassChapterVO> chapterList = classDAO.selectClassChapter(clCode);
+		List<ClassReviewCommand> reviewList = classDAO.selectClassReview(opcl);
+		List<ClassDepartmentVO> departmentClassList = classDAO.selectDepartmentClass();
+		List<MemberClassCommand> memberClassList = classDAO.selectMemberClassList(memEmail);
+		List<String> intrList = classDAO.selectMemberInterestClassList(memEmail);
+		dataMap.put("classVO", classVO);
+		dataMap.put("chapterList", chapterList);
+		dataMap.put("departmentClassList", departmentClassList);
+		dataMap.put("departmentClassSize", departmentClassList.size() - 1);
+		dataMap.put("reviewList", reviewList);
+		dataMap.put("intrList", intrList);
+		dataMap.put("sysdate", date);
+		dataMap.put("memberClassList", memberClassList);
+		System.out.println("size=============================="+memberClassList.size());
+		return dataMap;
+	}
+
+	@Override
+	public void updateBookmark(ClassIntr intr, boolean markState) throws SQLException {
+		if (markState) {
+			classDAO.insertBookmark(intr);
+		} else {
+			classDAO.deleteBookmark(intr);
+		}
+
+	}
+
+	@Override
+	public void insertMemberClass(MemberClassCommand memberClass) throws SQLException {
+		int testCpl = classDAO.selectClassTestState(memberClass.getOpcl());
+		if(testCpl == 1) {
+			memberClass.setTestCpl(0);
+		}else {
+			memberClass.setTestCpl(1);
+		}
+		classDAO.insertMemberClass(memberClass);
+	}
+
+	@Override
+	public Map<String, Object> HRDParseXML(Criteria cri,String memEmail) throws SQLException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+
+		HRDParseXML parse = new HRDParseXML(cri);
+		
+		List<Map<String, String>> hrdList = parse.getHrdList();
+		List<ClassEXT> extList = classDAO.selectExtClassList(memEmail);
+		int totalCount = parse.getTotalCount();
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+
+		dataMap.put("hrdList", hrdList);
+		dataMap.put("extList", extList);
+		dataMap.put("pageMaker", pageMaker);
+
+		return dataMap;
+	}
+
+	@Override
+	public void insertExtClass(ClassEXT ext) throws SQLException {
+		classDAO.insertExtClass(ext);
+		
+	}
+	
+	@Override
+	public void getImage(String filePath, HttpServletResponse response) throws Exception{
+		
+		File file = new File(filePath);
+		if(!file.isFile()){
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write("<script type='text/javascript'>alert('조회된 정보가 없습니다.'); self.close();</script>");
+			out.flush();
+			return;
+		}
+		
+		FileInputStream fis = new FileInputStream(file);
+		
+		BufferedInputStream in = null;
+		ByteArrayOutputStream bStream = null;
+		try {
+			fis = new FileInputStream(file);
+			in = new BufferedInputStream(fis);
+			bStream = new ByteArrayOutputStream();
+			int imgByte;
+			while ((imgByte = in.read()) != -1) {
+				bStream.write(imgByte);
+			}
+
+			String type = "";
+			String ext = FilenameUtils.getExtension(file.getName());
+			if (ext != null && !"".equals(ext)) {
+				if ("jpg".equals(ext.toLowerCase())) {
+					type = "image/jpeg";
+				} else {
+					type = "image/" + ext.toLowerCase();
+				}
+
+			} else {
+				/*LOGGER.debug("Image fileType is null.");*/
+				System.out.println("Image fileType is null.");
+			}
+
+			response.setHeader("Content-Type", type);
+			response.setContentLength(bStream.size());
+
+			bStream.writeTo(response.getOutputStream());
+
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+
+		} catch (Exception e) {
+			//LOGGER.debug("{}", e);
+		} finally {
+			if (bStream != null) {
+				try {
+					bStream.close();
+				} catch (Exception est) {
+					//LOGGER.debug("IGNORED: {}", est.getMessage());
+					System.out.println("IGNORED: "+ est.getMessage());
+				}
+			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception ei) {
+					//LOGGER.debug("IGNORED: {}", ei.getMessage());
+					System.out.println("IGNORED: "+ ei.getMessage());
+				}
+			}
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (Exception efis) {
+					//LOGGER.debug("IGNORED: {}", efis.getMessage());
+					System.out.println("IGNORED: "+ efis.getMessage());
+				}
+			}
+		}
+	}
+}

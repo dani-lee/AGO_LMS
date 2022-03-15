@@ -1,0 +1,265 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="hrdList" value="${dataMap.hrdList }" />
+<c:set var="extList" value="${dataMap.extList}" />
+
+
+<body>
+
+	<div class="container-fluid">
+		<div class="input-group justify-content-end col-12 p-0 mb-1">
+			<div class="p-0 m-0 text-left col-5 float-left">
+			</div>
+			<div class="row col-12 justify-content-end p-0 mr-1">
+				<select class="col-2 form-control" name="searchType">
+			        <option value="" ${cri.searchType eq '' ? 'selected':'' }>전체</option>
+					<option value="01" ${cri.searchType eq '01' ? 'selected':'' }>사업관리</option>
+					<option value="02" ${cri.searchType eq '02' ? 'selected':'' }>경영/회계/사무</option>
+					<option value="03" ${cri.searchType eq '03' ? 'selected':'' }>금융/보험</option>
+					<option value="04" ${cri.searchType eq '04' ? 'selected':'' }>교육/자연/사회과학</option>
+					<option value="05" ${cri.searchType eq '05' ? 'selected':'' }>법률/경찰/소방/교도/국방</option>
+					<option value="06" ${cri.searchType eq '06' ? 'selected':'' }>보건/의료</option>
+					<option value="07" ${cri.searchType eq '07' ? 'selected':'' }>사회복지/종교</option>
+					<option value="08" ${cri.searchType eq '08' ? 'selected':'' }>문화/예술/디자인/방송</option>
+					<option value="09" ${cri.searchType eq '09' ? 'selected':'' }>운전/운송</option>
+					<option value="10" ${cri.searchType eq '10' ? 'selected':'' }>영업판매</option>
+					<option value="11" ${cri.searchType eq '11' ? 'selected':'' }>경비/청소</option>
+					<option value="12" ${cri.searchType eq '12' ? 'selected':'' }>이용/숙박/여행/오락/스포츠</option>
+					<option value="13" ${cri.searchType eq '13' ? 'selected':'' }>음식서비스</option>
+					<option value="14" ${cri.searchType eq '14' ? 'selected':'' }>건설</option>
+					<option value="15" ${cri.searchType eq '15' ? 'selected':'' }>기계</option>
+					<option value="16" ${cri.searchType eq '16' ? 'selected':'' }>재료</option>
+					<option value="17" ${cri.searchType eq '17' ? 'selected':'' }>화학</option>
+					<option value="18" ${cri.searchType eq '18' ? 'selected':'' }>섬유/의복</option>
+					<option value="19" ${cri.searchType eq '19' ? 'selected':'' }>전기/전자</option>
+					<option value="20" ${cri.searchType eq '20' ? 'selected':'' }>정보통신</option>
+					<option value="21" ${cri.searchType eq '21' ? 'selected':'' }>식품가공</option>
+					<option value="22" ${cri.searchType eq '22' ? 'selected':'' }>인쇄/목재/가구/공예</option>
+					<option value="23" ${cri.searchType eq '23' ? 'selected':'' }>환경/에너지/안전</option>
+					<option value="24" ${cri.searchType eq '24' ? 'selected':'' }>농림어업</option>
+				</select>
+				<input type="text" placeholder="강의명 검색..." name="keyword" class="form-control col-9" value="${ param.keyword }" >
+				<button class="col-1 btn btn-primary float-right" onclick="list_go(1);" >검색</button>
+			</div>
+		</div>
+		<div class="row">
+				<table style="height: 650px;">
+					<tr class="row pl-2">
+						<c:if test="${not empty hrdList }" >
+							<c:forEach var="item" items="${hrdList}" varStatus="vs" >
+								<c:if test="${vs.index%5 eq 0}"> 
+									<td class="card p-3 pb-1 mb-2" style="width:240px; ">
+										<div class="mx-auto p-1" style="width: 210px; height: 95px;" 
+											onclick="window.open('${item.titleLink}tracseId=${item.trainCd }&tracseTme=${item.trprDegr }&crseTracseSe=${item.trainTargetCd }&trainstCstmrId=${item.trainstCstId }#undefined', '','600','800');">
+											<h5 class="font-weight-bold">${item.title }</h5>
+										</div>
+										<hr>
+										<div class="p-1" style="height: 70px;">
+											<h6>훈련기관 : <br>
+											${item.subTitle}</h6>
+										</div>
+										<span class="text-primary h6 pt-2">훈련기간 : <br>${item.traStartDate }~${item.traEndDate }</span>
+										<c:if test="${not empty extList }" >
+											<c:set var="loop_flag" value="false" />
+											<c:forEach var="ext" items="${extList}" varStatus="extvs" >
+												<c:if test="${item.trainCd eq ext.extCode }">
+													<c:if test="${item.title eq ext.extClName }" >
+														<c:if test="${ext.extNo eq 0}" >
+															<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" value="학습중" />
+														</c:if>
+														<c:if test="${ext.extNo ne 0}" >
+															<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-secondary"  value="수강완료" />
+														</c:if>
+														<c:set var="loop_flag" value="true" />
+													</c:if>
+												</c:if>
+											</c:forEach>
+											<c:if test="${not loop_flag}" >
+												<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" 
+														onclick="regist('${item.trainCd}')" value="수강신청" />
+											</c:if>
+										</c:if>
+										<c:if test="${empty extList }" >
+											<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" 
+														onclick="regist('${item.trainCd}')" value="수강신청" />
+										</c:if>
+										<form role="${item.trainCd}">
+											<input type="hidden" name="extCode" value="${item.trainCd }" />
+											<input type="hidden" name="extClName" value="${item.title }" />
+											<input type="hidden" name="studySdate" value="${item.traStartDate }" />
+											<input type="hidden" name="studyEdate" value="${item.traEndDate }" />
+										</form>
+									</td>
+								</c:if>
+								<c:if test="${vs.index%5 ne 0}"> 
+									<td class="card p-3 pb-1 ml-3 mb-2" style="width:240px; ">
+										<div class="mx-auto p-1" style="width: 210px; height: 95px;" 
+											onclick="window.open('${item.titleLink}tracseId=${item.trainCd }&tracseTme=${item.trprDegr }&crseTracseSe=${item.trainTargetCd }&trainstCstmrId=${item.trainstCstId }#undefined', '','600,800');">
+											<h5 class="font-weight-bold">${item.title }</h5>
+											
+										</div>
+										<hr>
+										<div class="p-1" style="height: 70px;">
+											<h6>훈련기관 : <br>
+											${item.subTitle}</h6>
+										</div>
+										<span class="text-primary h6 pt-2">훈련기간 : <br>${item.traStartDate }~${item.traEndDate }</span>
+										<c:if test="${not empty extList }" >
+											<c:set var="loop_flag" value="false" />
+											<c:forEach var="ext" items="${extList}" varStatus="extvs" >
+												<c:if test="${item.trainCd eq ext.extCode}">
+													<c:if test="${item.title eq ext.extClName}" >
+														<c:if test="${ext.extNo eq 0}" >
+															<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" value="학습중" />
+														</c:if>
+														<c:if test="${ext.extNo ne 0}" >
+															<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-secondary"  value="수강완료" />
+														</c:if>
+														<c:set var="loop_flag" value="true" />
+													</c:if>
+												</c:if>
+											</c:forEach>
+											<c:if test="${not loop_flag}" >
+												<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" 
+														onclick="regist('${item.trainCd}')" value="수강신청" />
+											</c:if>
+										</c:if>
+										<c:if test="${empty extList }" >
+											<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" 
+														onclick="regist('${item.trainCd}')" value="수강신청" />
+										</c:if>
+										<form role="${item.trainCd}">
+											<input type="hidden" name="extCode" value="${item.trainCd }" />
+											<input type="hidden" name="extClName" value="${item.title }" />
+											<input type="hidden" name="studySdate" value="${item.traStartDate }" />
+											<input type="hidden" name="studyEdate" value="${item.traEndDate }" />
+										</form>
+									</td>
+								</c:if>
+							</c:forEach>
+						</c:if>
+						<c:if test="${empty hrdList }" >
+							<h5 class="p-3 text-center"> 등록된 강의가 없습니다.</h5>
+						</c:if>
+					</tr> 
+		
+				</table>
+					
+					<!-- /.card -->
+				</div>
+				
+				<nav aria-label="Navigation">
+					<ul class="pagination justify-content-center m-0">
+						<li class="page-item">
+							<a class="page-link" href="javascript:list_go(1);">
+								<i class="fas fa-angle-double-left"></i>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="javascript:list_go(${ pageMaker.prev ? pageMaker.startPage-1 : pageMaker.cri.page });">
+								<i class="fas fa-angle-left"></i>
+							</a>
+						</li>
+						<c:forEach var="pageNum" begin="${ pageMaker.startPage }" end="${ pageMaker.endPage }">
+							<li class="page-item ${ pageMaker.cri.page == pageNum ? 'active' : ''  }">
+								<a class="page-link" href="javascript:list_go(${ pageNum });"> ${ pageNum } </a>
+							</li>
+						</c:forEach>
+				
+						<li class="page-item">
+							<a class="page-link" href="javascript:list_go(${ pageMaker.next ? pageMaker.endPage+1 : pageMaker.cri.page });">
+								<i class="fas fa-angle-right"></i>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="javascript:list_go(${ pageMaker.realEndPage });">
+								<i class="fas fa-angle-double-right"></i>
+							</a>
+						</li>
+					</ul>
+					<!-- /.pagination -->
+				</nav>
+				
+				<form id="jobForm">
+					<input type="hidden" name="page" value="" />
+					<input type="hidden" name="searchType" value="" />
+					<input type="hidden" name="keyword" value="" />
+					<input type="hidden" name="sortType" value="${ cri.sortType }" />
+					<input type="hidden" name="clCode" value="" />
+					<input type="hidden" name="opcl" value="" />
+				</form>
+
+			</div>
+<script>
+	function list_go(page,url, clCode, opcl) {
+		//console.log( document.getElementsByClassName('field').getAttribute('data-fullText'));
+		if(!url) url="list.do";
+		var jobForm = $('#jobForm');
+
+		jobForm.find("[name='page']").val(page);
+		jobForm.find("[name='searchType']").val($('select[name="searchType"]').val());
+		jobForm.find("[name='keyword']").val($('input[name="keyword"]').val());
+		jobForm.find("[name='sortType']").val($('input[name="sortType"]').val());
+		jobForm.find("[name='clCode']").val(clCode);
+		jobForm.find("[name='opcl']").val(opcl);
+		
+		jobForm.attr({
+			action : url,
+			method : 'get'
+		}).submit();
+	}
+	function fc_sort(sort){
+		var jobForm = $('#jobForm');
+		jobForm.find("[name='sortType']").val(sort);
+
+		list_go(1);
+	}
+</script>
+<script type="text/javascript">
+	
+	function regist(trainCd) {
+		// alert(trainCd);
+		var ext = $('form[role="'+trainCd+'"]')[0];
+ 		formData = new FormData(ext);
+ 		console.log($('form[role="'+trainCd+'"]')[0])
+ 		if(confirm("해당 강의를 수강하길 원하시는 경우 hrd-net에서 따로 수강신청을 하셔야 합니다. \n내 강의 목록에 추가하실려면 확인을 눌러주세요")){
+	  		 if($('#'+trainCd+'').attr('value') == '수강신청'){
+
+				 $.ajax({
+			         url         : 'regist',
+			         data        : formData,
+			         type        : 'post',
+			         processData : false,
+					 contentType : false,
+			         success     : function(data){
+			        	$('#'+trainCd+'').attr('value','학습중');
+
+			         },
+			         error       : function(error){
+			             //alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+			             AjaxErrorSecurityRedirectHandler(error.status);
+			             console.log(error.status);
+			         }
+			     })
+
+			 }else{
+				 console.log("신청취소")
+			 } 	
+		}  
+ 
+	}
+
+
+</script>
+	
+
+
+
+
+</body>

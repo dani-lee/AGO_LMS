@@ -1,0 +1,182 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head>
+<script src="<%=request.getContextPath() %>/resources/js/summernote/summernote-bs4.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/js/summernote/summernote-bs4.min.css" />
+</head>
+
+<title></title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">팝업등록</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">사이트관리</a>
+						</li>
+						<li class="breadcrumb-item">팝업관리</li>
+						<li class="breadcrumb-item active">팝업등록</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+
+			<form action="regist.do" method="post" name="registPopUpForm">
+				<table id="maincontent" class="table table-sm">
+					<tr>
+						<td class="font-weight-bold text-center">제목</td>
+						<td colspan="4"><input type="text" class="form-control form-control-sm" name="popTitle" id="popTitle"></td>
+					</tr>
+
+					<tr>
+						<td class="font-weight-bold text-center">게시기간</td>
+						<td colspan="4" class="popupPeriod">
+							<div class="d-flex d-block">
+								<input type="date" class="form-control form-control-sm col-3" name="popSdate" id="popSdate">
+								<span class="ml-3 mr-3">~</span>
+								<input type="date" class="form-control form-control-sm col-3" name="popEdate" id="popEdate">
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="font-weight-bold text-center">링크</td>
+						<td colspan="4"><input type="text" class="form-control form-control-sm" name="popLink" id="popLink" value=""></td>
+					</tr>
+					<!-- <tr>
+                    <td class="font-weight-bold text-center">사용여부</td>
+                    <td colspan="4"><input type="text" class="form-control form-control-sm" name=""></td>
+                </tr>       -->
+
+					<tr>
+						<td class="font-weight-bold text-center">위치</td>
+						<td colspan="4">
+							<div class="form-group form-inline">
+								<label for="x" class="col-1 col-form-label">X:</label>
+								<div class="col-md-3 p-0">
+									<input type="number" class="form-control form-control-sm" id="popX" name="popX">
+								</div>
+								<label for="y" class="col-1 col-form-label">Y:</label>
+								<div class="col-md-3 p-0">
+									<input type="number" class="form-control form-control-sm" id="popY" name="popY">
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="font-weight-bold text-center">크기</td>
+						<td colspan="4">
+							<div class="form-group form-inline">
+								<label for="pupWidth" class="col-1 col-form-label">가로:</label>
+								<div class="col-md-3 p-0">
+									<input type="number" class="form-control form-control-sm" id="popWsize" name="popWsize">
+								</div>
+								<label for="popHeight" class="col-1 col-form-label">세로:</label>
+								<div class="col-md-3 p-0">
+									<input type="number" class="form-control form-control-sm" id="popHsize" name="popHsize">
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="5"><textarea class="textarea" name="popContent" id="content" rows="30" placeholder="1000자 내외로 작성하세요." style="display: none;"></textarea></td>
+					<tr>
+				</table>
+			</form>
+
+			<%@ include file="/WEB-INF/views/common/summernote.jsp"%>
+
+			<div style="float: right; margin-right: 20px;">
+				<button class="btn btn-secondary" type="button" onclick="fn_regist();">등록</button>
+				<button class="btn btn-default" type="button" onclick="location.href='list.do'">취소</button>
+			</div>
+
+		</div>
+
+
+	</section>
+
+	<script>
+    window.onload = function(){
+        summernote_go($('textarea#content'));
+    }
+
+    function fn_regist(){
+    	let form = document.registPopUpForm;
+
+    	let inputTitle = document.querySelector('#popTitle');
+    	let inputSdate = document.querySelector('#popSdate');
+    	let inputEdate = document.querySelector('#popEdate');
+    	let inputpopX = document.querySelector('#popX');
+    	let inputpopY = document.querySelector('#popY');
+    	let inputpopWsize = document.querySelector('#popWsize');
+    	let inputpopHsize = document.querySelector('#popHsize');
+    	let inputContent = document.querySelector('#content');
+
+
+    	if(!inputTitle.value){
+    		alert("제목을 입력해주세요");
+    		return;
+    	}
+
+    	if(!inputSdate.value){
+    		alert("게시 시작 날짜를 입력해주세요");
+    		return;
+    	}
+
+    	if(!inputEdate.value){
+    		alert("게시 종료 날짜를 입력해주세요");
+    		return;
+    	}
+
+     	if(!inputpopX.value){
+    		inputpopX.value = "300";
+    	}
+
+    	if(!inputpopY.value){
+    		inputpopY.value = "500";
+    	}
+
+    	if(!inputpopWsize.value){
+    		inputpopWsize.value = "300";
+    	}
+
+    	if(!inputpopHsize.value){
+    		inputpopHsize.value = "400"
+    	}
+
+    	if(!inputContent.value){
+    		alert("내용을 입력해주세요");
+    		return;
+    	}
+
+    	form.submit();
+    }
+
+    </script>
+
+</body>

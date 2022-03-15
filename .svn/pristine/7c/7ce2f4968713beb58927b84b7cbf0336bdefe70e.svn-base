@@ -1,0 +1,15 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public interface LikeClassDAO {
+
+	public List<ClassStasticsVO> selectLikeClassList(String memEmail)throws SQLException;
+	
+	public List<ClassStasticsVO> selectLikeClassCntAttendees()throws SQLException;
+	
+	public int selectLikeClPoint(String memEmail)throws SQLException;
+}

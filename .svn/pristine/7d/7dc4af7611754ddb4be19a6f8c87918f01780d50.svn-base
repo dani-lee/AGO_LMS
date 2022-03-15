@@ -1,0 +1,37 @@
+package com.one.service.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dao.LikeClassDAO;
+import com.one.dto.ClassVO.ClassStasticsVO;
+import com.one.service.LikeClassService;
+
+public class LikeClassServiceImpl implements LikeClassService{
+
+	private LikeClassDAO likeClassDAO;
+	
+	public void setLikeClassDAO(LikeClassDAO likeClassDAO) {
+		this.likeClassDAO = likeClassDAO;
+	}
+
+	@Override
+	public List<ClassStasticsVO> getLikeClassList(String memEmail) throws SQLException{
+		List<ClassStasticsVO> likeClassList = likeClassDAO.selectLikeClassList(memEmail);
+		List<ClassStasticsVO> attendeesCntList = likeClassDAO.selectLikeClassCntAttendees();
+		for(ClassStasticsVO classInfo : likeClassList) {
+			for(ClassStasticsVO attendessCnt : attendeesCntList) {
+				if(classInfo.getOpcl() == attendessCnt.getOpcl()) {
+					attendessCnt.setCount(attendessCnt.getCount());
+				}
+			}
+		}
+		return likeClassList;
+	}
+
+	@Override
+	public int getLikeClPoint(String memEmail) throws SQLException {
+		return likeClassDAO.selectLikeClPoint(memEmail);
+	}
+
+}

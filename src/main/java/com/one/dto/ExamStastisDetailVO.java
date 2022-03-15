@@ -1,0 +1,205 @@
+package com.one.dto;
+
+import java.util.Date;
+import java.util.List;
+
+public class ExamStastisDetailVO {
+
+	private int student; // 수강인원
+	private int opcl;
+	private String clCode;
+	private String clName;
+	private String clCate;
+	private Date postSdate;
+	private Date postEdate;
+	private String mtestFile;
+	private String ftestFile;
+	
+	private double mPassRate; // 중간 합격률
+	private double fPassRate; // 기말 합격률
+	
+	private String testType; // m,f
+	private String scoreType; // 0-39 : 0, 40-69 : 1, 70-100 : 2
+	
+	private int mTotalCount;
+	private int fTotalCount;
+	private int[] mScoreCount = new int [3]; // 0-39,  40-69, 70-100
+	private double[] mScorePersent = new double [3]; // 0-39,  40-69, 70-100
+	private int[] fScoreCount = new int [3]; // 0-39,  40-69, 70-100
+	private double[] fScorePersent = new double [3]; // 0-39,  40-69, 70-100
+
+	private List<Double> mTest;
+	private List<Double> fTest;
+	
+	
+	
+	
+	public double[] getmScorePersent() {
+		return mScorePersent;
+	}
+
+	public void setmScorePersent(double[] mScorePersent) {
+		this.mScorePersent = mScorePersent;
+	}
+
+	public double[] getfScorePersent() {
+		return fScorePersent;
+	}
+
+	public void setfScorePersent(double[] fScorePersent) {
+		this.fScorePersent = fScorePersent;
+	}
+
+	public List<Double> getmTest() {
+		return mTest;
+	}
+
+	public void setmTest(List<Double> mTest) {
+		this.mTest = mTest;
+	}
+
+	public List<Double> getfTest() {
+		return fTest;
+	}
+
+	public void setfTest(List<Double> fTest) {
+		this.fTest = fTest;
+	}
+
+	public String getMtestFile() {
+		return mtestFile;
+	}
+
+	public void setMtestFile(String mtestFile) {
+		this.mtestFile = mtestFile;
+	}
+
+	public String getFtestFile() {
+		return ftestFile;
+	}
+
+	public void setFtestFile(String ftestFile) {
+		this.ftestFile = ftestFile;
+	}
+
+	public int getmTotalCount() {
+		return mTotalCount;
+	}
+
+	public void setmTotalCount(int mTotalCount) {
+		this.mTotalCount = mTotalCount;
+	}
+
+	public int getfTotalCount() {
+		return fTotalCount;
+	}
+
+	public void setfTotalCount(int fTotalCount) {
+		this.fTotalCount = fTotalCount;
+	}
+
+	public double getmPassRate() {
+		return mPassRate;
+	}
+
+	public void setmPassRate(double mPassRate) {
+		this.mPassRate = mPassRate;
+	}
+
+	public double getfPassRate() {
+		return fPassRate;
+	}
+
+	public void setfPassRate(double fPassRate) {
+		this.fPassRate = fPassRate;
+	}
+
+	public int getStudent() {
+		return student;
+	}
+
+	public void setStudent(int student) {
+		this.student = student;
+	}
+
+	public int getOpcl() {
+		return opcl;
+	}
+
+	public void setOpcl(int opcl) {
+		this.opcl = opcl;
+	}
+
+	public String getClCode() {
+		return clCode;
+	}
+
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+
+	public String getClName() {
+		return clName;
+	}
+
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+
+	public String getClCate() {
+		return clCate;
+	}
+
+	public void setClCate(String clCate) {
+		this.clCate = clCate;
+	}
+
+	public Date getPostSdate() {
+		return postSdate;
+	}
+
+	public void setPostSdate(Date postSdate) {
+		this.postSdate = postSdate;
+	}
+
+	public Date getPostEdate() {
+		return postEdate;
+	}
+
+	public void setPostEdate(Date postEdate) {
+		this.postEdate = postEdate;
+	}
+
+	public String getTestType() {
+		return testType;
+	}
+
+	public void setTestType(String testType) {
+		this.testType = testType;
+	}
+
+	public String getScoreType() {
+		return scoreType;
+	}
+
+	public void setScoreType(String scoreType) {
+		this.scoreType = scoreType;
+	}
+
+	public int[] getmScoreCount() {
+		return mScoreCount;
+	}
+
+	public void setmScoreCount(int[] mScoreCount) {
+		this.mScoreCount = mScoreCount;
+	}
+
+	public int[] getfScoreCount() {
+		return fScoreCount;
+	}
+
+	public void setfScoreCount(int[] fScoreCount) {
+		this.fScoreCount = fScoreCount;
+	}
+	
+}

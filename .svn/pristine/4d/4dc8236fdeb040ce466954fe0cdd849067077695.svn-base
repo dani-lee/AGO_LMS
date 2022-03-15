@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page trimDirectiveWhitespaces="true" %>
+
+        <head></head>
+
+        <title>강의 보기</title>
+
+        <body>
+            <div class="container-fluid col-12">
+
+                <div class="d-flex list-title">
+                    <h6 class="col-9" style="margin: 0px;">개인정보보호 의무 교육</h6>
+                    <div class="buttons col-3 ml-auto">
+                        <button class="btn btn-primary" onclick="player.playVideo()">학습하기</button>
+                        <button class="btn btn-primary" onclick="player.stopVideo(); checkClose();">학습종료</button>
+                    </div>
+                </div>
+                <hr color="#1D64F2" style="height:3px; border-radius:40px; margin-top:5px;" />
+                
+                <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+                <div id="player"></div>
+            </div>
+                    
+
+
+
+
+
+
+
+            <script>
+            	//참고: https://developers.google.com/youtube/iframe_api_reference?hl=ko
+                
+                // 2. This code loads the IFrame Player API code asynchronously.
+                var tag = document.createElement('script');
+
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                // 3. This function creates an <iframe> (and YouTube player)
+                //    after the API code downloads.
+                var player;
+                function onYouTubeIframeAPIReady() {
+                    player = new YT.Player('player', {
+                        height: '480',
+                        width: '100%',
+                        videoId: 'j-AHVN0A2a4',
+                        //https://youtu.be/j-AHVN0A2a4?t=9 뒷부분을 id로
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+
+                // 4. The API will call this function when the video player is ready.
+                function onPlayerReady(event) {
+                    event.target.playVideo();
+                }
+
+                // 5. The API calls this function when the player's state changes.
+                //    The function indicates that when playing a video (state=1),
+                //    the player should play for six seconds and then stop.
+                var done = false;
+                function onPlayerStateChange(event) {
+                    if (event.data == YT.PlayerState.PLAYING && !done) {
+                        setTimeout(stopVideo, 6000);
+                        done = true;
+                    }
+                }
+                function stopVideo() {
+                    player.stopVideo();
+                }
+
+                function checkPlayerState(){
+                    alert(player.getPlayerState());
+                    alert(player.getCurrentTime());
+                }
+
+
+
+                function checkClose(){
+                    if(confirm('학습을 종료하시겠습니까?')){
+                        window.close();
+                    }
+                }
+
+            </script>
+
+        </body>

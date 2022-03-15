@@ -1,0 +1,5 @@
+package com.one.dao;
+
+public interface AdminDAO {
+
+}

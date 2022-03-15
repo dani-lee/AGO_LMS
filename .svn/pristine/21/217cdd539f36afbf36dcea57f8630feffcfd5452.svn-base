@@ -1,0 +1,23 @@
+package com.one.dao;
+
+import java.sql.SQLException;
+
+import com.one.dto.MemRemdSetVO;
+
+public interface MemRemdSetDAO {
+
+	public MemRemdSetVO selectMemRemdSetByMemEmail(String memEmail) throws SQLException;
+	
+	public void insertMemRemdSetForUser(String memEmail) throws SQLException;
+	
+	public void insertMemRemdSetForHead(String memEmail) throws SQLException;
+	
+	public void updateReportDlFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void updateIntrClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void updateRealtimeClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void updateDutyClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void updateMsgFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void updateReportChkFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	
+	
+}

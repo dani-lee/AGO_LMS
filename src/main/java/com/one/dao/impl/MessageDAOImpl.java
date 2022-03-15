@@ -1,0 +1,112 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.command.Criteria;
+import com.one.command.MessageComand;
+import com.one.dao.MessageDAO;
+import com.one.dto.MessageVO;
+import com.one.dto.PopUpVO;
+
+public class MessageDAOImpl implements MessageDAO{
+
+	private SqlSession session;
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public List<MessageVO> selectMessageList(Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		List<MessageVO> messageList = session.selectList("Message-Mapper.selectMessageList", cri, rowBounds);
+		return messageList;
+	}
+
+	@Override
+	public int selectMessageListCount(Criteria cri) throws SQLException {
+		int totalCount = session.selectOne("Message-Mapper.selectMessageListCount", cri);
+		return totalCount;
+	}
+
+	@Override
+	public MessageVO selectMessage(MessageComand msgCMD) throws SQLException {
+		MessageVO message = session.selectOne("Message-Mapper.selectMessage", msgCMD);
+		return message;
+	}
+
+	@Override
+	public void readMessage(MessageVO message) throws SQLException {
+		session.update("Message-Mapper.readMessage",message);
+		
+	}
+
+	@Override
+	public void insertMessage(MessageVO message) throws SQLException {
+		session.update("Message-Mapper.insertMessage", message);
+	}
+
+	@Override
+	public int selectMsgSequenceNextValue() throws SQLException {
+		int seq = session.selectOne("Message-Mapper.selectMsgSequenceNextValue");
+		return seq;
+	}
+
+	@Override
+	public void deleteMsg(Map<String, Object> dataMap) throws SQLException {
+		session.delete("Message-Mapper.updateMemDelete", dataMap);
+		
+	}
+
+	@Override
+	public void insertMemMsg(MessageVO message) throws SQLException {
+		session.update("Message-Mapper.insertMemMsg",message);
+	}
+
+	@Override
+	public List<MessageVO> selectMsgList(Criteria cri) throws SQLException {
+		int offset = cri.getStartRowNum();
+		int limit = cri.getPerPageNum();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<MessageVO> msgList = session.selectList("Message-Mapper.selectMsgList",cri,rowBounds);
+		return msgList;
+	}
+
+	@Override
+	public List<MessageVO> selectMemMsgByNo(int msgNo) throws SQLException {
+		List<MessageVO> memMsg = session.selectList("Message-Mapper.selectMemMsgByNo", msgNo);
+		return memMsg;
+	}
+
+	@Override
+	public int countMsg() throws SQLException {
+		int cnt = session.selectOne("Message-Mapper.countMsg");
+		return cnt;
+	}
+
+	@Override
+	public MessageVO selectMsg(int msgNo) throws SQLException {
+		MessageVO message = session.selectOne("Message-Mapper.selectMsg", msgNo);
+		return message;
+	}
+
+	@Override
+	public void deleteMsgBymanager(int msgNo) throws SQLException {
+		session.update("Message-Mapper.deleteMsgBymanager", msgNo);
+	}
+
+	@Override
+	public int selectUnreadMsgCount(String memEmail) throws SQLException {
+		int unreadMsgCnt = session.selectOne("Message-Mapper.selectUnreadMsgCount", memEmail);
+		return unreadMsgCnt;
+	}
+
+
+}

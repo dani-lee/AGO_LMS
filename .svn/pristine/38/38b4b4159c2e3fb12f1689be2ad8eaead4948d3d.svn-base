@@ -1,0 +1,21 @@
+package com.one.service;
+
+import java.sql.SQLException;
+
+import com.one.dto.MemRemdSetVO;
+
+public interface MemRemdSetService {
+
+	public MemRemdSetVO getMemRemdSetByMemEmail(String memEmail) throws SQLException;
+	
+	public void registMemRemdSetForUser(String memEmail) throws SQLException;
+	
+	public void regisetMemRemdSetForHead(String memEmail) throws SQLException;
+	
+	public void modifyReportDlFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void modifyIntrClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void modifyRealtimeClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void modifyDutyClFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void modifyMsgFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+	public void modifyReportChkFlag(MemRemdSetVO memRemdSetVO) throws SQLException;
+}

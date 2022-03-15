@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FreeReply-Mapper">
+
+	<select id="selectFreeReplySeqNextValue" resultType="int" >
+		SELECT FREE_REPLY_SEQ.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="selectFreeReplyList" resultType="freeReply">
+		SELECT 
+			FRREPLY_NO
+		   ,FREE_NO
+		   ,FRREPLY_REGDATE
+		   ,FRREPLY_CONTENT
+		   ,MEM_ID
+		   ,NICK_NAME
+		FROM
+		FREE_REPLY
+		WHERE
+		FREE_NO = #{freeNo}
+		ORDER BY FRREPLY_NO ASC
+	</select>
+	<select id="countFreeReply" parameterType="int" resultType="int">
+		SELECT 
+		COUNT(FREE_NO)
+		FROM
+		FREE_REPLY
+		WHERE
+		FREE_NO = #{freeNo}
+	</select>
+	
+	<update id="insertFreeReply" >
+		INSERT INTO FREE_REPLY (
+		    FRREPLY_NO
+		   ,FREE_NO
+		   ,FRREPLY_REGDATE
+		   ,FRREPLY_CONTENT
+		   ,MEM_ID
+		   ,NICK_NAME
+		) VALUES (
+		     #{frreplyNo}
+		   , #{freeNo}
+		   , TRUNC(SYSDATE)
+		   , #{frreplyContent}
+		   , #{memId}
+		   , #{nickName}
+		)
+	</update>
+	
+	<update id="updateFreeReply" parameterType="freeReply">
+		UPDATE
+		FREE_REPLY
+		SET
+			FRREPLY_CONTENT =  #{frreplyContent}
+		   ,FRREPLY_REGDATE = TRUNC(SYSDATE)
+		WHERE
+		FRREPLY_NO = #{frreplyNo}		
+	</update>
+	
+	<update id="deleteFreeReply" parameterType="int">
+		DELETE 
+		FROM
+		FREE_REPLY
+		WHERE
+		FRREPLY_NO = #{frreplyNo}			
+	</update>	
+	
+	<update id="deleteAllFreeReply" parameterType="int">
+		DELETE 
+		FROM
+		FREE_REPLY
+		WHERE
+		FREE_NO = #{freeNo}			
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

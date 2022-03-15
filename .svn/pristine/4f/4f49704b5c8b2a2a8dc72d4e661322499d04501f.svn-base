@@ -1,0 +1,63 @@
+package com.one.dao.impl;
+
+import java.sql.SQLException;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.one.dao.MemRemdSetDAO;
+import com.one.dto.MemRemdSetVO;
+
+public class MemRemdSetDAOImpl implements MemRemdSetDAO {
+
+	private SqlSession session;
+	public void setSession(SqlSession session) {
+		this.session = session;
+	}
+
+	@Override
+	public MemRemdSetVO selectMemRemdSetByMemEmail(String memEmail) throws SQLException {
+		MemRemdSetVO memAlarm = session.selectOne("MemRemdSet-Mapper.selectMemRemdSetByMemEmail", memEmail);
+		return memAlarm;
+	}
+
+	@Override
+	public void insertMemRemdSetForUser(String memEmail) throws SQLException {
+		session.update("MemRemdSet-Mapper.insertMemRemdSetForUser", memEmail);
+	}
+
+	@Override
+	public void insertMemRemdSetForHead(String memEmail) throws SQLException {
+		session.update("MemRemdSet-Mapper.insertMemRemdSetForHead", memEmail);
+	}
+
+	@Override
+	public void updateReportDlFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateReportDlFlag", memRemdSetVO);
+	}
+
+	@Override
+	public void updateIntrClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateIntrClFlag", memRemdSetVO);
+	}
+
+	@Override
+	public void updateRealtimeClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateRealtimeClFlag", memRemdSetVO);
+	}
+
+	@Override
+	public void updateDutyClFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateDutyClFlag", memRemdSetVO);
+	}
+
+	@Override
+	public void updateMsgFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateMsgFlag", memRemdSetVO);
+	}
+
+	@Override
+	public void updateReportChkFlag(MemRemdSetVO memRemdSetVO) throws SQLException {
+		session.update("MemRemdSet-Mapper.updateReportChkFlag", memRemdSetVO);
+	}
+
+}

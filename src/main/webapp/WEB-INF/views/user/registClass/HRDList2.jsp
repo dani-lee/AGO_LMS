@@ -1,0 +1,333 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+
+<c:set var="pageMaker" value="${dataMap.pageMaker }" />
+<c:set var="cri" value="${dataMap.pageMaker.cri }" />
+<c:set var="hrdList" value="${dataMap.hrdList }" />
+<c:set var="extList" value="${dataMap.extList}" />
+
+
+<body>
+
+	<div class="container-fluid p-0">
+		<div id="demo" class="carousel slide" data-ride="carousel" data-interval="false">
+			<a class="carousel-control-prev" href="#demo" data-slide="prev" style="width: 20px;">
+			   <i class="fas fa-chevron-left font-weight-bold" style="color: black; font-size: 40px;"></i>
+			</a>
+			<div class="carousel-inner">
+			  <div class="carousel-item ${cri.searchType < 13 ? 'active':'' }">
+				<div class="row pl-5 ml-5 pt-3">
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="01" onclick="inconClick('01')" name="#F7625D">   
+						<i class="fas fa-building" style="font-size: 40px;"></i> <br>                                                        
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">사업관리</span>                                         
+					</div>                                                                                                                   
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="02" onclick="inconClick('02')" name="#F7855D">   
+						<i class="fas fa-calculator" style="font-size: 40px;"></i> <br>                                                      
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">경영/회계</span>                                         
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="03" onclick="inconClick('03')" name="#F7DB5D">   
+						<i class="fas fa-piggy-bank" style="font-size: 40px;"></i> <br>                                           
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">금융/보험</span >                             
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="04" onclick="inconClick('04')" name="#8BDB5D">   
+						<i class="fas fa-graduation-cap" style="font-size: 40px;"></i> <br>                                       
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">교육/자연</span  >                            
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="05" onclick="inconClick('05')" name="#32915D">   
+						<i class="fas fa-gavel" style="font-size: 40px;"></i> <br>                                                
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">법률/국방</span>                              
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="06"onclick="inconClick('06')" name="#32918F">   
+						<i class="fas fa-briefcase-medical" style="font-size: 40px;"></i> <br>                                    
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">보건/의료</span >                             
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="07" onclick="inconClick('07')" name="#3291D6">   
+						<i class="fas fa-hand-holding-heart" style="font-size: 40px; "></i> <br>                                  
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">사회복지</span>                              
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="08"onclick="inconClick('08')" name="#3256D6">   
+						<i class="fas fa-paint-brush" style="font-size: 40px;"></i> <br>                                          
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">문화/예술</span  >                            
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px;"id="09" onclick="inconClick('09')"  name="#3237D6">   
+						<i class="fas fa-bus" style="font-size: 40px;"></i> <br>                                                  
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">운전/운송</span >                             
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="10" onclick="inconClick('10')" name="#5D3DDD">   
+						<i class="fas fa-shopping-cart" style="font-size: 40px;"></i> <br>                                        
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">영업판매</span>                              
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="11" onclick="inconClick('11')" name="#933DDD">   
+						<i class="fas fa-user-tie" style="font-size: 40px;"></i> <br>                                             
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">경비/청소</span  >                            
+					</div>                                                                                                        
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="12" onclick="inconClick('12')" name="#CA6EDD">   
+						<i class="fas fa-gamepad" style="font-size: 40px;"></i> <br>                                                         
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">이용/오락</span>
+					</div>
+				</div>
+			  </div>
+			  <div class="carousel-item ${cri.searchType > 12 ? 'active':'' }">
+				<div class="row pl-5 ml-5 pt-3">
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="13"  onclick="inconClick('13')" name="#F7625D">    
+						<i class="fas fa-utensils" style="font-size: 40px;"></i> <br>                                                              
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">음식서비스</span>                                             
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="14"  onclick="inconClick('14')" name="#F7855D">    
+						<i class="fas fa-hard-hat" style="font-size: 40px;"></i> <br>                                                              
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">건설</span>                                                   
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="15"  onclick="inconClick('15')" name="#F7DB5D">    
+						<i class="fas fa-robot" style="font-size: 40px;"></i> <br>                                                                 
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">기계</span>                                                   
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="16"  onclick="inconClick('16')" name="#8BDB5D">    
+						<i class="fas fa-gem" style="font-size: 40px;"></i> <br>                                                                   
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">재료</span>                                                   
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="17"  onclick="inconClick('17')" name="#32915D">    
+						<i class="fas fa-flask" style="font-size: 40px;"></i> <br>                                                                 
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">화학</span>                                                   
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="18"  onclick="inconClick('18')" name="#32918F">    
+						<i class="fas fa-tshirt" style="font-size: 40px;"></i> <br>                                                                
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">섬유/의복</span>                                              
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="19"  onclick="inconClick('19')" name="#3291D6">    
+						<i class="fas fa-bolt" style="font-size: 40px;"></i> <br>                                                                  
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">전기/전자</span>                                              
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="20"  onclick="inconClick('20')" name="#3256D6">    
+						<i class="fas fa-satellite-dish" style="font-size: 40px;"></i> <br>                                                        
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">정보통신</span>                                               
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="21"  onclick="inconClick('21')"  name="#3237D6">       
+						<i class="fas fa-hamburger" style="font-size: 40px;"></i> <br>                                                             
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">식품가공</span>                                               
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="22"  onclick="inconClick('22')" name="#5D3DDD">    
+						<i class="fas fa-couch" style="font-size: 40px;"></i> <br>                                                                 
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">목재/공예</span>                                              
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="23"  onclick="inconClick('23')" name="#933DDD">    
+						<i class="fas fa-seedling" style="font-size: 40px;"></i> <br>                                                              
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">에너지</span>                                                 
+					</div>                                                                                                                         
+					<div class="text-center p-2 pt-3 " style="cursor: pointer; width: 90px; height: 100px; " id="24"  onclick="inconClick('24')" name="#CA6EDD">    
+						<i class="fas fa-tractor" style="font-size: 40px;"></i> <br>                                                               
+						<span style="font-size: 13px;" class="font-weight-bold pt-1">농림어업</span>
+					</div>
+				</div>
+				</div>
+			</div>
+			<a class="carousel-control-next" href="#demo" data-slide="next" style="width: 20px;">
+			  <i class="fas fa-chevron-right" style="color: black; font-size: 40px;"></i>
+			</a>
+		</div>
+		<div class="row col-12 justify-content-end p-0 mr-1">
+			<input type="text" placeholder="강의명 검색..." name="keyword" class="form-control col-5" value="${ param.keyword }" >
+			<button class="col-1 btn btn-primary float-right" onclick="list_go(1);" >검색</button>
+		</div>
+		<table class="mt-2" style="height: 540px;">
+			<tr class="row pl-2">
+				<c:if test="${not empty hrdList }" >
+					<c:forEach var="item" items="${hrdList}" varStatus="vs" >
+						<td class="card p-2 mx-2"  style="width:240px; ">
+							<h5 style="overflow: hidden;
+							    text-overflow: ellipsis;
+							    display: -webkit-box;
+							    line-height: 25px;    
+							    max-height: 100px;     
+							    -webkit-line-clamp: 3; /* 표시하고자 하는 라인 수 */
+							    -webkit-box-orient: vertical;
+							    height: 75px;
+							    cursor: pointer;"
+							    onclick="window.open('${item.titleLink}tracseId=${item.trainCd }&tracseTme=${item.trprDegr }&crseTracseSe=${item.trainTargetCd }&trainstCstmrId=${item.trainstCstId }#undefined', '','600','800');">
+								${item.title }
+							</h5>
+							<hr>
+							<span style="width: 50px; " class="badge bg-secondary font-weight-bold">기관</span>
+							<span style = "
+										 max-width: 390px; 
+										 overflow: hidden;
+										 white-space: nowrap; 
+										 text-overflow: ellipsis;
+										 cursor: pointer;"
+										 onclick="window.open('${item.titleLink}tracseId=${item.trainCd }&tracseTme=${item.trprDegr }&crseTracseSe=${item.trainTargetCd }&trainstCstmrId=${item.trainstCstId }#undefined', '','600','800');">
+								${item.subTitle}
+							</span>
+							<span class="badge bg-primary" style="width: 60px;">학습기간</span>
+							<span class="text-primary pb-1">${item.traStartDate }&nbsp;~&nbsp;${item.traEndDate }</span>
+							<c:if test="${not empty extList }" >
+								<c:set var="loop_flag" value="false" />
+								<c:forEach var="ext" items="${extList}" varStatus="extvs" >
+									<c:if test="${not loop_flag }">
+										<c:if test="${item.trainCd eq ext.extCode }">
+											<c:if test="${ext.extNo eq 0}" >
+												<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" value="학습중" />
+											</c:if>
+											<c:if test="${ext.extNo ne 0}" >
+												<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-secondary"  value="수강완료" />
+											</c:if>
+											<c:set var="loop_flag" value="true" />
+										</c:if>
+									</c:if>
+								</c:forEach>
+								<c:if test="${not loop_flag}" >
+									<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" 
+											onclick="regist('${item.trainCd}')" value="수강신청" />
+								</c:if>
+							</c:if>
+							<c:if test="${empty extList }" >
+								<input id="${item.trainCd}" style="vertical-align: bottom;" type="button" class="p-1 btn btn-block btn-primary" onclick="regist('${item.trainCd}')" value="수강신청" />
+							</c:if>
+							
+							<form role="${item.trainCd}">
+								<input type="hidden" name="extCode" value="${item.trainCd }" />
+								<input type="hidden" name="extClName" value="${item.title }" />
+								<input type="hidden" name="studySdate" value="${item.traStartDate }" />
+								<input type="hidden" name="studyEdate" value="${item.traEndDate }" />
+							</form>
+						</td>
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty hrdList }" >
+					<td class="px-3 h5 text-danger ml-5" style="width: 1280px;">
+						해당교과 과정이 존재하지 않습니다.
+					</td>
+				</c:if>
+			</tr>
+		</table>
+		<nav aria-label="Navigation">
+			<ul class="pagination justify-content-center m-0">
+				<li class="page-item">
+					<a class="page-link" href="javascript:list_go(1);">
+						<i class="fas fa-angle-double-left"></i>
+					</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="javascript:list_go(${ pageMaker.prev ? pageMaker.startPage-1 : pageMaker.cri.page });">
+						<i class="fas fa-angle-left"></i>
+					</a>
+				</li>
+				<c:forEach var="pageNum" begin="${ pageMaker.startPage }" end="${ pageMaker.endPage }">
+					<li class="page-item ${ pageMaker.cri.page == pageNum ? 'active' : ''  }">
+						<a class="page-link" href="javascript:list_go(${ pageNum });"> ${ pageNum } </a>
+					</li>
+				</c:forEach>
+		
+				<li class="page-item">
+					<a class="page-link" href="javascript:list_go(${ pageMaker.next ? pageMaker.endPage+1 : pageMaker.cri.page });">
+						<i class="fas fa-angle-right"></i>
+					</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="javascript:list_go(${ pageMaker.realEndPage });">
+						<i class="fas fa-angle-double-right"></i>
+					</a>
+				</li>
+			</ul>
+			<!-- /.pagination -->
+		</nav>
+		
+		<form id="jobForm">
+			<input type="hidden" name="page" value="" />
+			<input type="hidden" name="searchType" value="${cri.searchType}" />
+			<input type="hidden" name="keyword" value="" />
+			<input type="hidden" name="sortType" value="${ cri.sortType }" />
+			<input type="hidden" name="clCode" value="" />
+			<input type="hidden" name="opcl" value="" />
+		</form>
+	</div>
+	
+	<input hidden="" type="text" name="sortType" value="">
+	
+<script>
+	window.onload = function(){
+		var iconId = "#"+$('input[name="searchType"]').val();
+		if($('input[name="searchType"]').val() != null && $('input[name="searchType"]').val() != ""){
+			$(iconId).css('color','white');
+			$(iconId).css('background-color', $(iconId).attr('name'));
+			$('input[name="searchType"]').attr('value',$('input[name="searchType"]').val()); 
+		}
+	}
+	function list_go(page, url, clCode, opcl) {
+		//console.log( document.getElementsByClassName('field').getAttribute('data-fullText'));
+		if(!url) url="list.do";
+		var jobForm = $('#jobForm');
+
+		jobForm.find("[name='page']").val(page);
+		jobForm.find("[name='keyword']").val($('input[name="keyword"]').val());
+		jobForm.find("[name='searchType']").val($('input[name="searchType"]').val());
+		jobForm.find("[name='sortType']").val($('input[name="sortType"]').val());
+		jobForm.find("[name='clCode']").val(clCode);
+		jobForm.find("[name='opcl']").val(opcl);
+		
+		jobForm.attr({
+			action : url,
+			method : 'get'
+		}).submit();
+	}
+	function fc_sort(sort){
+		var jobForm = $('#jobForm');
+		jobForm.find("[name='sortType']").val(sort);
+
+		list_go(1);
+	}
+</script>
+<script type="text/javascript">
+	
+	
+	function inconClick(id) {
+		// alert($('#'+id).attr('name'));
+ 		$('#'+id).css('color','white')
+		$('#'+id).css('background-color', $('#'+id).attr('name'));
+		$('input[name="searchType"]').attr('value',id); 
+		list_go(1);
+	}
+	
+	function regist(trainCd) {
+		//alert(trainCd);
+		var ext = $('form[role="'+trainCd+'"]')[0];
+		formData = new FormData(ext);
+		
+  		 if($('#'+trainCd+'').attr('value') == '수강신청'){
+  			if (confirm("해당 강의를 신청하시겠습니까?")) {
+				 
+
+			 $.ajax({
+		         url         : 'regist',
+		         data        : formData,
+		         type        : 'post',
+		         processData : false,
+				 contentType : false,
+		         success     : function(data){
+
+// 					alert(data)
+		        	$('#'+trainCd+'').attr('value','학습중');
+
+		         },
+		         error         : function(error){
+		        	 alert("수강신청에 실패했습니다.");
+		             //alert("현재 사진 업로드가 불가합니다. \n 관리자에게 연락바랍니다.");
+		             AjaxErrorSecurityRedirectHandler(error.status);
+		             console.log(error.status);
+		         }
+		     })
+
+		    }
+
+		 }
+	}
+
+
+</script>
+	
+
+
+
+
+</body>

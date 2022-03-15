@@ -1,0 +1,257 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<head></head>
+
+<title></title>
+<body>
+
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header pb-0">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">알림설정</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<i class="fas fa-home"></i>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="#">마이페이지</a>
+						</li>
+						<li class="breadcrumb-item active">알림설정</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- 메인 바디 -->
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="card table mt-3 col-md-12">
+				<table>
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">의무교육 기간 만료안내</p> 
+							<span class="text-muted" style="color: gray;">사용자가 학습하는 강의 중 의무 교육에 한해서 학습기간 만료 3일 전부터 해당 강의 학습 기간 잔여일을 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.dutyClFlag eq 1 ? 'checked' : ''} class="custom-control-input" id="dutyClFlag" name="dutyClFlag" value="${memAlarm.dutyClFlag }" onchange="fn_dutyClFlag()">
+								<label class="custom-control-label" for="dutyClFlag"></label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">보고서 제출 기한 안내</p> 
+							<span class="text-muted" style="color: gray;">사용자가 학습하는 강의 중 의무 교육에 한해서 학습기간 만료 3일 전부터 해당 강의 학습 기간 잔여일을 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.reportDlFlag eq 1 ? 'checked' : ''} class="custom-control-input" id="reportDlFlag" name="reportDlFlag" value="${memAlarm.reportDlFlag}" onchange="fn_reportDlFlag()">
+								<label class="custom-control-label" for="reportDlFlag"></label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">관심 강의 신청기간 안내</p> 
+							<span class="text-muted" style="color: gray;">사용자의 관심 강의 중 해당 강의 신청 마감일을 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.intrClFlag eq 1 ? 'checked' : ''} class="custom-control-input" id="intrClFlag" name="intrClFlag" value="${memAlarm.intrClFlag}" onchange="fn_intrClFlag()">
+								<label class="custom-control-label" for="intrClFlag"></label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">실시간 온라인 강의 시작 안내</p> 
+							<span class="text-muted" style="color: gray;">사용자가 수강하는 실시간 온라인 강의 수강 날짜를 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.realtimeClFlag eq 1 ? 'checked' : ''} class="custom-control-input" id="realtimeClFlag" name="realtimeClFlag" value="${memAlarm.realtimeClFlag }" onchange="fn_realtimeClFlag()">
+								<label class="custom-control-label" for="realtimeClFlag"></label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">읽지않은 쪽지 알림</p> 
+							<span class="text-muted" style="color: gray;">읽지 않은 쪽지에 대하여 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.msgFlag eq 1 ? 'checked' : ''} class="custom-control-input" id="msgFlag" name="msgFlag" value="${memAlarm.msgFlag }" onchange="fn_msgFlag()">
+								<label class="custom-control-label" for="msgFlag"></label>
+							</div>
+						</td>
+					</tr>
+					
+					<c:if test="${loginUser.authorityId eq 'A102' }">
+					<tr>
+						<td>
+							<p class="font-weight-bold m-0">보고서 결재 알림</p> 
+							<span class="text-muted" style="color: gray;">부서원들이 제출한 새 보고서에 대하여 알립니다.</span>
+						</td>
+						<td class="text-center">
+							<div class="custom-control custom-switch mt-3">
+								<input type="checkbox" ${memAlarm.reportChkFlag eq 1 ? 'checked' : ''}  class="custom-control-input" id="reportChkFlag" name="reportChkFlag" value=${memAlarm.reportChkFlag } onchange="fn_reportChkFlag()">
+								<label class="custom-control-label" for="reportChkFlag"></label>
+							</div>
+						</td>
+					</tr>
+					</c:if>
+				</table>
+			</div>
+		</div>
+	</section>
+
+<script>
+const dutyClFlag = document.querySelector('#dutyClFlag');
+const reportDlFlag = document.querySelector('#reportDlFlag');
+const intrClFlag = document.querySelector('#intrClFlag');
+const realtimeClFlag = document.querySelector('#realtimeClFlag');
+const msgFlag = document.querySelector('#msgFlag');
+const reportChkFlag = document.querySelector('#reportChkFlag');
+
+function fn_dutyClFlag(){
+	let flag = dutyClFlag.value
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "dutyClFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'dutyClFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+}
+
+function fn_reportDlFlag(){
+	let flag = reportDlFlag.value
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "reportDlFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'reportDlFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+	
+}
+
+function fn_intrClFlag(){
+	let flag = intrClFlag.value
+	alert(intrClFlag.value)
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "intrClFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'intrClFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+}
+
+function fn_realtimeClFlag(){
+	let flag = realtimeClFlag.value
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "realtimeClFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'realtimeClFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+}
+
+function fn_msgFlag(){
+	let flag = msgFlag.value
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "msgFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'msgFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+}
+
+function fn_reportChkFlag(){
+	let flag = reportChkFlag.value
+	if(flag == 1) flag = 0
+	else flag = 1
+	
+	let data = {
+		   "memEmail" : "${loginUser.memEmail}",
+		   "reportChkFlag" : flag	
+		   }
+	
+	$.ajax({
+		url:'reportChkFlag',
+		type :'post',
+		data : data,
+		dataType:"json",
+		success:function(data){
+		}
+	})
+}
+
+</script>
+
+</body>

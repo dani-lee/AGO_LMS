@@ -1,0 +1,44 @@
+package com.one.dto;
+
+import java.util.Date;
+
+public class ExamStatisVO {
+
+	private int testNo;
+	private String clCode;
+	private String clName;
+	private double mtestAvgSco;
+	private double ftestAvgSco;
+
+	public int getTestNo() {
+		return testNo;
+	}
+	public void setTestNo(int testNo) {
+		this.testNo = testNo;
+	}
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClName() {
+		return clName;
+	}
+	public void setClName(String clName) {
+		this.clName = clName;
+	}
+	public double getMtestAvgSco() {
+		return mtestAvgSco;
+	}
+	public void setMtestAvgSco(double mtestAvgSco) {
+		this.mtestAvgSco = mtestAvgSco;
+	}
+	public double getFtestAvgSco() {
+		return ftestAvgSco;
+	}
+	public void setFtestAvgSco(double ftestAvgSco) {
+		this.ftestAvgSco = ftestAvgSco;
+	}
+	
+}

@@ -1,0 +1,13 @@
+package com.one.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.one.dto.ClassVO.ClassStasticsVO;
+
+public interface LikeClassService {
+
+	public List<ClassStasticsVO>getLikeClassList(String memEmail)throws SQLException;
+	
+	public int getLikeClPoint(String memEmail) throws SQLException;
+}

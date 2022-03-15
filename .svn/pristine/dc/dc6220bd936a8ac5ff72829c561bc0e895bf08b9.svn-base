@@ -1,0 +1,193 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<head></head>
+<title></title>
+<body>
+	<c:set var="dpClassList" value="${ dataMap.dpClassList }" />
+	<c:set var="pageMaker" value="${ dataMap.pageMaker }" />
+	<c:set var="cri" value="${ pageMaker.cri }" />
+
+
+		<!-- 메인 헤더 -->
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-6">
+						<h4 class="m-0">강의 목록</h4>
+					</div>
+					<!-- /.col -->
+					<div class="col-sm-6">
+						<ol class="breadcrumb float-sm-right">
+							<li class="breadcrumb-item">
+								<i class="fas fa-home"></i>
+							</li>
+							<li class="breadcrumb-item">
+								<a href="<%=request.getContextPath()%>/user/departmentHead/main.do">메인보드</a>
+							</li>
+							<li class="breadcrumb-item">강의 목록</li>
+						</ol>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.content-header -->
+	
+		<!-- 메인 바디 -->
+		<!-- Main content -->
+		<section class="content">
+			<div class="container-fluid">
+				<div class="">
+					<div class="card-header">
+						<div class="row input-group col-12 p-0 mb-1">
+							<span style="font-size: 13px;" class="pt-3 pr-2 mr-5 text-secondary">
+								<span onclick="list_go(1)" style="cursor: pointer;" id="sortOption" data-sort="" >전체보기</span>&nbsp;|&nbsp;
+								<span onclick="fn_sort(1,'sortOption1')" style="cursor: pointer;" id="sortOption1" data-sort="s">즐겨찾기(<i class="fas fa-star"></i>)</span>
+							</span>
+							<div class="row col-9 justify-content-end p-0 mr-1">
+								<select class="col-md-2 form-control" name="searchType">
+									<option value="cn" ${ cri.searchType eq 'cn' ? 'selected' : '' }>전체</option>
+									<option value="c" ${ cri.searchType eq 'c' ? 'selected' : '' }>강의코드</option>
+									<option value="n" ${ cri.searchType eq 'n' ? 'selected' : '' }>강의명</option>
+								</select>
+								<input type="text" placeholder="검색할 단어를 입력하세요" class="form-control col-md-7" name="keyword" value="${ cri.keyword }" />
+								<button class="col-md-1 btn btn-primary float-right" onclick="list_go(1);">검색</button>
+							</div>
+						</div>
+					</div>
+					<div class="card-body p-0" style="height: 559px;">
+						<table class="table table-hover table-sm">
+							<thead>
+								<tr class="text-center" style="background-color:#E6EFFC;">
+									<th scope="col" class="col-1">즐겨찾기</th>
+									<th scope="col" class="col-1">강의코드</th>
+									<th scope="col" class="col-7">강의명</th>
+									<th scope="col" class="col-3">수강인원</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${not empty dpClassList }">
+									<c:forEach items="${dpClassList }" var="dpClass">
+										<tr>
+											<td class="align-middle text-center">
+												<a href="javascript:;" onclick="fav_go(this, '${dpClass.opcl }');">
+													<i class="text-warning ${dpClass.fav ? 'fas' : 'far' } fa-star"></i>
+												</a>
+											</td>
+											<td class="align-middle text-center">${dpClass.clCode}</td>
+											<td class="text-left" onclick="location.href='classDetail.do?opcl=${dpClass.opcl }&clCode=${dpClass.clCode }'">
+												<div class="row">
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<img src="/ago/user/departmentHead/getClassImg.do?fileNM=${dpClass.clImg }" style="width: 130px; height: 60px;">
+													<div class="col-md-8 column ui-sortable">
+														<span class="h6" style="cursor: pointer;">${dpClass.clName }</span>
+														
+														<c:if test="${dpClass.clFormat eq 'A601'}">
+															<span class=" badge badge-info" style="margin-left: 10px;">오프라인</span>
+														</c:if>
+														<c:if test="${dpClass.clFormat eq 'A602'}">
+															<span class=" badge badge-primary" style="margin-left: 10px;">온라인</span>
+														</c:if>
+														<c:if test="${dpClass.clFormat eq 'A603'}">
+															<span class=" badge badge-success" style="margin-left: 10px;">실시간</span>
+														</c:if>
+														
+														<c:if test="${dpClass.clDivision eq 'A502'}">
+															<span class=" badge badge-warning" style="margin-left: 2px;">선택</span>
+														</c:if>
+														<c:if test="${dpClass.clDivision eq 'A501'}">
+															<span class=" badge badge-danger" style="margin-left: 2px;">필수</span>
+														</c:if>
+
+														<br>
+														<span class="text-primary">
+															<fmt:formatDate value="${dpClass.postSdate }" pattern="yyyy-MM-dd" />
+															~
+															<fmt:formatDate value="${dpClass.postEdate }" pattern="yyyy-MM-dd" />
+														</span>
+														
+													</div>
+													<div class="col-md-3 column ui-sortable"></div>
+												</div>
+											</td>
+											<td class="align-middle text-center">
+												<c:if test="${dpClass.enrPers  eq '제한없음'}">
+													[${dpClass.enrPers}]
+												</c:if>
+												<c:if test="${dpClass.enrPers  ne '제한없음'}">
+													[${dpClass.count}/${dpClass.enrPers}]
+												</c:if>
+												
+												
+											</td>
+										</tr>
+									</c:forEach>
+								</c:if>
+								<c:if test="${empty dpClassList }">
+									<tr>
+										<td class="text-center" colspan="9">
+											할당된 강의가 존재하지 않습니다.
+										</td>
+									</tr>
+								</c:if>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="text-center">
+						<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
+					</div>
+				</div>
+			</div>
+		</section>
+	<form id="favForm">
+		<input type="hidden" name="page" value="" />
+		<input type="hidden" name="favType" value="" />
+	</form>
+	
+	<script type="text/javascript">
+		function fav_go(aTag, opcl){
+			let url = "favRegist.do";
+			let $i = $(aTag).children('i');
+			if($i.hasClass('fas')){
+				url = "favRemove.do";
+			}
+
+			$.ajax({
+				url : url,
+				type: 'post',
+				data : {"opcl" : opcl},
+				dataType: 'json',
+				success:function(data){
+					$i.removeClass(data.remove);
+					$i.addClass(data.add);
+				},
+				error:function(error){
+					
+				}
+			});
+
+		}
+		
+		function fn_sort(page,id) {
+			url="classList.do";
+			
+			let sortForm = $('#favForm');
+			let sortOption = document.getElementById(id).getAttribute('data-sort');
+			sortForm.find("[name='page']").val(page);
+			sortForm.find("[name='favType']").val(sortOption).val();
+
+			sortForm.attr({
+				action : url,
+				method : 'get'
+			}).submit();
+		}
+
+		
+	</script>
+</body>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Attach-Mapper">
+	<select id="selectAttachByBno" resultType="attach">
+		select NOTICE_DOC_NO as ano
+				,NOTICE_NO as bno
+				,NOTICE_DOC_NAME as fileName
+				,NOTICE_DOC_REGDATE as regDate
+		from NOTICE_DOC 
+		where NOTICE_NO = #{bno}
+	</select>
+	
+	<select id="selectAttachCountFromNotice" resultType="int">
+        select count(*)
+        from NOTICE_DOC
+        where NOTICE_NO = #{bno}	
+	</select>	
+	
+	<select id="selectAttachByAno" resultType="attach">
+		select NOTICE_DOC_NO as ano
+				,NOTICE_NO as bno
+				,NOTICE_DOC_NAME as fileName
+				,NOTICE_DOC_REGDATE as regDate
+		from NOTICE_DOC
+		where NOTICE_DOC_NO=#{ano}
+	</select>
+	
+	<update id="insertAttach">
+		insert into 
+		NOTICE_DOC (NOTICE_DOC_NO, NOTICE_NO, NOTICE_DOC_NAME, NOTICE_DOC_REGDATE)
+		values (SEQ_NOTICE_DOC.NEXTVAL, #{ bno }, #{fileName}, sysdate)
+	</update>
+	
+	<update id="deleteAttach">
+		delete from NOTICE_DOC where NOTICE_DOC_NO = #{ano}
+	</update>
+	
+	<update id="deleteAllAttach">
+		delete 
+		from NOTICE_DOC 
+		where NOTICE_NO = #{bno}
+	</update>
+	
+
+	
+	<update id="insertClassFileclDocAttach">
+	INSERT INTO cl_doc (
+		cl_doc_no
+		,cl_code
+		,cl_doc_name
+		,cl_doc_regdate
+	) VALUES (
+		 #{docNO}
+		,#{clCode}
+		,#{fileName}
+		,sysdate
+	)
+	</update>
+	<select id="getNextDocNo" resultType="int">
+		select SEQ_CL_DOC.NEXTVAL from dual
+	</select>
+	
+	
+
+	
+	<update id="insertClassFileMiddleTestAttach">
+	    INSERT INTO test (
+    test_no
+   ,mtest_file
+   ,mtest_regdate
+   ,opcl
+   ,test_status
+) VALUES (
+    #{testNo}
+   ,#{fileName,jdbcType=VARCHAR}
+   ,sysdate
+   ,#{opcl}
+   ,#{testStatus}
+)
+	
+	</update>
+	
+	
+	
+	<update id="insertClassFileFinalTestAttach">
+ 	UPDATE test
+   		SET 
+   		ftest_file =#{fileName,jdbcType=VARCHAR}
+    	,ftest_regdate =sysdate
+    
+	WHERE
+    	test_no = #{testNo}	
+	</update>
+	
+	
+	<update id="ModifyClassFileclDocAttach">
+	UPDATE  cl_doc
+	 	SET
+		cl_code = #{clCode}
+	   ,cl_doc_name = #{fileName}
+	   ,cl_doc_regdate = sysdate
+	   
+	where cl_doc_no = #{docNO}
+	</update>
+	
+	<update id="ModifyClassFileMiddleTestAttach">
+	   update test 
+  		SET 
+   			mtest_file = #{fileName}
+	   	   ,mtest_regdate = sysdate
+   
+   		where test_no=#{testNo}
+   		and opcl = #{opcl}
+	</update>
+	
+	<update id="ModifyClassFileFinalTestAttach">
+		   update test 
+  		SET 
+   			ftest_file = #{fileName}
+	   	   ,ftest_regdate = sysdate
+   
+   		where test_no=#{testNo}
+   		and opcl = #{opcl}
+	</update>
+</mapper>

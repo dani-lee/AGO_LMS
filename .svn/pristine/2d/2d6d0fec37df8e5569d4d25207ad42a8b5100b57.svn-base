@@ -1,0 +1,17 @@
+package com.one.controller.user.myClass;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/user/myClass/clsLike")
+public class clsLikeController {
+	
+	
+	@RequestMapping("/list.do")
+	public String listForclsLikeList() throws Exception {
+		String url = "user/myClass/clsLike/list";
+
+		return url;
+	}
+}

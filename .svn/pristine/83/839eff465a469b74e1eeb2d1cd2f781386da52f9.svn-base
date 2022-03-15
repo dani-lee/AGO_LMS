@@ -1,0 +1,6 @@
+log.user.login=login_user_log.csv
+log.manager.login=login_manager_log.csv
+log.admin.login=login_admin_log.csv
+log.manager.action=action_manager_log.csv
+log.admin.action=action_admin_log.csv
+log.error=error_log.csv

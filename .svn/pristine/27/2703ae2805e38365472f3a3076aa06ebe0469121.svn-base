@@ -1,0 +1,121 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+
+<head></head>
+
+<title></title>
+
+<body>
+	<!-- 메인 헤더 -->
+	<!-- Content Header (Page header) -->
+	<div class="content-header mx-auto">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h4 class="m-0">시험</h4>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item">
+							<a href="#">내강의실</a>
+						</li>
+						<li class="breadcrumb-item active">학습중인 강의</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+	<section class="content">
+		<div class="container-fluid">
+
+			<div class="col-9 float-left">
+				<!-- Content Header (Page header) -->
+				<div class="row">
+					<section class="col-6">
+						<table id="exam-left" class="table table-bordered  mt-3" style="padding: 10px;">
+							<tr>
+								<td>
+									<table class="table table-borderless">
+										<tbody>
+											<tr>
+												<td class="p-0" style="font-size: 20px"><b style="font-size: 28px" class="text-center">1</b>
+													<p class="text-danger m-0" style="font-size: 15px; width: 50px;"></p></td>
+												<td class="p-2">여기가 문제가 나오는 곳입니다. 그럼 몇번일까요? &nbsp;&nbsp;
+<!-- 													<span class="badge badge-info right">{{testAnswer}}</span> -->
+												</td>
+											</tr>
+											<tr>
+												<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="kingName" id="1_1" value="1_1">⑴ {{testNumber1}}</td>
+											</tr>
+											<tr>
+												<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="kingName" id="1_2" value="1_2">⑵ {{testNumber2}}</td>
+											</tr>
+											<tr>
+												<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="kingName" id="1_3" value="1_3">⑶ {{testNumber3}}</td>
+											</tr>
+											<tr>
+												<td class="p-0" colspan="2" style="font-size: 16px"><input type="radio" name="kingName" id="1_4" value="1_4">⑷ {{testNumber4}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</section>
+					<section class="col-6">
+						<table id="exam-right" class="table table-bordered mt-3" style="padding: 10px;">
+
+
+						</table>
+					</section>
+				</div>
+
+			</div>
+
+			<aside class="col-3 float-right" style="min-height:550px; background-color:#f4f6f9;">
+
+				<!-- Sidebar -->
+				<div class="sidebar p-3">
+					1.
+					<label for="1_1" class="pl-1 pr-1">①</label>
+					<label for="1_2" class="pr-1">②</label>
+					<label for="1_3" class="pr-1">③</label>
+					<label for="1_4" class="pr-1">④</label>
+					<!-- /.sidebar-menu -->
+				</div>
+				<!-- /.sidebar -->
+			</aside>
+		</div>
+	</section>
+	
+	<script>
+	window.onload = function(){
+		$.ajax({
+			url : 'getTest.do',
+			type : 'post',
+			data : {
+				"fileName" : "${testVO.mtestFile}",
+			},
+			dataType : 'json',
+			success : function(data) {
+				printData(data, $('#custom-tabs-four-attach'),$('#class-doc-template'));
+				parent.resize(window.parent.document.getElementById("ifr"));
+			},
+			error : function(error) {
+				AjaxErrorSecurityRedirectHandler(error.status);
+			}
+		});
+	}
+	function printData(detail, target, templateObject) {
+		let template = Handlebars.compile(templateObject.html());
+		let html = template(detail);
+		$('.detail-body').remove();
+		target.append(html);
+	}
+	</script>
+</body>

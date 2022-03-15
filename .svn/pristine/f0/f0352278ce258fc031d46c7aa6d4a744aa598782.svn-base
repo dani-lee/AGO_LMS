@@ -1,0 +1,154 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><decorator:title default="All Gi For Organixation" /></title>
+
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/fontawesome-free/css/all.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- iCheck -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- JQVMap -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/jqvmap/jqvmap.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/dist/css/adminlte.min.css">
+<!-- overlayScrollbars -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+<!-- Daterange picker -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/bootstrap/plugins/daterangepicker/daterangepicker.css">
+<!-- jQuery -->
+<script src="<%=request.getContextPath()%>/resources/bootstrap/plugins/jquery/jquery.min.js"></script>
+<link rel="icon" href="<%=request.getContextPath()%>/resources/img/pavicon.png">
+
+<decorator:head />
+
+</head>
+<body class="mx-auto text-sm" style="width: 1280px; margin-left: 10px;">
+	<div class="wrapper">
+
+		<!-- Navbar -->
+		<nav class="main-header navbar navbar-expand ${ !empty loginUser ? 'navbar-primary' : 'navbar-secondary' } navbar-dark m-0 px-4" role="logoNav" id="logoNav" style="min-width: 1280px;">
+			<!-- Left navbar links -->
+			<ul class="navbar-nav align-items-center">
+				<li>
+					<a href="indexPage.do">
+						<img src="<%=request.getContextPath()%>/resources/img/logo.png" id="logoId" name="logo" style="width: 200px; height: 55px;">
+					</a>
+				</li>
+				<!-- mainMunu 생성 -->
+				<c:forEach items="${ menuList }" var="menu">
+					<li class="nav-item d-none d-sm-inline-block">
+						<a href="javascript:goPage('<%=request.getContextPath() %>${menu.murl }','${menu.mcode }');subMenu_go('${menu.mcode}');" class="nav-link">${menu.mname }</a>
+					</li>
+				</c:forEach>
+
+			</ul>
+
+			<!-- Right navbar links -->
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="javascript:goPage('<%=request.getContextPath()%>/user/departmentHead/main.do', 'M000700');subMenu_go('M000700');">
+						<i class="fas fa-briefcase"></i>
+					</a>
+				</li>
+
+				<!-- Logout DropDown Menu -->
+				<li class="nav-item dropdown">
+					<a class="nav-link" data-toggle="dropdown" href="#">
+						<i class="far fa-user"></i>
+
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+						<span class="dropdown-item dropdown-header">내 정보</span>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item"> <!-- Message Start -->
+							<div class="media">
+							
+								<div class="media-body">
+									<h3 class="dropdown-item-title">
+										${member.memName }(${member.memId })
+									</h3>
+									<p class="text-sm">${member.dpId }</p>
+									<p class="text-sm text-muted">
+										 ${member.memEmail }<br>
+										 ${member.memPhone }
+									</p>
+								</div>
+								<img src="<%=request.getContextPath()%>/resources/img/logo.png" alt="User Avatar" style="width:60px;height:36px;background-color:#007bff;">
+							</div> <!-- Message End -->
+						</a>
+
+
+
+						<div class="dropdown-divider"></div>
+						<a href="<%=request.getContextPath() %>/user/myPage/myInfo/modifyMemberPwdForm.pop" onclick="OpenWindow(this.href, '비밀번호 변경', '450', '450'); return false;" class="dropdown-item">
+							<i class="fas fa-lock"></i>&nbsp;
+							<span class="text-sm">비밀번호 변경하기</span>
+						</a>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item" onclick="logout();">
+							<i class="fas fa-unlink"></i>&nbsp;
+							<span class="text-sm">로그아웃</span>
+						</a>
+					</div>
+				</li>
+
+
+				<!-- Messages Dropdown Menu -->
+
+				<a class="nav-link" href="javascript:goPage('<%=request.getContextPath()%>/user/myPage/message/list.do', 'M000502');subMenu_go('M000500'); ">
+					<i class="far fa-comments"></i>
+					<span class="badge badge-danger navbar-badge">${msgCnt }</span>
+				</a>
+
+
+				<!-- Notifications Dropdown Menu -->
+				<li class="nav-item dropdown">
+					<a class="nav-link" data-toggle="dropdown" href="#">
+						<i class="far fa-bell"></i>
+						<span class="badge badge-warning navbar-badge">15</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+						<span class="dropdown-item dropdown-header">15 Notifications</span>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item">
+							<i class="fas fa-envelope mr-2"></i>
+							4 new messages
+							<span class="float-right text-muted text-sm">3 mins</span>
+						</a>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item">
+							<i class="fas fa-users mr-2"></i>
+							8 friend requests
+							<span class="float-right text-muted text-sm">12 hours</span>
+						</a>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item">
+							<i class="fas fa-file mr-2"></i>
+							3 new reports
+							<span class="float-right text-muted text-sm">2 days</span>
+						</a>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+		<!-- /.navbar -->
+		<nav class="main-header navbar navbar-expand navbar-white navbar-light m-0 p-0" style="min-width: 1280px;">
+			<ul class="navbar-nav align-items-center pl-5" id="subMenuList">
+
+			</ul>
+		</nav>
+		<!-- /.navbar -->

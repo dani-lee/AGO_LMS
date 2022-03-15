@@ -1,0 +1,537 @@
+<%@page import="java.util.Date"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<c:set var="myClassList" value="${dataMap.myClassList }" />
+<c:set var="myClassListCount" value="${dataMap.myClassListCount }" />
+<c:set var="essentialList" value="${dataMap.essentialList }" />
+<c:set var="finishClassList" value="${dataMap.finishClassList }" />
+<c:set var="importantNoticeList" value="${dataMap.importantNoticeList }" />
+<c:set var="noticeList" value="${dataMap.noticeList }" />
+<c:set var="mainEPList" value="${dataMap.mainEPList }" />
+<c:set var="dpClassInfoList" value="${dataMap.dpClassInfoList }" />
+
+<title></title>
+
+<head>
+<style>
+/* 레이어 팝업 */
+#layer {
+	position: fixed;
+	/* 	left: 350px; */
+	/* 	top: 150px; */
+	/* 	width: 300px; */
+	border: 3px solid #dceff7;
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+	/* 	background-color : #ffffff; */
+}
+
+#layer .content img {
+	display: block;
+}
+
+#layer .checkbtn {
+	position: absolute;
+	bottom: 10px;
+	padding: 1px 2px;
+	/* 	background: #0093bd; */
+	/* 	color: #fff; */
+}
+</style>
+
+<script>
+$(function(){
+	$('#calendar').datetimepicker({
+	    format: 'L',
+	    inline: true,
+	  })
+	$('#calendar table').attr('class','table table-md')
+	  
+})
+
+function logout() {
+		let logout = confirm('로그아웃 하시겠습니까?');
+		if (logout) {
+			location.href = "logout.do";
+		}
+	}
+</script>
+
+</head>
+
+<body>
+
+	<div class="row m-1" style="width: 1268px;">
+
+		<div class="col-3 p-0">
+			<div class="card m-2">
+				<div class="card-body p-0">
+					<div class="card-body text-center">
+					
+						<h5 class="font-weight-bold m-2">${loginUser.memName }${loginUser.positionName }</h5>
+						<span>${loginUser.dpName }</span>
+						<hr>
+						<div class="row  justify-content-center">
+							<span class="col-6 text-left">이수점수</span><span class="col-2 text-rigth text-primary font-weight-bold">${loginUser.memCredit }</span>
+						</div>
+						<div class="row justify-content-center">
+							<span class="col-6 text-left">학습중인 강의</span><span class="col-2 text-rigth text-primary font-weight-bold"><a href="myClass/clsStudying/list.do">${myClassListCount}</a></span>
+						</div>
+						<hr>
+						<button type="button" class="btn btn-block btn-primary btn-xs" onclick="logout();">로그아웃</button>
+					</div>
+				</div>
+			</div>
+			<div class="small-box bg m-2" style="height:121px; background-color:#1586FF;">
+              <div class="inner">
+                <h5 style="color:#ffffff;"><b>QR출결체크</b></h5>
+                <p onclick="OpenWindow('<%=request.getContextPath()%>/user/myClass/clsStudying/QRCheck.do','QR체크',375, 812);" style="cursor:poinger;color:#ffffff;">스캔하기</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-qrcode" onclick="OpenWindow('<%=request.getContextPath()%>/user/myClass/clsStudying/QRCheck.do','QR체크',500, 812);" style="cursor:poinger;"></i>
+              </div>
+            </div>
+
+			
+		<div class="card m-2" style="position: relative; height: 422px; left: 0px; top: 0px;">
+				<!-- /.card-header -->
+				<div class="p-2 pt-4">
+					<!--The calendar -->
+					<div id="calendar" style="width: 100%"></div>
+				</div>
+				<!-- /.card-body -->
+			</div>
+		</div>
+		<div class="col-9 p-0">
+			<div class="row" style="height: 250px;">
+
+				<div class="col-6 p-2">
+					<div class="card m-0 w-100 h-100">
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color: #E6EFFC;">
+										<th colspan="3">학습 중인 강의</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:if test="${empty myClassList }">
+										<td colspan="5" class="text-center align-middle pt-2 pb-1"><strong>학습중인 강의가 없습니다.</strong></td>
+									</c:if>
+									<c:forEach items="${myClassList }" var="myClass" end="4">
+										<tr>
+											<td class="col-md-8 align-middle pt-2 pb-1" style="height: 40px; cursor: pointer;" onclick="location.href='myClass/clsStudying/detail.do?opcl=${myClass.opcl}&from=mainHome'">
+											<c:choose>
+												<c:when test="${fn:length(myClass.clName) gt 18 }">
+													<c:out value="${fn:substring(myClass.clName,0,18) }..." ></c:out>
+												</c:when>
+												<c:otherwise>
+													${myClass.clName }
+												</c:otherwise>
+											</c:choose>
+											<c:if test="${myClass.clFormat eq 'A601'}">
+													<span class="badge badge-info m-1">오프라인</span>
+												</c:if> 
+												<c:if test="${myClass.clFormat eq 'A602'}">
+													<span class="badge badge-primary m-1">온라인</span>
+												</c:if>
+												<c:if test="${myClass.clFormat eq 'A603'}">
+													<span class="badge badge-success m-1">실시간</span>
+												</c:if>
+											</td>
+											<td class="col-md-3 p-3 align-items-center align-middle pt-2 pb-1">
+												<div class="progress progress-xs">
+													<div class="progress-bar progress-bar-danger" style="width: ${myClass.progRate}%"></div>
+												</div>
+											</td>
+											<td class="col-md-1 text-right align-middle pt-2 pb-1"><span class="badge bg-primary">${myClass.progRate}%</span></td>
+
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- 부서장이라면 필수강의 노출 -->
+				<c:if test="${loginUser.authorityId eq 'A102' }">
+				<div class="col-6 p-2">
+					<div class="card  m-0 w-100 h-100">
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color: #E6EFFC;">
+										<th colspan="3">필수강의</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:if test="${empty essentialList }">
+										<td colspan="3" class="text-center align-middle pt-2 pb-1"><strong>필수 강의가 없습니다.</strong></td>
+									</c:if>
+									<c:forEach items="${essentialList }" var="essentail" end="4">
+										<tr>
+											<td class="col-md-7 align-middle pt-2 pb-1" style="cursor: pointer;" onclick="location.href='myClass/clsStudying/detail.do?opcl=${essentail.opcl}&from=mainHome'">
+												<c:choose>
+													<c:when test="${fn:length(essentail.clName) gt 16}">
+														<c:out value="${fn:substring(essentail.clName,0,16) }..." ></c:out>
+													</c:when>
+													<c:otherwise>
+														${essentail.clName }
+													</c:otherwise>
+												</c:choose>
+												<span class="badge bg-danger m-1">필수</span>
+											</td>
+											<td class="col-md-3 p-3 align-items-center align-middle pt-2 pb-1">
+												<div class="progress progress-xs">
+													<div class="progress-bar progress-bar-danger" style="width: ${essentail.progRate}%"></div>
+												</div>
+											</td>
+											<td class="col-md-2 text-right pt-2 pb-1"><span class="badge bg-primary" onclick="OpenWindow('<%=request.getContextPath()%>/user/myClass/clsStudying/detail.do?opcl=${essentail.opcl}','강의상세',1100,700)" style="cursor:pointer;">강의보기</span></td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				</c:if>
+				<c:if test="${loginUser.authorityId ne 'A102' }">
+				<!-- 부서장이 아니면 수강지시목록 노출 -->
+				<div class="col-6 p-2">
+					<div class="card  m-0 w-100 h-100">
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color: #E6EFFC;">
+										<th colspan="3">수강 지시 내역</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:if test="${empty dpClassInfoList }">
+										<td colspan="3" class="text-center align-middle pt-2 pb-1"><strong>지시 받은 강의가 없습니다.</strong></td>
+									</c:if>
+									<c:forEach items="${dpClassInfoList }" var="dpClassInfo" end="4">
+										<tr>
+											<td class="col-md-7 align-middle pt-2 pb-1">
+												<c:choose>
+													<c:when test="${fn:length(dpClassInfo.clName) gt 25}">
+														<c:out value="${fn:substring(dpClassInfo.clName,0,25) }..." ></c:out>
+													</c:when>
+													<c:otherwise>
+														${dpClassInfo.clName }
+													</c:otherwise>
+												</c:choose>
+												<span class="badge bg-danger m-1">필수</span>
+											</td>
+											<td class="col-md-2 text-right align-middle pt-2 pb-1"><span class="badge bg-primary" onclick="location.href='<%=request.getContextPath()%>/user/rcls/detail.do?clCode=${dpClassInfo.clCode}&opcl=${dpClassInfo.opcl}&from=mainHome'" style="cursor:pointer;">수강신청</span></td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				</c:if>
+			</div>
+			<div class="row" style="min-height: 250px;">
+			<c:set value="<%= new Date() %>" var="date"></c:set>
+				<div class="col-12 pt-1">
+					<div class="card h-100 w-100 m-0">
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color: #E6EFFC;">
+										<th colspan="5">종료된 강의</th>
+									</tr>
+									<tr class="text-center font-weight-bold">
+										<td>강의명</td>
+										<td>수료날짜</td>
+										<td>처리상태</td>
+										<td>기간</td>
+										<td>보고서제출</td>
+									</tr>
+								</thead>
+								<tbody>
+									<c:if test="${empty finishClassList }">
+										<td colspan="5" class="text-center pt-2 pb-1"><strong>해당 정보가 없습니다.</strong></td>
+									</c:if>
+									<c:forEach items="${finishClassList }" var="finishClass" end="4">
+										<tr>
+											<td class="col-4 align-middle pt-2 pb-1">
+												<c:choose>
+													<c:when test="${fn:length(finishClass.clName) gt 16}">
+														<c:out value="${fn:substring(finishClass.clName,0,16) }..." ></c:out>
+													</c:when>
+													<c:otherwise>
+														${finishClass.clName}
+													</c:otherwise>
+												</c:choose>
+												<c:if test="${finishClass.clFormat eq 'A601'}">
+													<span class="badge badge-info m-1">오프라인</span>
+												</c:if> <c:if test="${finishClass.clFormat eq 'A602'}">
+													<span class="badge badge-primary m-1">온라인</span>
+												</c:if> <c:if test="${finishClass.clFormat eq 'A603'}">
+													<span class="badge badge-primary m-1">실시간</span>
+												</c:if> <c:if test="${finishClass.clDivision eq 'A501' }">
+													<span class="badge badge-danger">필수</span>
+												</c:if> <c:if test="${finishClass.clDivision eq 'A502' }">
+													<span class="badge badge-danger">선택</span>
+												</c:if>
+											</td>
+											<td class="col-md-2 text-center align-middle pt-2 pb-1">
+												<c:if test="${finishClass.memclState eq 'C102'}">
+													<fmt:formatDate value="${finishClass.ctfDate }" pattern="yyyy-MM-dd" />
+												</c:if>												    
+												<c:if test="${finishClass.memclState ne 'C102'}">미수료</c:if>												    
+											</td>
+											<td class="col-md-2 text-primary text-center align-middle pt-2 pb-1">
+												<c:if test="${finishClass.intState eq 'B101' || empty finishClass.intNo}"><span class="text-danger">미제출</span></c:if> 
+												<c:if test="${finishClass.intState eq 'B102'}"><span class="text-primary">승인대기</span></c:if> 
+												<c:if test="${finishClass.intState eq 'B103'}"><span class="text-danger">반려</span></c:if> 
+												<c:if test="${finishClass.intState eq 'B104'}"><span class="test-success">승인완료</span></c:if> 
+												<c:if test="${finishClass.intState eq 'B105'}"><span class="text-secondary">제출기한마감</span></c:if>
+<!-- 												 || finishClass.dDate > date -->
+											</td>
+											<td class="text-center align-middle pt-2 pb-1">
+												<c:choose>
+													<c:when test="${finishClass.testCpl eq 1 && finishClass.studyCpl eq 1 && finishClass.progRate >= 80 }">
+														<c:if test="${finishClass.dDays lt 0}"></c:if>
+														<c:if test="${finishClass.dDays eq 0}"><span class="text-danger">D-DAY</span></c:if>
+														<c:if test="${finishClass.dDays gt 0}"><span class="text-primary">D-${finishClass.dDays }</span></c:if>
+													</c:when>
+												</c:choose>
+											</td>
+											<td class="col-2 mx-auto align-middle pt-2 pb-1" >
+												<button type="button" class="btn btn-block btn-primary btn-xs col-10 ml-3" onclick="OpenWindow('<%=request.getContextPath()%>/user/myClass/clsFinished/intReportForm.pop?memClNo=${finishClass.memClNo }', '', 780, 850);"
+												<c:if test="${finishClass.intState eq 'B102'}">disabled</c:if> 
+												<c:if test="${finishClass.intState eq 'B104'}">disabled</c:if> 
+												<c:if test="${finishClass.intState eq 'B105'}">disabled</c:if>
+												<c:if test="${finishClass.memclState ne 'C102'}">disabled</c:if>		
+												>보고서 제출</button>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-2" style="height: 300px;">
+
+				<div class="col-6 p-2">
+					<div class="card m-0 w-100 h-98">
+						<div class="card-body pb-2">
+							<table class="table table-sm">
+								<c:if test="${empty mainEPList }">
+									<tr>
+										<td colspan="3">등록된 강의가 없습니다.</td>
+									</tr>
+								</c:if>
+								<tr>
+									<td class="justify-content-center align-middle pt-2 pb-1">
+										<div id="demo" class="carousel slide justify-content-center" data-ride="carousel">
+											<div class="carousel-inner">
+												<c:forEach items="${mainEPList }" var="mainEP" end="4" varStatus="status">
+													<div class="carousel-item ${status.first ? 'active':'' }">
+														<div class="row p-0 m-0 mt-2 justify-content-center">
+															<img src="<%=request.getContextPath() %>/user/myClass/getPicture?picture=${mainEP.clImg}" style="width: 220px; height: 220px;">
+															<div class="ml-1 p-2 pt-4">
+																<div style="height: 130px;">
+																	<c:choose>
+																		<c:when test="${fn:length(mainEP.clName) gt 15 }">
+																			<p class="font-weight-bold p-0 m-0">
+																			<c:out value="${fn:substring(mainEP.clName,0,15)}..." />
+																			</p>
+																		</c:when>
+																		<c:otherwise>
+																			<p class="font-weight-bold p-0 m-0">${mainEP.clName}</p>
+																		</c:otherwise>
+																	</c:choose>
+																	<span class="mr-4 text-primary"> <fmt:formatDate value="${mainEP.postSdate }" pattern="yy-MM-dd" />&nbsp;~&nbsp; <fmt:formatDate value="${mainEP.postEdate }" pattern="yy-MM-dd" />
+																	</span><br>
+																	<c:if test="${mainEP.clFormat eq 'A601'}">
+																		<span class="badge badge-info mr-1">오프라인</span>
+																	</c:if>
+																	<c:if test="${mainEP.clFormat eq 'A602'}">
+																		<span class="badge badge-primary mr-1">온라인</span>
+																	</c:if>
+																	<c:if test="${mainEP.clFormat eq 'A603'}">
+																		<span class="badge badge-primary mr-1">실시간</span>
+																	</c:if>
+																	<c:if test="${mainEP.mainExposure eq 'M101' }">
+																		<span class="badge badge-secondary">신규강의</span>
+																	</c:if>
+																	<c:if test="${mainEP.mainExposure eq 'M102' }">
+																		<span class="badge badge-secondary">인기강의</span>
+																	</c:if>
+																	<c:if test="${mainEP.mainExposure eq 'M103' }">
+																		<span class="badge badge-secondary">추천강의</span>
+																	</c:if>
+																</div>
+																<div>
+																	<button type="button" class="btn btn-block btn-primary btn-sm" onclick="location.href='<%=request.getContextPath()%>/user/rcls/detail.do?clCode=${mainEP.clCode}&opcl=${mainEP.opcl}&from=mainHome'">신청하기</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</c:forEach>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-6 p-2 pl-0">
+					<div class="card  m-0 w-100 h-99">
+						<div class="card-body p-0">
+							<table class="table table-sm">
+								<thead>
+									<tr style="background-color: #E6EFFC;">
+										<th colspan="2">공지사항</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${importantNoticeList }" var="importantNotice" end="1">
+									<tr class="pt-1 pb-1" style="background-color: #F0F0F0; cursor: pointer; "  onclick="location.href='management/notice/detail.do?noticeNo=${importantNotice.noticeNo}&from=mainHome'">
+										<td class="text-danger text-center col-2 align-middle pt-2 pb-1">[중요]</td>
+										<c:choose>
+											<c:when test="${fn:length(importantNotice.noticeTitle) gt 30 }">
+												<td class="col-10 align-middle pt-2 pb-1">${fn:substring(importantNotice.noticeTitle,0,30 )}...</td>
+											</c:when>
+											<c:otherwise>
+												<td class="col-10 align-middle pt-2 pb-1">${importantNotice.noticeTitle }</td>
+											</c:otherwise>
+										</c:choose>
+									</tr>
+									</c:forEach>
+									<c:forEach items="${noticeList }" var="notice" end="4">
+									<tr class="pt-1 pb-1" style=" cursor: pointer; "  onclick="location.href='management/notice/detail.do?noticeNo=${notice.noticeNo}&from=mainHome'">
+										<td class="text-center align-middle pt-2 pb-1">${notice.noticeNo }</td>
+										<td class="align-middle pt-2 pb-1">${notice.noticeTitle }</td>
+									</tr>
+									</c:forEach>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- layer popup-->
+	<div id="layer-popup"></div>
+	<!-- //layer popup-->
+
+
+	<script>
+	  
+function printPopup(popupArr, target, templateObject){
+	let template = Handlebars.compile(templateObject.html());
+	let html = template(popupArr);
+	$('#layer').remove();
+	target.after(html);
+}
+
+$(function(){
+	  
+	$.ajax({
+		url : '<%=request.getContextPath()%>/getPopUpList',
+				type : "get",
+				dataType : "json",
+				success : function(data) {
+					printPopup(data, $('#layer-popup'),
+							$('#popup-list-template'));
+					let imgtag = document.querySelectorAll('.content img');
+					$(imgtag).attr("style", "width:100%;");
+
+					let layerArr = document.querySelectorAll('#layer');
+					let closeBtn = document.querySelectorAll('#close');
+					let chkBoxs = document.querySelectorAll('#chkbox');
+					for (let i = 0; i < layerArr.length; i++) {
+
+						var cookiedata = document.cookie;
+						//console.log(cookiedata)
+						if (cookiedata.indexOf("close=Y") == 0) {
+							$(layerArr[i]).hide();
+						} else {
+							$(layerArr[i]).show();
+						}
+
+						closeBtn[i].onclick = function() {
+							console.log($('#close')[i])
+							couponClose(layerArr[i], chkBoxs[i]);
+						}
+					}
+
+				},
+				error : function(error) {
+					console.log("error")
+					AjaxErrorSecurityRedirectHandler(error.status);
+				}
+			});
+		})
+	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+	<script type="text/x-handlebars-template" id="popup-list-template">
+{{#each .}}
+<div id="layer" style="width:{{popWsize}}px; height:{{popHsize}}px; background-color:#ffffff; overflow:hidden; left:{{popX}}px; top:{{popY}}px;">
+	<div class="content"><a href="{{popLink}}">{{{popContent}}}</a></div>
+	<form name="pop_form">
+	<div class="d-flex checkbtn" style="position:absolute;">
+		<div id="check" class="ml-2">
+			<input type="checkbox" name="chkbox" value="checkbox" id='chkbox'>
+			<label for="chkbox">&nbsp&nbsp오늘 하루동안 보지 않기</label>
+		</div>
+		<div id="close" class="float-right">
+			<a href="#" onclick="javascript:couponClose();">&nbsp;&nbsp;&nbsp;&nbsp;닫기</a>
+		</div>
+	</div>
+	</form>
+</div>
+{{/each}}
+</script>
+
+	<script>
+		// 쿠키 가져오기
+		var getCookie = function(cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ')
+					c = c.substring(1);
+				if (c.indexOf(name) != -1)
+					return c.substring(name.length, c.length);
+			}
+			return "";
+		}
+
+		// 24시간 기준 쿠키 설정하기
+		var setCookie = function(cname, cvalue, exdays) {
+			var todayDate = new Date();
+			todayDate.setTime(todayDate.getTime()
+					+ (exdays * 24 * 60 * 60 * 1000));
+			var expires = "expires=" + todayDate.toUTCString();
+			document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+
+		var couponClose = function(layer, chkBox) {
+			console.log("chkbox:" + chkBox.checked)
+			if (chkBox.checked) {
+				setCookie("close", "Y", 1); //기간( ex. 1은 하루, 7은 일주일)
+			}
+			layer.style.display = "none";
+		}
+	</script>
+
+</body>
+

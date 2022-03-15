@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PopUp-Mapper">
+	
+	<select id="selectPopupList" resultType="popUp">
+		SELECT
+		    POP_NO
+		   ,POP_TITLE
+		   ,POP_SDATE
+		   ,POP_EDATE-1 as POP_EDATE
+		   ,POP_WSIZE
+		   ,POP_HSIZE
+		   ,POP_LINK
+		   ,POP_CONTENT
+		   ,POP_X
+		   ,POP_Y
+		FROM
+		    POPUP
+		ORDER BY POP_NO DESC
+	</select>
+	
+	<select id="countPopup" resultType="int">
+		SELECT COUNT(*)
+		FROM
+			POPUP
+		
+	</select>
+	<update id="insertPopup" parameterType="popUp">
+		insert into POPUP (
+    		  POP_NO
+    	 	, POP_TITLE
+    		, POP_SDATE
+    		, POP_EDATE
+    		, POP_WSIZE
+    		, POP_HSIZE
+    		, POP_LINK
+    		, POP_CONTENT
+    		, POP_X
+    		, POP_Y
+		) values (
+    		  #{popNo}
+  			, #{popTitle}
+  			, #{popSdate}
+  			, #{popEdate}+1
+  			, #{popWsize}
+  			, #{popHsize}
+  			, #{popLink}
+  			, #{popContent}
+  			, #{popX}
+  			, #{popY}
+		)
+	</update>
+	
+	<select id="selectPopupSequenceNextValue" resultType="int">
+		SELECT POPUP_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<select id="selectPopup" parameterType="int" resultType="popUp">
+		SELECT
+		    POP_NO
+		   ,POP_TITLE
+		   ,POP_SDATE
+		   ,POP_EDATE-1 as POP_EDATE
+		   ,POP_WSIZE
+		   ,POP_HSIZE
+		   ,POP_LINK
+		   ,POP_CONTENT
+		   ,POP_X
+		   ,POP_Y
+		FROM
+		    POPUP
+		WHERE
+		    POP_NO = #{popNo}
+	</select>
+	
+	<select id="selectPopupListByDate" resultType="popUp">
+		SELECT
+		    POP_NO
+		   ,POP_TITLE
+		   ,POP_SDATE
+		   ,POP_EDATE
+		   ,POP_WSIZE
+		   ,POP_HSIZE
+		   ,POP_LINK
+		   ,POP_CONTENT
+		   ,POP_X
+		   ,POP_Y
+		FROM
+		    POPUP
+		<![CDATA[
+		WHERE
+		    POP_SDATE <= TRUNC(SYSDATE)
+		AND
+		    POP_EDATE >= TRUNC(SYSDATE)
+		]]>
+	</select>
+	
+	<update id="updatePopup" parameterType="popUp">
+		UPDATE POPUP
+		    SET
+			    POP_TITLE = #{popTitle}
+			   ,POP_SDATE = #{popSdate}
+			   ,POP_EDATE = #{popEdate}+1
+			   ,POP_WSIZE = #{popWsize}
+			   ,POP_HSIZE = #{popHsize}
+			   ,POP_LINK = #{popLink}
+			   ,POP_CONTENT = #{popContent}
+			   ,POP_X = #{popX}
+			   ,POP_Y = #{popY}
+			   
+		WHERE
+		    POP_NO = #{popNo}
+	</update>
+	
+	<update id="deletePopup" parameterType="int">
+		DELETE FROM POPUP
+		WHERE
+		    POP_NO = #{popNo}
+	</update>
+	
+</mapper>
